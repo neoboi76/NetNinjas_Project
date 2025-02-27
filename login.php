@@ -25,8 +25,8 @@
 
 <body>
 
-   <section class="container-fluid p-3 d-flex align-items-center">
-      <div class="logo me-3">
+   <section class="container-fluid p-3 d-flex align-items-center m-3">
+      <div class=" logo me-3">
          <img src="./images/logo.png" alt="San Antonio Logo" width="75px" height="75px">
       </div>
 

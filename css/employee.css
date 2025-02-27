@@ -1,0 +1,135 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'helvetica';
+    background-image: url("/images/background.jpg");
+    background-size: cover; 
+    background-position: center;  
+    background-repeat: no-repeat; 
+    height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    height: 81vh;
+    margin-left: 3rem;
+    background: white;
+    padding: 15px;
+    position: fixed;
+    border-radius: 10px;
+}
+
+.sidebar a {
+    color: black;
+}
+
+.content {
+    margin-left: 330px;
+}
+
+.account-icon {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    cursor: pointer;
+}
+.tab-content {
+    background: white;
+    padding: 20px;
+    height: 67.5vh;
+    width: 95%;
+    border-radius: 10px;
+}
+
+.tab-content div {
+    color: black;
+}
+
+.content h2 {
+    background: white;
+    width: 12.5%;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 1em;
+}
+
+
+
+@media all and (max-width: 675px) {
+
+    .logo img {
+        width: 55px;
+        height: 55px;
+    }
+
+    .headTitle h2 {
+        font-size: 20px;
+    }
+
+    .headTitle h3 {
+        font-size: 16px;
+    }
+       
+
+}
+
+
+
+@media all and (max-width: 500px) {
+
+    .logo img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .headTitle h2 {
+        font-size: 16px;
+    }
+
+    .headTitle h3 {
+        font-size: 14px;
+    }
+       
+
+}
+
+@media all and (max-width: 410px) {
+
+    .logo img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .headTitle h2 {
+        font-size: 12px;
+    }
+
+    .headTitle h3 {
+        font-size: 10px;
+    }
+       
+
+}
+
+@media all and (max-width: 310px) {
+
+    .logo img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .headTitle h2 {
+        font-size: 10px;
+    }
+
+    .headTitle h3 {
+        font-size: 8px;
+    }
+
+       
+
+}
