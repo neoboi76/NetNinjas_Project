@@ -39,13 +39,13 @@
     <section class="signup-center">
         <div class="signup-container text-center">
             <h2 class="mb-4"><b>Sign Up</b></h2>
-            <form>
+            <form id="signupForm">
                 <div class="mb-3">
-                    <input type="text" class="form-control" style="background-color: lightblue;" placeholder="Email"
-                        required>
+                    <input type="text" id="emailText" class="form-control" style="background-color: lightblue;"
+                        placeholder="Email" required>
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" style="background-color: lightblue;"
+                    <input type="text" class="form-control" id="idText" style="background-color: lightblue;"
                         placeholder="Employee ID" required>
                 </div>
                 <div class="mb-3 password-container">
@@ -54,8 +54,8 @@
                     <span class="toggle-password" onclick="togglePassword()">👁️</span>
                 </div>
                 <div class="mb-3 password-container">
-                    <input type="password" id="password" class="form-control" style="background-color: lightblue;"
-                        placeholder="Confirm Password" required>
+                    <input type="password" id="confirmPassword" class="form-control"
+                        style="background-color: lightblue;" placeholder="Confirm Password" required>
                 </div>
                 <button type="submit" class="btn btn-primary btn-signup">Sign Up</button>
             </form>

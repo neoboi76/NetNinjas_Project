@@ -6,3 +6,23 @@ function togglePassword() {
         passwordField.type = "password";
     }
 }
+
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+
+    event.preventDefault(); 
+
+    let idField = document.getElementById("idText");
+    let passwordField = document.getElementById("passwordText");
+
+    if (idField.value === "696969" && passwordField.value === "1234") {
+        window.location.href = "employee.php";
+    } 
+
+    else {
+        idField.value = "";
+        passwordField.value = "";
+        alert("Wrong ID or Password. Please try again.");
+    }
+    
+});
+

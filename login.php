@@ -39,17 +39,17 @@
    <section class="login-center">
       <div class="login-container text-center">
          <h2 class="mb-4"><b>Login to Your Account</b></h2>
-         <form>
+         <form id="loginForm">
             <div class="mb-3">
-               <input type="text" class="form-control" style="background-color: lightblue;"
+               <input type="text" class="form-control" id="idText" style="background-color: lightblue;"
                   placeholder="Admin/Employee ID" required>
             </div>
             <div class="mb-3 password-container">
-               <input type="password" id="password" class="form-control" style="background-color: lightblue;"
+               <input type="password" id="passwordText" class="form-control" style="background-color: lightblue;"
                   placeholder="Password" required>
                <span class="toggle-password" onclick="togglePassword()">👁️</span>
             </div>
-            <button type="submit" class="btn btn-primary btn-login">Log In</button>
+            <button id="login" type="submit" class="btn btn-primary btn-login">Log In</button>
          </form>
       </div>
    </section>
