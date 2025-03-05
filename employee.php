@@ -65,7 +65,7 @@
         <div class="account-icon">
             <img src="./images/juoross.jpg" width="75px" width="75px" alt="Account"
                 style="contain: cover; width: 75px; height: 75px; border-radius: 50%;">
-            <p style="color: white">&nbsp;&nbsp;<b>Account</b></p>
+            <p style="color: white">&nbsp;&nbsp;<b>Settings</b></p>
         </div>
         <h2 id="pageTitle"><b>Welcome</b></h2>
         <div class="tab-content">
@@ -145,11 +145,10 @@
             </div>
             <div id="documents" class="tab-pane fade">
                 <div class="documents-container">
-                    <h5><b>Documents</b></h5>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
-                                <!--  SAMPLE CONTENTS -->
+                                <!--  SAMPLE CONTENTS MAKE DYNAMIC SOON-->
                                 <tr>
                                     <th>Date</th>
                                     <th>Department</th>
@@ -270,10 +269,173 @@
                     </div>
                 </div>
             </div>
-            <div id="leave" class="tab-pane fade">Leave Content</div>
-            <div id="feedback" class="tab-pane fade">Feedback Content</div>
-            <div id="salary" class="tab-pane fade">Salary Content</div>
+            <div id="leave" class="tab-pane fade">
+                <div class="container p-4 bg-light rounded">
+                    <h4 class="mb-3"><b>Leave Request Form</b></h4>
+
+                    <form>
+                        <!-- Reason Field -->
+                        <div class="mb-3">
+                            <label for="reason" class="form-label">Reason</label>
+                            <textarea id="reason" class="form-control" rows="3"
+                                placeholder="Enter your reason"></textarea>
+                        </div>
+
+                        <!-- Description Field -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea id="description" class="form-control" rows="3"
+                                placeholder="Provide additional details"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <!-- Date of Leave -->
+                            <div class="col-md-6">
+                                <label for="dateLeave" class="form-label">Date of Leave</label>
+                                <input type="date" id="dateLeave" class="form-control">
+                            </div>
+
+                            <!-- Date of Return -->
+                            <div class="col-md-6">
+                                <label for="dateReturn" class="form-label">Date of Return</label>
+                                <input type="date" id="dateReturn" class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="mt-3 text-center">
+                            <button type="submit" class="btn btn-primary w-10">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="feedback" class="tab-pane fade">
+                <div class="container p-4 bg-light rounded">
+
+                    <!-- Feedback Viewing Section -->
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <h6 class="mb-1"><b>From: Maylyn Bautista (Manager)</b></h6>
+                            <p class="mb-1">Heneraaaaaaal! Nangopya ka nanaman! Masisingko ka nanaman ulit saken. Hay
+                                jusko, lagi nalang, di ka na ba nasasawa saaken?</p>
+                            <small class="text-muted">Received on: 02/15/2024</small>
+                        </div>
+                        <div class="list-group-item">
+                            <h6 class="mb-1"><b>From: Dr. William Rey (HR)</b></h6>
+                            <p class="mb-1">Mr. Jose, can you give me a good reason why not to terminate you right now?
+                                Your co-worker [Redacted] filed a complaint of sexual assualt, citing that you
+                                "touched my private parts during our break". What do you have to say for yourself?</p>
+                            <small class="text-muted">Received on: 01/10/2024</small>
+                        </div>
+                    </div>
+
+                    <!-- Review Superior Button -->
+                    <div class="text-center mt-4">
+                        <button id="reviewSuperiorBtn" class="btn btn-primary">Review Superior</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="reviewSuperior" class="tab-pane fade">
+                <div class="container p-4 bg-light rounded">
+                    <h4 class="mb-3 text-center"><b>Review Your Direct Superior (Maylyn Bautista)</b></h4>
+                    <!-- Make the name of the superior dynamic.-->
+
+                    <form>
+                        <div class="mb-3">
+                            <label for="superiorFeedback" class="form-label">Your Feedback</label>
+                            <textarea class="form-control" id="superiorFeedback" rows="4"
+                                placeholder="Write your feedback here..."></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Submit Feedback</button>
+                        </div>
+                    </form>
+
+                    <!-- Back Button -->
+                    <div class="text-center mt-3">
+                        <button id="backToFeedbackBtn" class="btn btn-secondary">Back</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- SAMPLE CONTENT MAKE DYNAMIC SOON -->
+
+            <div id="salary" class="tab-pane fade">
+                <div class="container p-4 bg-light rounded">
+                    <h4 class="mb-3 text-center"><b>Invoices</b></h4>
+
+                    <!-- Salary Deposit Entries -->
+                    <div class="list-group">
+                        <a href="#"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <b>$3,000 was deposited for January 2024</b>
+                            <span class="badge bg-secondary">01/31/2024</span>
+                        </a>
+                        <a href="#"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <b>$3,200 was deposited for February 2024</b>
+                            <span class="badge bg-secondary">02/29/2024</span>
+                        </a>
+                        <a href="#"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <b>$3,500 was deposited for March 2024</b>
+                            <span class="badge bg-secondary">03/31/2024</span>
+                        </a>
+                        <a href="#"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <b>$3,600 was deposited for April 2024</b>
+                            <span class="badge bg-secondary">04/30/2024</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Profile Modal -->
+        <div id="profileModal" class="profile-modal">
+            <div class="profile-content">
+                <span class="close-btn">&larr;</span>
+                <div class="profile-header">
+                    <img src="./images/default-user.png" alt="Profile Picture" class="profile-img">
+                    <h3>Employee ID</h3>
+                    <p>Joined in mm/dd/yyyy</p>
+                </div>
+
+                <div class="profile-info">
+                    <p><strong>First Name:</strong> John</p>
+                    <p><strong>Last Name:</strong> Doe</p>
+                    <p><strong>Phone/Cellphone Number:</strong> 123-456-7890</p>
+                    <p><strong>Birthdate:</strong> mm/dd/yyyy</p>
+                    <p><strong>Status:</strong> Active</p>
+                    <div class="password-section">
+                        <label><strong>Password:</strong></label>
+                        <input type="password" value="password123" disabled>
+                        <a href="#" id="changePasswordLink">Change password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Change Password Modal -->
+        <div id="passwordModal" class="profile-modal">
+            <div class="profile-content">
+                <span class="close-btn" id="closePasswordModal">&larr;</span>
+                <h4 class="text-center">Change Password</h4>
+
+                <div class="password-container">
+                    <input type="password" id="currentPassword" placeholder="Current Password">
+                    <input type="password" id="newPassword" placeholder="New Password">
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password">
+                    <button id="savePassword" class="btn btn-success">Save Password</button>
+                </div>
+            </div>
+        </div>
+
+
     </section>
 
 
