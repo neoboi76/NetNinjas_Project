@@ -16,7 +16,7 @@ body {
 
 .sidebar {
     width: 250px;
-    height: 80.3vh;
+    height: 81vh;
     margin-left: 3rem;
     background: white;
     padding: 15px;
@@ -75,7 +75,6 @@ body {
     background: white;
     padding: 20px;
     height: 69.8vh;
-    overflow: scroll;
     width: 95%;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 2);
@@ -108,60 +107,7 @@ body {
     }
 }
 
-.content-placeholder {
-    background-color: #e9ecef;
-    border: 1px solid #dee2e6;
-    padding: 90px;
-    text-align: center;
-    border-radius: 5px;
-    min-height: 100px; 
 
-}
-
-.content-container1 { background-color: #d6d8db; }
-.content-container2 { background-color: #d6d8db; }
-.content-container3 { background-color: #d6d8db; }
-
-.content-box {
-    background-color: #d6d8db; 
-    border-radius: 8px;
-    min-height: 200px;
-    font-size: 18px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.form-container {
-    background-color: #d6d8db;
-    border-radius: 8px;
-    border: 1px solid #b1b1b1;
-}
-
-.documents-container {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-}
-
-.table-responsive {
-    max-height: 300px; /* Makes it scrollable */
-    overflow-y: auto;
-}
-
-@media all and (max-width: 768px) {
-    .col-md-8, .col-md-9, .col-md-4, .col-md-3 {
-        width: 100%;
-    }
-}
-
-@media all and (max-width: 1080px) {
-    body {
-        overflow: scroll;
-    }
-}
 
 @media all and (max-width: 675px) {
 

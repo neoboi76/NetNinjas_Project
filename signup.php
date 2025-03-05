@@ -49,7 +49,7 @@
                         placeholder="Employee ID" required>
                 </div>
                 <div class="mb-3 password-container">
-                    <input type="password" id="password" class="form-control" style="background-color: lightblue;"
+                    <input type="password" id="passwordText" class="form-control" style="background-color: lightblue;"
                         placeholder="Password" required>
                     <span class="toggle-password" onclick="togglePassword()">👁️</span>
                 </div>

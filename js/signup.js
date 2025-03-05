@@ -1,5 +1,5 @@
 function togglePassword() {
-    let passwordField = document.getElementById("password");
+    let passwordField = document.getElementById("passwordText");
     if (passwordField.type === "password") {
         passwordField.type = "text";
     } else {
@@ -13,7 +13,7 @@ document.getElementById("signupForm").addEventListener("submit", function(event)
 
     let emailField = document.getElementById("emailText");
     let idField = document.getElementById("idText");
-    let passwordField = document.getElementById("password");
+    let passwordField = document.getElementById("passwordText");
     let confirmField = document.getElementById("confirmPassword");
 
     if (emailField.value === "joseIntsek@gmail.com" && idField.value === "696969" && passwordField.value === confirmField.value) {

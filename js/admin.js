@@ -24,13 +24,14 @@ document.querySelectorAll('.nav-link, .dropdown-item').forEach(item => {
                 });
                 break;
 
-            case "Report":
+            case "Employee":
                 navId.forEach(link => {
 
                     link.classList.remove('classBg');
 
                 });
-                document.getElementById('report1').classList.add('classBg');
+                pageId.innerHTML = `<b>Employee</b>`;
+                document.getElementById('employee1').classList.add('classBg');
                 contentId.forEach(link => {
 
                     link.classList.remove('show active');
@@ -38,6 +39,39 @@ document.querySelectorAll('.nav-link, .dropdown-item').forEach(item => {
 
                 });
                 break;
+
+            case "Review":
+                navId.forEach(link => {
+
+                    link.classList.remove('classBg');
+
+                });
+                pageId.innerHTML = `<b>Review</b>`;
+                document.getElementById('review1').classList.add('classBg');
+                contentId.forEach(link => {
+
+                    link.classList.remove('show active');
+                    link.classList.add('show active');
+
+                });
+                break;
+
+            case "Department":
+                navId.forEach(link => {
+
+                    link.classList.remove('classBg');
+
+                });
+                pageId.innerHTML = `<b>Department</b>`;
+                document.getElementById('department1').classList.add('classBg');
+                contentId.forEach(link => {
+
+                    link.classList.remove('show active');
+                    link.classList.add('show active');
+
+                });
+                break;
+
 
             case "Case Report":
                 pageId.innerHTML = `<b>Report / Case Report</b>`;
