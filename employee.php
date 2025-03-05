@@ -394,12 +394,13 @@
             </div>
         </div>
 
-        <!-- Profile Modal -->
-        <div id="profileModal" class="profile-modal">
+
+
+        <!-- <div id="profileModal" class="profile-modal">
             <div class="profile-content">
                 <span class="close-btn">&larr;</span>
                 <div class="profile-header">
-                    <img src="./images/default-user.png" alt="Profile Picture" class="profile-img">
+                    <img src="./images/juoross.jpg" alt="Profile Picture" class="profile-img">
                     <h3>Employee ID</h3>
                     <p>Joined in mm/dd/yyyy</p>
                 </div>
@@ -420,7 +421,7 @@
         </div>
 
 
-        <!-- Change Password Modal -->
+       
         <div id="passwordModal" class="profile-modal">
             <div class="profile-content">
                 <span class="close-btn" id="closePasswordModal">&larr;</span>
@@ -433,7 +434,7 @@
                     <button id="savePassword" class="btn btn-success">Save Password</button>
                 </div>
             </div>
-        </div>
+        </div> -->
 
 
     </section>
