@@ -144,10 +144,10 @@
                 </div>
             </div>
             <div id="documents" class="tab-pane fade">
-                
+
             </div>
 
-           
+
             <div id="leave" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
                     <h4 class="mb-3"><b>Leave Request Form</b></h4>
@@ -320,7 +320,7 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-    <script src="./js/employee.js"></script>
+    <script src="js\employee.js"></script>
 
 </body>
 

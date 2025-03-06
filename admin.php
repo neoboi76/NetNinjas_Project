@@ -440,17 +440,13 @@
             <div class="profile-content">
                 <span class="close-btn">&larr;</span>
                 <div class="profile-header">
-                    <img src="./images/juoross.jpg" alt="Profile Picture" class="profile-img">
-                    <h3>Employee ID: 696969</h3>
+                    <img src="./images/profilePlaceholder.png" alt="Profile Picture" class="profile-img">
+                    <h3>Admin ID: 969696</h3>
                     <p>Joined in 01/01/2025</p>
                 </div>
 
                 <div class="profile-info">
-                    <p><strong>First Name:</strong> Juoross Phillip</p>
-                    <p><strong>Last Name:</strong> Jose</p>
-                    <p><strong>Phone/Cellphone Number:</strong> 123-456-7890</p>
-                    <p><strong>Birthdate:</strong> 06/06/2006</p>
-                    <p><strong>Role:</strong> Janitor</p>
+                    <p><strong>Role:</strong> Admin</p>
                     <div class="password-section">
                         <label><strong>Password:</strong></label>
                         <input type="password" value="1234" id="mainPassword" disabled>
@@ -482,7 +478,7 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-    <script src="./js/admin.js"></script>
+    <script src="js\admin.js"></script>
 
 </body>
 
