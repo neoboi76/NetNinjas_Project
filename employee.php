@@ -144,131 +144,10 @@
                 </div>
             </div>
             <div id="documents" class="tab-pane fade">
-                <div class="documents-container">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <!--  SAMPLE CONTENTS MAKE DYNAMIC SOON-->
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Department</th>
-                                    <th>File Type</th>
-                                    <th>File Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <tr>
-                                    <td>01/01/2025</td>
-                                    <td>HR</td>
-                                    <td>PDF</td>
-                                    <td>Employee_Handbook.pdf</td>
-                                    <td><a href="./Test/Manifesto.pdf" download="CommmunistManifesto.pdf"
-                                            class="btn btn-primary">Download</a></td>
-                                </tr>
-                                <tr>
-                                    <td>02/01/2025</td>
-                                    <td>Finance</td>
-                                    <td>Excel</td>
-                                    <td>Budget_2025.xlsx</td>
-                                    <td><a href="./Test/ass.jpg" download="Sauce.jpg"
-                                            class="btn btn-primary">Download</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                
             </div>
-            <div id="records" class="tab-pane fade">
 
-                <!-- Placeholder for future content -->
-                <div class="content-header p-3 bg-light">
-                    <h5><b>Track Work Evaluation</b></h5>
-                </div>
-
-                <!-- Work Evaluation Table -->
-                <div class="container p-3">
-                    <div class="evaluation-container p-3" style="background-color: #b0b0b0; border-radius: 10px;">
-                        <form id="evaluationForm">
-                            <table class="table table-bordered text-center">
-                                <thead>
-                                    <tr class="bg-secondary text-white">
-                                        <th colspan="4">Performance Standards</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Criteria</th>
-                                        <th>Poor</th>
-                                        <th>Good</th>
-                                        <th>Great</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Row Template -->
-                                    <tr>
-                                        <td>Work quality</td>
-                                        <td><input type="radio" name="work_quality" value="Poor"></td>
-                                        <td><input type="radio" name="work_quality" value="Good"></td>
-                                        <td><input type="radio" name="work_quality" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Work autonomy</td>
-                                        <td><input type="radio" name="work_autonomy" value="Poor"></td>
-                                        <td><input type="radio" name="work_autonomy" value="Good"></td>
-                                        <td><input type="radio" name="work_autonomy" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Shows initiative</td>
-                                        <td><input type="radio" name="shows_initiative" value="Poor"></td>
-                                        <td><input type="radio" name="shows_initiative" value="Good"></td>
-                                        <td><input type="radio" name="shows_initiative" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Productivity</td>
-                                        <td><input type="radio" name="productivity" value="Poor"></td>
-                                        <td><input type="radio" name="productivity" value="Good"></td>
-                                        <td><input type="radio" name="productivity" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Integrity</td>
-                                        <td><input type="radio" name="integrity" value="Poor"></td>
-                                        <td><input type="radio" name="integrity" value="Good"></td>
-                                        <td><input type="radio" name="integrity" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Technical Skills</td>
-                                        <td><input type="radio" name="technical_skills" value="Poor"></td>
-                                        <td><input type="radio" name="technical_skills" value="Good"></td>
-                                        <td><input type="radio" name="technical_skills" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Creativity</td>
-                                        <td><input type="radio" name="creativity" value="Poor"></td>
-                                        <td><input type="radio" name="creativity" value="Good"></td>
-                                        <td><input type="radio" name="creativity" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Attendance</td>
-                                        <td><input type="radio" name="attendance" value="Poor"></td>
-                                        <td><input type="radio" name="attendance" value="Good"></td>
-                                        <td><input type="radio" name="attendance" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Teamwork</td>
-                                        <td><input type="radio" name="teamwork" value="Poor"></td>
-                                        <td><input type="radio" name="teamwork" value="Good"></td>
-                                        <td><input type="radio" name="teamwork" value="Great"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <!-- Submit Button -->
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Submit Evaluation</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+           
             <div id="leave" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
                     <h4 class="mb-3"><b>Leave Request Form</b></h4>
@@ -394,51 +273,48 @@
             </div>
         </div>
 
-
-
-        <!-- <div id="profileModal" class="profile-modal">
+        <!-- SAMPLE CONTENT MAKE DYNAMIC SOON -->
+        <div id="profileModal" class="profile-modal">
             <div class="profile-content">
                 <span class="close-btn">&larr;</span>
                 <div class="profile-header">
                     <img src="./images/juoross.jpg" alt="Profile Picture" class="profile-img">
-                    <h3>Employee ID</h3>
-                    <p>Joined in mm/dd/yyyy</p>
+                    <h3>Employee ID: 696969</h3>
+                    <p>Joined in 01/01/2025</p>
                 </div>
 
                 <div class="profile-info">
-                    <p><strong>First Name:</strong> John</p>
-                    <p><strong>Last Name:</strong> Doe</p>
+                    <p><strong>First Name:</strong> Juoross Phillip</p>
+                    <p><strong>Last Name:</strong> Jose</p>
                     <p><strong>Phone/Cellphone Number:</strong> 123-456-7890</p>
-                    <p><strong>Birthdate:</strong> mm/dd/yyyy</p>
-                    <p><strong>Status:</strong> Active</p>
+                    <p><strong>Birthdate:</strong> 06/06/2006</p>
+                    <p><strong>Role:</strong> Janitor</p>
                     <div class="password-section">
                         <label><strong>Password:</strong></label>
-                        <input type="password" value="password123" disabled>
+                        <input type="password" value="1234" id="mainPassword" disabled>
                         <a href="#" id="changePasswordLink">Change password?</a>
                     </div>
                 </div>
             </div>
         </div>
 
-
-       
         <div id="passwordModal" class="profile-modal">
             <div class="profile-content">
                 <span class="close-btn" id="closePasswordModal">&larr;</span>
                 <h4 class="text-center">Change Password</h4>
 
                 <div class="password-container">
-                    <input type="password" id="currentPassword" placeholder="Current Password">
-                    <input type="password" id="newPassword" placeholder="New Password">
-                    <input type="password" id="confirmPassword" placeholder="Confirm Password">
-                    <button id="savePassword" class="btn btn-success">Save Password</button>
+                    <form action="">
+                        <input type="password" id="currentPassword" placeholder="Current Password">
+                        <input type="password" id="newPassword" placeholder="New Password">
+                        <input type="password" id="confirmPassword" placeholder="Confirm Password">
+                        <button id="savePassword" type="submit" class="btn btn-success">Save Password</button>
+                    </form>
                 </div>
             </div>
-        </div> -->
-
+        </div>
 
     </section>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

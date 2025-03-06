@@ -122,7 +122,14 @@ document.querySelectorAll('.nav-link, .dropdown-item').forEach(item => {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
+let profileModal = document.getElementById("profileModal");
+let passwordModal = document.getElementById("passwordModal");
+let profileIcon = document.querySelector(".account-icon");
+let closeProfileModal = document.querySelector(".close-btn");
+let changePasswordLink = document.getElementById("changePasswordLink");
+let closePasswordModal = document.getElementById("closePasswordModal");
+
+document.addEventListener("DOMContentLoaded", function (event) {
 
     // Show Review Superior tab when button is clicked
     document.getElementById("reviewSuperiorBtn").addEventListener("click", function () {
@@ -135,13 +142,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".tab-pane").forEach(tab => tab.classList.remove("show", "active"));
         document.getElementById("feedback").classList.add("show", "active");
     });
-
-    let profileModal = document.getElementById("profileModal");
-    let passwordModal = document.getElementById("passwordModal");
-    let profileIcon = document.querySelector(".account-icon");
-    let closeProfileModal = document.querySelector(".close-btn");
-    let changePasswordLink = document.getElementById("changePasswordLink");
-    let closePasswordModal = document.getElementById("closePasswordModal");
 
     profileModal.style.display  = 'none';
     passwordModal.style.display = 'none';
@@ -158,7 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Open Change Password Modal
     changePasswordLink.addEventListener("click", function (event) {
-        event.preventDefault();
         profileModal.style.display = "none";
         passwordModal.style.display = "flex";
     });
@@ -166,32 +165,38 @@ document.addEventListener("DOMContentLoaded", function () {
     // Close Change Password Modal
     closePasswordModal.addEventListener("click", function () {
         passwordModal.style.display = "none";
+        profileModal.style.display = "flex";
     });
+    
 
-    // Close modals when clicking outside
-    window.addEventListener("click", function (event) {
-        if (event.target === profileModal) {
-            profileModal.style.display = "none";
-        }
-        if (event.target === passwordModal) {
-            passwordModal.style.display = "none";
-        }
-    });
+});
 
+
+document.getElementById("savePassword").addEventListener("submit", function(event) {
+
+    event.preventDefault(); 
+
+    let mainPassField = document.getElementById("mainPassword");
+    let currentPassField = document.getElementById("currentPassword");
+    let newPassField = document.getElementById("newPassword");
+    let confirmPassField = document.getElementById("confirmPassword");
+
+    if (mainPassField.value === currentPassField.value && newPassField.value === confirmPassField.value) {
+        mainPassField.value = newPassField.value;
+        console.log(mainPassField.value)
+        alert("Passwords changed");
+        passwordModal.style.display = "none";
+        profileModal.style.display = "flex";
+    } 
+
+    else {
+        currentPassField.value = "";
+        newPassField.value = "";
+        currentPassField = "";
+        alert("Passwords don't match. Please try again.");
+    }
 
 });
 
 
 
-/* function loadContent(page) {
-
-    let pageTitle = document.getElementById("pageTitle");
-
-    let pages = {
-        'announcement': `<b>Announcement</b>`,
-        'leave': `<b>Leave/b>`,
-    };
-
-   pageTitle.innerHTML = ``;
-   pageTitle.innerHTML = pages[page] || `<h2>Page Not Found</h2><p>Sorry, the requested content is unavailable.</p>`; 
-} */
