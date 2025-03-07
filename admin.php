@@ -134,21 +134,66 @@
                             <button>Add profile picture</button>
                         </div>
 
-                        <input type="text" placeholder="Employee ID" required>
-                        <input type="text" placeholder="Phone/Cellphone Number" required>
-                        <input type="text" placeholder="Role" required>
+                        <form method="POST">
+                        <input type="text" name = "emp_id_add" placeholder="Employee ID" required>
+                        <input type="text" name = "emp_phoneNum_add" placeholder="Phone/Cellphone Number" required>
+                        <input type="text" name = "emp_role_add" placeholder="Role" required>
                         <input type="text" placeholder="Department" required>
 
                         <div class="employee-name-fields">
-                            <input type="text" placeholder="First Name" required>
-                            <input type="text" placeholder="Last Name" required>
+                            <input type="text" name = "emp_fname_add" placeholder="First Name" required>
+                            <input type="text" name = "emp_lname_add" placeholder="Last Name" required>
                         </div>
 
-                        Birthdate: <input type="date" placeholder="Birthdate" required>
-                        <button class="btn btn-success">Add Employee</button>
+                        Birthdate: <input type="date" name = "emp_bday_add" placeholder="Birthdate" required>
+                        <button class="btn btn-success" name = "add_employee">Add Employee</button>
+                        </form>
                     </div>
                 </div>
             </div>
+
+            <?php 
+                $host = "34.92.138.155"; 
+                $user = "root2"; 
+                $pass = "O1Bf>i:9/v&kA-@i"; 
+                $db = "web2proj"; 
+                
+                $conn = new mysqli($host, $user, $pass, $db);
+
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+
+                if(isset($_POST['add_employee'])){
+                    $emp_id_add = $_POST['emp_id_add'];
+                    $emp_phoneNum_add = $_POST['emp_phoneNum_add'];
+                    $emp_role_add = $_POST['emp_role_add'];
+                    $emp_fname_add = $_POST['emp_fname_add'];
+                    $emp_lname_add = $_POST['emp_lname_add'];
+                    $emp_bday_add = $_POST['emp_bday_add'];
+                    $emp_pass_add = "vivanetninjas"; //hardcoded for now since the user will need to change it
+                    $emp_joined_add = date("Y-m-d"); //records the day today
+
+                    $sql_add = "INSERT INTO employee (EMP_ID, EMP_PASS, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_PHONENUM, EMP_BIRTH, EMP_JOINED)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                    
+                    $emp_adding = $conn->prepare($sql_add);
+                    $emp_adding->bind_param("isssssss", $emp_id_add, $emp_pass_add, $emp_fname_add, $emp_lname_add, $emp_role_add, $emp_phoneNum_add, $emp_bday_add, $emp_joined_add);
+
+                    if ($emp_adding->execute()) {
+                        echo "<script>alert('Employee added successfully!');</script>";
+                    } else {
+                        echo "<script>alert('Error: " . $emp_adding->error . "');</script>";
+                    }
+
+                    $emp_adding->close();
+                }
+
+                $conn->close();
+
+
+
+            ?>
 
             <!-- Edit Employee Modal. It must already have content-->
             <div id="employeeEditModal" class="employeeEdit-modal">
