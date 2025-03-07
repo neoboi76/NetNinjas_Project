@@ -250,22 +250,22 @@
                     <div class="list-group">
                         <a href="#"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>$3,000 was deposited for January 2024</b>
+                            <b>₱100,000.00 was deposited for January 2024</b>
                             <span class="badge bg-secondary">01/31/2024</span>
                         </a>
                         <a href="#"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>$3,200 was deposited for February 2024</b>
+                            <b>₱80,000.00 was deposited for February 2024</b>
                             <span class="badge bg-secondary">02/29/2024</span>
                         </a>
                         <a href="#"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>$3,500 was deposited for March 2024</b>
+                            <b>₱120,000.00 was deposited for March 2024</b>
                             <span class="badge bg-secondary">03/31/2024</span>
                         </a>
                         <a href="#"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>$3,600 was deposited for April 2024</b>
+                            <b>₱50,000.00 was deposited for April 2024</b>
                             <span class="badge bg-secondary">04/30/2024</span>
                         </a>
                     </div>

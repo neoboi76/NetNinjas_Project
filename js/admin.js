@@ -178,20 +178,9 @@ let closePasswordModal = document.getElementById("closePasswordModal");
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
-    // Show Review Superior tab when button is clicked
-    document.getElementById("reviewSuperiorBtn").addEventListener("click", function () {
-        document.querySelectorAll(".tab-pane").forEach(tab => tab.classList.remove("show", "active"));
-        document.getElementById("reviewSuperior").classList.add("show", "active");
-    });
-
-    // Back button to return to Feedback page
-    document.getElementById("backToFeedbackBtn").addEventListener("click", function () {
-        document.querySelectorAll(".tab-pane").forEach(tab => tab.classList.remove("show", "active"));
-        document.getElementById("feedback").classList.add("show", "active");
-    });
-
-    profileModal.style.display  = 'none';
-    passwordModal.style.display = 'none';
+    event.preventDefault(); 
+    profileModal.style.display = "none";
+    passwordModal.style.display = "none";
 
     // Open Profile Modal
     profileIcon.addEventListener("click", function () {
@@ -217,6 +206,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     
 
 });
+
+
 
 
 document.getElementById("savePassword").addEventListener("submit", function(event) {
@@ -417,6 +408,162 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const leaveRequests = [
+        { id: 696969, employee: "Juoross Phillip Jose", date: "March 7, 2025", reason: "May date po ako sa sogo. Pasok ako sa lunes. Salamat ssob. Peace out!" },
+        { id: 222222, employee: "Jane Smith", date: "March 12, 2025", reason: "Attending a family event out of town." },
+        { id: 333333, employee: "David Johnson", date: "March 15, 2025", reason: "Taking a personal day to rest and recharge." },
+        { id: 444444, employee: "Emily Brown", date: "March 20, 2025", reason: "Need to handle some urgent personal matters." }
+    ];
 
+    const leaveRequestsContainer = document.getElementById("leaveRequests");
+
+    function renderRequests() {
+        leaveRequestsContainer.innerHTML = "";
+        leaveRequests.forEach(request => {
+           /*  const employeeId = getRandomEmployeeId(); */
+            const requestDiv = document.createElement("div");
+            requestDiv.classList.add("leave-request");
+            requestDiv.dataset.id = request.id;
+            requestDiv.innerHTML = `
+                <p><strong>${request.employee} (ID: ${request.id})</strong></p>
+                <p><strong>Date:</strong> ${request.date}</p>
+                <p>${request.reason}</p>
+                <div>
+                    <button class="approve-btn">✅</button>
+                    <button class="deny-btn">➖</button>
+                </div>
+            `;
+            leaveRequestsContainer.appendChild(requestDiv);
+        });
+    }
+
+    leaveRequestsContainer.addEventListener("click", function (event) {
+        if (event.target.classList.contains("approve-btn") || event.target.classList.contains("deny-btn")) {
+            event.target.closest(".leave-request").remove();
+        }
+    });
+
+    renderRequests();
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const feedbackRequests = [
+        { from: "100234", to: "100567", date: "03/07/2025", feedback: "Great team player, always helpful." },
+        { from: "100789", to: "100432", date: "03/05/2025", feedback: "Consistently meets deadlines with quality work." },
+        { from: "100321", to: "100654", date: "03/03/2025", feedback: "Shows strong leadership skills in projects." }
+    ];
+
+    const feedbackContainer = document.getElementById("feedback");
+
+    function renderFeedback() {
+        feedbackContainer.innerHTML = "";
+        feedbackRequests.forEach(request => {
+            const feedbackDiv = document.createElement("div");
+            feedbackDiv.classList.add("feedback-request");
+            feedbackDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 5px;">
+                    <span><strong>Feedback by:</strong> ${request.from}</span>
+                    <span><strong>For:</strong> ${request.to}</span>
+                    <span><strong>Posted:</strong> ${request.date}</span>
+                </div>
+                <div>
+                    ${request.feedback}
+                </div>
+            `;
+            feedbackContainer.appendChild(feedbackDiv);
+        });
+    }
+
+
+    renderFeedback();
+});
+
+document.addEventListener("DOMContentLoaded", function (event) {
+
+    event.preventDefault();
+
+    const createInvoiceBtn = document.getElementById("createInvoiceBtn");
+    const changeSalaryBtn = document.getElementById("changeSalaryBtn");
+    const salaryList = document.getElementById("salaryList");
+
+    const modal = document.getElementById("invoiceModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalEmployeeId = document.getElementById("modalEmployeeId");
+    const modalSalary = document.getElementById("modalSalary");
+    const modalDate = document.getElementById("modalDate");
+    const saveInvoiceBtn = document.getElementById("saveInvoiceBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    let editingInvoice = null; // Track which invoice is being edited
+
+    // Open modal for new invoice
+    createInvoiceBtn.addEventListener("click", function () {
+        modalTitle.innerText = "Create Invoice";
+        modalEmployeeId.value = "";
+        modalSalary.value = "";
+        modalDate.value = "";
+        editingInvoice = null;
+        modal.style.display = "flex";
+    });
+
+    // Save new invoice or update an existing one
+    saveInvoiceBtn.addEventListener("click", function () {
+        const employeeId = modalEmployeeId.value.trim();
+        const salary = modalSalary.value.trim();
+        const date = modalDate.value;
+
+        if (!employeeId || !salary || !date) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        if (editingInvoice) {
+            // Update existing invoice
+            editingInvoice.innerHTML = `
+                <span><b>${employeeId}</b> - $${salary} - <b>${date}</b></span>
+            `;
+            editingInvoice.dataset.employeeId = employeeId;
+            editingInvoice.dataset.salary = salary;
+            editingInvoice.dataset.date = date;
+        } else {
+            // Create new invoice entry
+            const salaryItem = document.createElement("div");
+            salaryItem.classList.add("salary-item");
+            salaryItem.dataset.employeeId = employeeId;
+            salaryItem.dataset.salary = salary;
+            salaryItem.dataset.date = date;
+
+            salaryItem.innerHTML = `
+                <span><strong>Employee ID:</strong>${employeeId}</span> <br>
+                <span><strong>Salary:</strong> ₱${salary}</span> <br>
+                <span><strong>Date:</strong> ${date}</span>
+            `;
+
+            salaryList.appendChild(salaryItem);
+        }
+
+        modal.style.display = "none";
+    });
+
+    // Close modal
+    closeModalBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    // Open modal for editing existing invoice
+    salaryList.addEventListener("click", function (event) {
+        const selectedInvoice = event.target.closest(".salary-item");
+        if (selectedInvoice) {
+            modalTitle.innerText = "Edit Invoice";
+            modalEmployeeId.value = selectedInvoice.dataset.employeeId;
+            modalSalary.value = selectedInvoice.dataset.salary;
+            modalDate.value = selectedInvoice.dataset.date;
+            editingInvoice = selectedInvoice;
+            modal.style.display = "flex";
+        }
+    });
+});
 
 

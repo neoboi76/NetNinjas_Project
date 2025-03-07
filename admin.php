@@ -310,130 +310,72 @@
             </div>
         </div>
 
-
         <div id="leave" class="tab-pane fade">
-            <div class="container p-4 bg-light rounded">
-                <h4 class="mb-3"><b>Leave Request Form</b></h4>
-
-                <form>
-                    <!-- Reason Field -->
-                    <div class="mb-3">
-                        <label for="reason" class="form-label">Reason</label>
-                        <textarea id="reason" class="form-control" rows="3" placeholder="Enter your reason"></textarea>
-                    </div>
-
-                    <!-- Description Field -->
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea id="description" class="form-control" rows="3"
-                            placeholder="Provide additional details"></textarea>
-                    </div>
-
-                    <div class="row">
-                        <!-- Date of Leave -->
-                        <div class="col-md-6">
-                            <label for="dateLeave" class="form-label">Date of Leave</label>
-                            <input type="date" id="dateLeave" class="form-control">
-                        </div>
-
-                        <!-- Date of Return -->
-                        <div class="col-md-6">
-                            <label for="dateReturn" class="form-label">Date of Return</label>
-                            <input type="date" id="dateReturn" class="form-control">
-                        </div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="mt-3 text-center">
-                        <button type="submit" class="btn btn-primary w-10">Submit</button>
-                    </div>
-                </form>
-            </div>
+            <div id="leaveRequests"></div>
         </div>
+
+
         <div id="feedback" class="tab-pane fade">
-            <div class="container p-4 bg-light rounded">
 
-                <!-- Feedback Viewing Section -->
-                <div class="list-group">
-                    <div class="list-group-item">
-                        <h6 class="mb-1"><b>From: Maylyn Bautista (Manager)</b></h6>
-                        <p class="mb-1">Heneraaaaaaal! Nangopya ka nanaman! Masisingko ka nanaman ulit saken. Hay
-                            jusko, lagi nalang, di ka na ba nasasawa saaken?</p>
-                        <small class="text-muted">Received on: 02/15/2024</small>
-                    </div>
-                    <div class="list-group-item">
-                        <h6 class="mb-1"><b>From: Dr. William Rey (HR)</b></h6>
-                        <p class="mb-1">Mr. Jose, can you give me a good reason why not to terminate you right now?
-                            Your co-worker [Redacted] filed a complaint of sexual assualt, citing that you
-                            "touched my private parts during our break". What do you have to say for yourself?</p>
-                        <small class="text-muted">Received on: 01/10/2024</small>
-                    </div>
-                </div>
-
-                <!-- Review Superior Button -->
-                <div class="text-center mt-4">
-                    <button id="reviewSuperiorBtn" class="btn btn-primary">Review Superior</button>
-
-                </div>
-            </div>
         </div>
-
-        <div id="reviewSuperior" class="tab-pane fade">
-            <div class="container p-4 bg-light rounded">
-                <h4 class="mb-3 text-center"><b>Review Your Direct Superior (Maylyn Bautista)</b></h4>
-                <!-- Make the name of the superior dynamic.-->
-
-                <form>
-                    <div class="mb-3">
-                        <label for="superiorFeedback" class="form-label">Your Feedback</label>
-                        <textarea class="form-control" id="superiorFeedback" rows="4"
-                            placeholder="Write your feedback here..."></textarea>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-success">Submit Feedback</button>
-                    </div>
-                </form>
-
-                <!-- Back Button -->
-                <div class="text-center mt-3">
-                    <button id="backToFeedbackBtn" class="btn btn-secondary">Back</button>
-                </div>
-            </div>
-        </div>
-
 
         <!-- SAMPLE CONTENT MAKE DYNAMIC SOON -->
 
         <div id="salary" class="tab-pane fade">
-            <div class="container p-4 bg-light rounded">
-                <h4 class="mb-3 text-center"><b>Invoices</b></h4>
+            <div class="salary-container">
+                <button id="createInvoiceBtn" class="btn btn-primary create-invoice">Create Invoice</button>
+            </div>
 
-                <!-- Salary Deposit Entries -->
-                <div class="list-group">
-                    <a href="#"
-                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <b>$3,000 was deposited for January 2024</b>
-                        <span class="badge bg-secondary">01/31/2024</span>
-                    </a>
-                    <a href="#"
-                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <b>$3,200 was deposited for February 2024</b>
-                        <span class="badge bg-secondary">02/29/2024</span>
-                    </a>
-                    <a href="#"
-                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <b>$3,500 was deposited for March 2024</b>
-                        <span class="badge bg-secondary">03/31/2024</span>
-                    </a>
-                    <a href="#"
-                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <b>$3,600 was deposited for April 2024</b>
-                        <span class="badge bg-secondary">04/30/2024</span>
-                    </a>
+            <div id="salaryList" class="salary-list">
+                <div class="salary-item">
+                    <span><strong>Employee ID:</strong> 111111</span> <br>
+                    <span><strong>Salary:</strong> ₱5,000.00</span> <br>
+                    <span><strong>Date:</strong> 03/01/2025</span>
+                </div>
+
+                <div class="salary-item">
+                    <span><strong>Employee ID:</strong> 222222</span> <br>
+                    <span><strong>Salary:</strong> ₱6,200.00</span> <br>
+                    <span><strong>Date:</strong> 03/01/2025</span>
+                </div>
+
+                <div class="salary-item">
+                    <span><strong>Employee ID:</strong> 333333</span> <br>
+                    <span><strong>Salary:</strong> ₱4,500</span> <br>
+                    <span><strong>Date:</strong> 02/25/2025</span>
+                </div>
+
+                <div class="salary-item">
+                    <span><strong>Employee ID:</strong> 444444</span> <br>
+                    <span><strong>Salary:</strong> ₱7,000.00</span> <br>
+                    <span><strong>Date:</strong> 02/20/2025</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Invoice Popup Modal -->
+        <div id="invoiceModal" class="modal">
+            <div class="modal-content">
+                <h2 id="modalTitle"></h2>
+                <label>Employee ID:</label>
+                <input type="text" id="modalEmployeeId">
+
+                <label>Salary:</label>
+                <input type="number" id="modalSalary">
+
+                <label>Date:</label>
+                <input type="date" id="modalDate">
+
+                <div class="modal-buttons">
+                    <button type="submit" id="saveInvoiceBtn" style="background-color: green"
+                        class="btn btn-primary">Save</button>
+                    <button id="closeModalBtn" style="background-color: red"
+                        class="btn btn-primary close">Cancel</button>
                 </div>
             </div>
         </div>
-        </div>
+
 
         <!-- SAMPLE CONTENT MAKE DYNAMIC SOON -->
         <div id="profileModal" class="profile-modal">
