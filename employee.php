@@ -1,3 +1,8 @@
+<?php
+// Include the file that fetches the employee details
+include('getempdetail.php'); // or use require()
+?>
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -38,9 +43,14 @@
 
     <section class="sidebar">
         <img src="./images/juoross.jpg" class="img-thumbnail" style="contain: cover; width: 120px; height: 120px;">
+        <!--
         <p>Employee ID: <b> 696969</b></p>
         <p>First Name: <b>Juoross Phillip</b></p>
         <p>Last Name: <b>Jose</b></p>
+        -->
+        <p>Employee ID: <b><?php echo $employee['EMP_ID']; ?></b></p>
+        <p>First Name: <b><?php echo $employee['EMP_FNAME']; ?></b></p>
+        <p>Last Name: <b><?php echo $employee['EMP_LNAME']; ?></b></p>
         <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link" id="announcement1" href="#announcement"
                     data-bs-toggle="tab">Announcement</a></li>
@@ -254,8 +264,6 @@
 
 
             <div id="records" class="tab-pane fade">
-
-
 
 
 
@@ -577,19 +585,19 @@
                 <span class="close-btn">&larr;</span>
                 <div class="profile-header">
                     <img src="./images/juoross.jpg" alt="Profile Picture" class="profile-img">
-                    <h3>Employee ID: 696969</h3>
-                    <p>Joined in 01/01/2025</p>
+                    <h3>Employee ID: <?php echo $employee['EMP_ID']; ?></h3>
+                    <p>Joined in <?php echo $employee['EMP_JOINED']; ?></p>
                 </div>
 
                 <div class="profile-info">
-                    <p><strong>First Name:</strong> Juoross Phillip</p>
-                    <p><strong>Last Name:</strong> Jose</p>
-                    <p><strong>Phone/Cellphone Number:</strong> 123-456-7890</p>
-                    <p><strong>Birthdate:</strong> 06/06/2006</p>
-                    <p><strong>Role:</strong> Janitor</p>
+                    <p><strong>First Name:</strong> <?php echo $employee['EMP_FNAME']; ?></p>
+                    <p><strong>Last Name:</strong> <?php echo $employee['EMP_LNAME']; ?></p>
+                    <p><strong>Phone/Cellphone Number:</strong> <?php echo $employee['EMP_PHONENUM']; ?></p>
+                    <p><strong>Birthdate:</strong> <?php echo $employee['EMP_BIRTH']; ?></p>
+                    <p><strong>Role:</strong> <?php echo $employee['EMP_POS']; ?></p>
                     <div class="password-section">
                         <label><strong>Password:</strong></label>
-                        <input type="password" value="1234" id="mainPassword" disabled>
+                        <input type="password" value="<?php echo $employee['EMP_PASS']; ?>" id="mainPassword" disabled>
                         <a href="#" id="changePasswordLink">Change password?</a>
                     </div>
                 </div>
@@ -614,6 +622,7 @@
 
     </section>
 
+    <script src="js\savepassword.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
