@@ -515,6 +515,7 @@
                     <button class="custom-btn" id="viewDocumentsBtn">View Documents</button>
                 </div>
                 <div class="content-box mt-3">
+                    <!-- EMPLOYEE REPORTS -->
                     <div id="empReports" class="tab-pane fade">
                         <div class="reports-container">
                             <div class="report-list">
@@ -568,6 +569,56 @@
                                 </div>
                                 -->
                             </div>
+                        </div>
+                    </div>
+                    <!-- UPLOADED DOCUMENTS -->
+                    <div id="empDocuments" class="tab-pane fade d-none">
+                            <div class="d-flex justify-content-between mb-3">
+                                <input type="file" id="fileInput" class="form-control w-50">
+                                <button id="addDocumentBtn" class="btn btn-success">Add Document</button>
+                            </div>
+                        </form>
+                        <div class="table-responsive">
+                            <table class="table table-bordered p-3" id="documentsTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Department</th>
+                                        <th>File Type</th>
+                                        <th>File Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                        include 'connection.php';
+
+                                        $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
+                                        $stmt = $conn->prepare($sql_fetch_feedback);
+
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) { ?>
+                                                <tr>
+                                                    <td><?php echo $row['F_DATE']; ?></td>
+                                                    <td><?php echo $row['F_DEPT']; ?></td>
+                                                    <td><?php echo $row['F_TYPE']; ?></td>
+                                                    <td><?php echo $row['F_NAME']; ?></td>
+                                                    <td><a href="<?php echo $row['F_PATH']; ?>" download="<?php echo $row['F_NAME']; ?>"
+                                                            class="btn btn-primary">Download</a> <button class="btn btn-danger remove-btn">Remove</button></td>
+                                                </tr>
+                                            <?php }
+                                        } else {
+                                            echo "<p>No feedback records found.</p>";
+                                        }
+                                        
+                                        $stmt->close();
+                                        $conn->close();
+                                    ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const viewReportsBtn = document.getElementById("viewReportsBtn");
     
     const empReportsTab = document.getElementById("empReports");
-    //const documentsTab = document.getElementById("documents");
+    const documentsTab = document.getElementById("empDocuments");
     //const empDocumentsTab = document.getElementById("empDocuments");
 
     viewDocumentsBtn.addEventListener("click", function () {
@@ -344,7 +344,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     viewReportsBtn.addEventListener("click", function () {
         // Hide the 'documents' tab
-        //documentsTab.classList.add("d-none");
+        documentsTab.classList.add("d-none");
 
         //console.log("empReportsTab:", empReportsTab);
         //console.log("classList:", empReportsTab.classList);

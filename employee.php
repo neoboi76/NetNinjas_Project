@@ -109,8 +109,45 @@ include('getempdetail.php'); // or use require()
             <div id="caseReport" class="tab-pane fade">
                 <div class="container-fluid p-3">
                     <!-- Placeholder for Future Content -->
-                    <div class="content-box p-3 text-center">
-                        <p>No Case Reports</p>
+                    <div class="content-box text-center d-flex">
+                        <div id="assignedCases" class="tab-pane p-2 bg-light rounded">
+                            <div class="assignedCases-list">
+                                <?php 
+                                    include 'connection.php';
+
+                                    // Assuming the logged-in employee's ID is stored in a session variable, for example:
+                                    $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
+
+                                    // Fetch evaluations for the logged-in employee only
+                                    $sql_fetch_feedback = "SELECT * FROM cases WHERE EMP_ID_FK_CASE = ? ORDER BY CASE_DATE DESC";
+                                    $stmt = $conn->prepare($sql_fetch_feedback);
+                                    $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
+
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) { ?>
+                                            <div class="assignedCases-item">
+                                                <div class="assignedCases-header">
+                                                    <span><strong>ID:</strong> <?php echo $row['CASE_ID']; ?></span>
+                                                    <span><strong>Subject:</strong> <?php echo $row['CASE_SUBJ']; ?></span>
+                                                    <span><strong>Issued:</strong> <?php echo $row['CASE_DATE']; ?></span>
+                                                </div>
+                                                <div class="assignedCases-text">
+                                                   <span><?php echo $row['CASE_DESC']; ?></span>
+                                                </div>
+                                            </div>
+                                        <?php }
+                                    } else {
+                                        echo "<p>No feedback records found.</p>";
+                                    }
+                                    
+                                    $stmt->close();
+                                    $conn->close();
+                                ?>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Case Report Form -->

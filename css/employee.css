@@ -151,6 +151,50 @@ body {
     overflow-y: auto;
 }
 
+/*ASSIGNED CASES  STUFF*/
+.assignedCases-list {
+    background: #ffffff; /* White background */
+    padding: 10px;
+    border-radius: 3px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    max-height: 200px; /* Set the maximum height you want for the container */
+    overflow-y: auto; /* Allow vertical scrolling */
+    padding-right: 10px; /* Optional, add space for the scrollbar */
+    width: 100%;
+}
+
+/* Each assigned case item */
+#assignedCases {
+    width: 100%;
+}
+.assignedCases-item {
+    display: flex;
+    flex-direction: column;
+    background: #f4f4f4; /* Light gray background */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd; /* Subtle border */
+}
+
+.assignedCases-header {
+    display: flex;
+    justify-content: space-between; /* Spaces out elements */
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Feedback text in a separate row */
+.assignedCases-text {
+    display:flex;
+    justify-content: left;
+    font-size: 20px;
+    color: #555;
+    margin-top: 5px;
+}
+
+
 /*FEED BACK STUFF*/
 .feedback-list {
     background: #ffffff; /* White background */
