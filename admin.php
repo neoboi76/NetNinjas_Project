@@ -624,13 +624,17 @@
                     <?php 
                         include 'connection.php';
 
-                        $sql_fetch_salaries = "SELECT * FROM payroll ORDER BY P_DATE DESC";
+                         // Modify the SQL query to join the payroll and employee tables, similar to your provided structure
+                        $sql_fetch_salaries = "SELECT payroll.P_AMT, payroll.P_DATE, payroll.EMP_ID_FK_PAY, e.EMP_FNAME, e.EMP_LNAME
+                                                FROM payroll
+                                                LEFT JOIN employee e ON payroll.EMP_ID_FK_PAY = e.EMP_ID
+                                                ORDER BY payroll.P_DATE DESC";
                         $result = $conn->query($sql_fetch_salaries);
 
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) { ?>
                                 <div class="salary-item">
-                                    <span><strong>Employee ID:</strong> <?php echo $row['EMP_ID']; ?></span> <br>
+                                    <span><strong>Employee ID:</strong> <?php echo $row['EMP_ID_FK_PAY'] . " (" . $row['EMP_FNAME'] . " " . $row['EMP_LNAME'] . ")"; ?></span> <br>
                                     <span><strong>Salary:</strong> ₱<?php echo number_format($row['P_AMT'], 2); ?></span> <br>
                                     <span><strong>Date:</strong> <?php echo $row['P_DATE']; ?></span>
                                 </div>
