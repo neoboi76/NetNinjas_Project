@@ -208,8 +208,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 
-
-
 document.getElementById("savePassword").addEventListener("submit", function(event) {
 
     event.preventDefault(); 
@@ -449,45 +447,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 document.addEventListener("DOMContentLoaded", function () {
+    const feedbackList = document.getElementById("feedback");
+
+    /*
     const feedbackRequests = [
         { from: "100234", to: "100567", date: "03/07/2025", feedback: "Great team player, always helpful." },
         { from: "100789", to: "100432", date: "03/05/2025", feedback: "Consistently meets deadlines with quality work." },
         { from: "100321", to: "100654", date: "03/03/2025", feedback: "Shows strong leadership skills in projects." }
     ];
+    */
 
-    const feedbackContainer = document.getElementById("feedback");
-
-    function renderFeedback() {
-        feedbackContainer.innerHTML = "";
+    if (feedbackRequests.length > 0) {
         feedbackRequests.forEach(request => {
-            const feedbackDiv = document.createElement("div");
-            feedbackDiv.classList.add("feedback-request");
-            feedbackDiv.innerHTML = `
-                <div style="display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 5px;">
-                    <span><strong>Feedback by:</strong> ${request.from}</span>
-                    <span><strong>For:</strong> ${request.to}</span>
-                    <span><strong>Posted:</strong> ${request.date}</span>
-                </div>
-                <div>
-                    ${request.feedback}
-                </div>
+            const feedbackItem = document.createElement("div");
+            feedbackItem.classList.add("feedback-item");
+
+            feedbackItem.innerHTML = `
+                <span><strong>Feedback by:</strong> ${request.from}</span>
+                <span><strong>For:</strong> ${request.to}</span>
+                <span><strong>Posted:</strong> ${request.date}</span>
+                <div>${request.feedback}</div>
             `;
-            feedbackContainer.appendChild(feedbackDiv);
+
+            feedbackList.appendChild(feedbackItem);
         });
+    } else {
+        feedbackList.innerHTML = "<p>No feedback records found.</p>";
     }
-
-
-    renderFeedback();
 });
 
-document.addEventListener("DOMContentLoaded", function (event) {
-
-    event.preventDefault();
-
+document.addEventListener("DOMContentLoaded", function () {
     const createInvoiceBtn = document.getElementById("createInvoiceBtn");
-    const changeSalaryBtn = document.getElementById("changeSalaryBtn");
     const salaryList = document.getElementById("salaryList");
-
     const modal = document.getElementById("invoiceModal");
     const modalTitle = document.getElementById("modalTitle");
     const modalEmployeeId = document.getElementById("modalEmployeeId");
@@ -498,7 +489,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     let editingInvoice = null; // Track which invoice is being edited
 
-    // Open modal for new invoice
+    // Open modal for creating a new invoice
     createInvoiceBtn.addEventListener("click", function () {
         modalTitle.innerText = "Create Invoice";
         modalEmployeeId.value = "";
@@ -519,32 +510,62 @@ document.addEventListener("DOMContentLoaded", function (event) {
             return;
         }
 
+        const formData = new FormData();
+        formData.append('employeeId', employeeId);
+        formData.append('salary', salary);
+        formData.append('date', date);
+
+        // If editing an invoice
         if (editingInvoice) {
-            // Update existing invoice
-            editingInvoice.innerHTML = `
-                <span><b>${employeeId}</b> - $${salary} - <b>${date}</b></span>
-            `;
-            editingInvoice.dataset.employeeId = employeeId;
-            editingInvoice.dataset.salary = salary;
-            editingInvoice.dataset.date = date;
+            formData.append('invoiceId', editingInvoice.dataset.invoiceId);
+            formData.append('action', 'update');
         } else {
-            // Create new invoice entry
-            const salaryItem = document.createElement("div");
-            salaryItem.classList.add("salary-item");
-            salaryItem.dataset.employeeId = employeeId;
-            salaryItem.dataset.salary = salary;
-            salaryItem.dataset.date = date;
-
-            salaryItem.innerHTML = `
-                <span><strong>Employee ID:</strong>${employeeId}</span> <br>
-                <span><strong>Salary:</strong> ₱${salary}</span> <br>
-                <span><strong>Date:</strong> ${date}</span>
-            `;
-
-            salaryList.appendChild(salaryItem);
+            formData.append('action', 'create');
         }
 
-        modal.style.display = "none";
+        // Send data to the server via AJAX
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'invoice_handler.php', true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    if (editingInvoice) {
+                        // Update the existing invoice item in the DOM
+                        editingInvoice.innerHTML = `
+                            <span><strong>Employee ID:</strong> ${employeeId}</span> <br>
+                            <span><strong>Salary:</strong> ₱${salary}</span> <br>
+                            <span><strong>Date:</strong> ${date}</span>
+                        `;
+                        editingInvoice.dataset.employeeId = employeeId;
+                        editingInvoice.dataset.salary = salary;
+                        editingInvoice.dataset.date = date;
+                    } else {
+                        // Create new invoice item
+                        const salaryItem = document.createElement("div");
+                        salaryItem.classList.add("salary-item");
+                        salaryItem.dataset.invoiceId = response.invoiceId; // Get the new invoice ID from the response
+                        salaryItem.dataset.employeeId = employeeId;
+                        salaryItem.dataset.salary = salary;
+                        salaryItem.dataset.date = date;
+
+                        salaryItem.innerHTML = `
+                            <span><strong>Employee ID:</strong> ${employeeId}</span> <br>
+                            <span><strong>Salary:</strong> ₱${salary}</span> <br>
+                            <span><strong>Date:</strong> ${date}</span>
+                        `;
+
+                        salaryList.appendChild(salaryItem);
+                    }
+                    modal.style.display = "none";
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            } else {
+                alert('An error occurred while saving the invoice.');
+            }
+        };
+        xhr.send(formData);
     });
 
     // Close modal
@@ -552,7 +573,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         modal.style.display = "none";
     });
 
-    // Open modal for editing existing invoice
+    // Open modal for editing an existing invoice
     salaryList.addEventListener("click", function (event) {
         const selectedInvoice = event.target.closest(".salary-item");
         if (selectedInvoice) {
@@ -565,5 +586,3 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }
     });
 });
-
-

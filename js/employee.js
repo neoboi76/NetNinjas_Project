@@ -171,6 +171,63 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const feedbackList = document.getElementById("feedback");
+
+    /*
+    const feedbackRequests = [
+        { from: "100234", to: "100567", date: "03/07/2025", feedback: "Great team player, always helpful." },
+        { from: "100789", to: "100432", date: "03/05/2025", feedback: "Consistently meets deadlines with quality work." },
+        { from: "100321", to: "100654", date: "03/03/2025", feedback: "Shows strong leadership skills in projects." }
+    ];
+    */
+
+    if (feedbackRequests.length > 0) {
+        feedbackRequests.forEach(request => {
+            const feedbackItem = document.createElement("div");
+            feedbackItem.classList.add("feedback-item");
+
+            feedbackItem.innerHTML = `
+                <h6 class="mb-1"><b> ${request.from}</b></h6>
+                <p class="mb-1">${request.feedback}</p>
+                <small class="text-muted">${request.date}</small>
+            `;
+
+            feedbackList.appendChild(feedbackItem);
+        });
+    } else {
+        feedbackList.innerHTML = "<p>No feedback records found.</p>";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const salaryList = document.getElementById("salary");
+
+    if (salaryRequests.length > 0) {
+        salaryRequests.forEach(request => {
+            const salaryItem = document.createElement("div");
+            salaryRequests.classList.add("salary-item");
+
+            /*
+            salaryRequests.innerHTML = `
+                <a href="#"
+                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <b>₱100,000.00 was deposited for January 2024</b>
+                        <span class="badge bg-secondary">01/31/2024</span>
+                </a>
+                <h6 class="mb-1"><b> ${request.from}</b></h6>
+                <p class="mb-1">${request.feedback}</p>
+                <small class="text-muted">${request.date}</small>
+            `;
+            */
+
+            salaryList.appendChild(salaryItem);
+        });
+    } else {
+        salaryList.innerHTML = "<p>No feedback records found.</p>";
+    }
+});
+
 /*
 document.getElementById("savePassword").addEventListener("submit", function(event) {
 

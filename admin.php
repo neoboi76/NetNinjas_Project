@@ -1,3 +1,7 @@
+<?php
+    include('getadmdetail.php');
+?>
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -39,7 +43,7 @@
     <section class="sidebar">
         <img src="./images/profilePlaceholder.png" class="img-thumbnail"
             style="contain: cover; width: 120px; height: 120px;">
-        <p>Admin ID: <b>969696</b></p>
+        <p>Admin ID: <b><?php echo $admin['ADM_ID']; ?></b></p>
         <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link" id="announcement1" href="#announcement"
                     data-bs-toggle="tab">Announcement</a></li>
@@ -546,42 +550,102 @@
 
 
         <div id="feedback" class="tab-pane fade">
+            <div id="feedbackList" class="feedback-list">
+            <?php 
+                include 'connection.php';
 
+                // Assuming the logged-in admin's ID is stored in a session variable, for example:
+                $adminId = $_SESSION['ADM_ID'];  // Replace this with your actual session variable that stores the admin ID
+
+                // Fetch feedback for the logged-in admin only
+                $sql_fetch_feedback = "SELECT * FROM evaluation WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC";
+                $stmt = $conn->prepare($sql_fetch_feedback);
+                $stmt->bind_param("i", $adminId); // Bind the admin ID to the query
+
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) { ?>
+                        <div class="feedback-item">
+                            <div class="feedback-header">
+                                <span><strong>Feedback by:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
+                                <span><strong>For:</strong> <?php echo $row['ADM_ID_FK_EVAL']; ?></span>
+                                <span><strong>Posted:</strong> <?php echo $row['EVAL_DATE']; ?></span><br>
+                            </div>
+                            <div class="feedback-text">
+                                <?php echo $row['EVAL_NOTE']; ?>
+                            </div>
+                        </div>
+                    <?php }
+                } else {
+                    echo "<p>No feedback records found.</p>";
+                }
+                
+                $stmt->close();
+                $conn->close();
+            ?>
+
+                <!--
+                <div class="feedback-item">
+                    <span><strong>Feedback by:</strong> 100234</span> <br>
+                    <span><strong>For:</strong> 100567</span> <br>
+                    <span><strong>Posted:</strong> 03/07/2025</span> <br>
+                    <div>Great team player, always helpful.</div>
+                </div>
+
+                <div class="feedback-item">
+                    <span><strong>Feedback by:</strong> 100789</span> <br>
+                    <span><strong>For:</strong> 100432</span> <br>
+                    <span><strong>Posted:</strong> 03/05/2025</span> <br>
+                    <div>Consistently meets deadlines with quality work.</div>
+                </div>
+
+                <div class="feedback-item">
+                    <span><strong>Feedback by:</strong> 100321</span> <br>
+                    <span><strong>For:</strong> 100654</span> <br>
+                    <span><strong>Posted:</strong> 03/03/2025</span> <br>
+                    <div>Shows strong leadership skills in projects.</div>
+                </div>
+                -->
+            </div>
         </div>
+
 
         <!-- SAMPLE CONTENT MAKE DYNAMIC SOON -->
 
+        <!-- SALARY PORTION -->
         <div id="salary" class="tab-pane fade">
             <div class="salary-container">
                 <button id="createInvoiceBtn" class="btn btn-primary create-invoice">Create Invoice</button>
             </div>
+                <!-- PHP SCRIPT TO DYNAMICALLY LOAD SALARY LISTS -->
+                <div id="salaryList" class="salary-list">
+                    <?php 
+                        include 'connection.php';
 
-            <div id="salaryList" class="salary-list">
-                <div class="salary-item">
-                    <span><strong>Employee ID:</strong> 111111</span> <br>
-                    <span><strong>Salary:</strong> ₱5,000.00</span> <br>
-                    <span><strong>Date:</strong> 03/01/2025</span>
-                </div>
+                         // Modify the SQL query to join the payroll and employee tables, similar to your provided structure
+                        $sql_fetch_salaries = "SELECT payroll.P_AMT, payroll.P_DATE, payroll.EMP_ID_FK_PAY, e.EMP_FNAME, e.EMP_LNAME
+                                                FROM payroll
+                                                LEFT JOIN employee e ON payroll.EMP_ID_FK_PAY = e.EMP_ID
+                                                ORDER BY payroll.P_DATE DESC";
+                        $result = $conn->query($sql_fetch_salaries);
 
-                <div class="salary-item">
-                    <span><strong>Employee ID:</strong> 222222</span> <br>
-                    <span><strong>Salary:</strong> ₱6,200.00</span> <br>
-                    <span><strong>Date:</strong> 03/01/2025</span>
-                </div>
-
-                <div class="salary-item">
-                    <span><strong>Employee ID:</strong> 333333</span> <br>
-                    <span><strong>Salary:</strong> ₱4,500</span> <br>
-                    <span><strong>Date:</strong> 02/25/2025</span>
-                </div>
-
-                <div class="salary-item">
-                    <span><strong>Employee ID:</strong> 444444</span> <br>
-                    <span><strong>Salary:</strong> ₱7,000.00</span> <br>
-                    <span><strong>Date:</strong> 02/20/2025</span>
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) { ?>
+                                <div class="salary-item">
+                                    <span><strong>Employee ID:</strong> <?php echo $row['EMP_ID_FK_PAY'] . " (" . $row['EMP_FNAME'] . " " . $row['EMP_LNAME'] . ")"; ?></span> <br>
+                                    <span><strong>Salary:</strong> ₱<?php echo number_format($row['P_AMT'], 2); ?></span> <br>
+                                    <span><strong>Date:</strong> <?php echo $row['P_DATE']; ?></span>
+                                </div>
+                            <?php }
+                        } else {
+                            echo "<p>No salary records found.</p>";
+                        }
+                        $conn->close();
+                    ?>
                 </div>
             </div>
-
         </div>
 
         <!-- Invoice Popup Modal -->
@@ -595,7 +659,7 @@
                 <input type="number" id="modalSalary">
 
                 <label>Date:</label>
-                <input type="date" id="modalDate">
+                <input type="date" id="modalDate" >
 
                 <div class="modal-buttons">
                     <button type="submit" id="saveInvoiceBtn" style="background-color: green"
@@ -606,22 +670,21 @@
             </div>
         </div>
 
-
         <!-- SAMPLE CONTENT MAKE DYNAMIC SOON -->
         <div id="profileModal" class="profile-modal">
             <div class="profile-content">
                 <span class="close-btn">&larr;</span>
                 <div class="profile-header">
                     <img src="./images/profilePlaceholder.png" alt="Profile Picture" class="profile-img">
-                    <h3>Admin ID: 969696</h3>
-                    <p>Joined in 01/01/2025</p>
+                    <h3>Admin ID: <?php echo $admin['ADM_ID']; ?></h3>
+                    <p>Joined in <?php echo $admin['ADM_DATE']; ?></p>
                 </div>
 
                 <div class="profile-info">
-                    <p><strong>Role:</strong> Admin</p>
+                    <p><strong>Role:</strong> Admin - <?php echo $admin['ADM_POS']; ?></p>
                     <div class="password-section">
                         <label><strong>Password:</strong></label>
-                        <input type="password" value="1234" id="mainPassword" disabled>
+                        <input type="password" value="<?php echo $employee['ADM_PASS']; ?>" id="mainPassword" disabled>
                         <a href="#" id="changePasswordLink">Change password?</a>
                     </div>
                 </div>
