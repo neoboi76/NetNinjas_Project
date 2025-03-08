@@ -496,8 +496,39 @@ include('getempdetail.php'); // or use require()
             </div>
             <div id="feedback" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
-
                     <!-- Feedback Viewing Section -->
+                    <div class="list-group">
+                        <?php 
+                            include 'connection.php';
+
+                            // Assuming the logged-in employee's ID is stored in a session variable, for example:
+                            $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
+
+                            // Fetch evaluations for the logged-in employee only
+                            $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE EMP_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC";
+                            $stmt = $conn->prepare($sql_fetch_feedback);
+                            $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
+
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) { ?>
+                                    <div class="feedback-item">
+                                        <h6 class="mb-1"><b>From: <?php echo $employee['ADM_FNAME']; ?></b></h6>
+                                        <p class="mb-1"> <?php echo $row['EVAL_NOTE']; ?></p>
+                                        <small class="text-muted"><?php echo $row['EVAL_DATE']; ?></small>
+                                    </div>
+                                <?php }
+                            } else {
+                                echo "<p>No feedback records found.</p>";
+                            }
+                            
+                            $stmt->close();
+                            $conn->close();
+                        ?>
+                    </div>
+                    <!--
                     <div class="list-group">
                         <div class="list-group-item">
                             <h6 class="mb-1"><b>From: Maylyn Bautista (Manager)</b></h6>
@@ -513,30 +544,76 @@ include('getempdetail.php'); // or use require()
                             <small class="text-muted">Received on: 01/10/2024</small>
                         </div>
                     </div>
+                    -->
 
                     <!-- Review Superior Button -->
                     <div class="text-center mt-4">
                         <button id="reviewSuperiorBtn" class="btn btn-primary">Review Superior</button>
-
                     </div>
                 </div>
             </div>
 
             <div id="reviewSuperior" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
-                    <h4 class="mb-3 text-center"><b>Review Your Direct Superior (Maylyn Bautista)</b></h4>
+                    <h4 class="mb-3 text-center"><b>Review Your Direct Superior (<?php echo $employee['ADM_FNAME'] . " " . $employee['ADM_LNAME']; ?>)</b></h4>
                     <!-- Make the name of the superior dynamic.-->
 
-                    <form>
+                    <form method ="POST">
                         <div class="mb-3">
                             <label for="superiorFeedback" class="form-label">Your Feedback</label>
-                            <textarea class="form-control" id="superiorFeedback" rows="4"
+                            <textarea name="feedback-text" class="form-control" id="superiorFeedback" rows="4"
                                 placeholder="Write your feedback here..."></textarea>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-success">Submit Feedback</button>
+                            <button type="submit" name="submit_feedback" class="btn btn-success">Submit Feedback</button>
                         </div>
-                    </form>
+                    </form> 
+                    
+                    
+                    <?php
+                    /*
+                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_feedback'])) {
+                            // Ensure the employee variable is set and contains the necessary information.
+        
+                            if (isset($employee['EMP_ID']) && isset($employee['ADM_ID_FK_EMP'])) {
+                                // Get the employee and admin IDs
+                                $employeeId = $employee['EMP_ID'];  // Employee being reviewed
+                                $adminId = $employee['ADM_ID_FK_EMP'];  // Admin providing feedback
+
+                                // Sanitize the feedback input
+                                $feedback = htmlspecialchars($_POST['feedback-text']);
+
+                                // Get the current date
+                                $evalDate = date('Y-m-d');
+
+                                // Prepare the SQL query to insert the feedback
+                                $dbData_insert = "INSERT INTO evaluation (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) 
+                                                VALUES (?, ?, ?, ?)";
+                                $insert_feedback = $conn->prepare($dbData_insert);
+                                if ($insert_feedback) {
+                                    // Bind parameters to the query
+                                    $insert_feedback->bind_param("ssii", $feedback, $evalDate, $employeeId, $adminId);
+
+                                    // Execute the query
+                                    if ($insert_feedback->execute()) {
+                                        echo "<script>alert('Thank you for your feedback!');</script>";
+                                        echo "<script>window.location.href = window.location.href;</script>";  // Prevents form resubmission on refresh
+                                    } else {
+                                        echo "<script>alert('Error submitting feedback: " . $insert_feedback->error . "');</script>";
+                                    }
+                                    
+                                    // Close the prepared statement
+                                    $insert_feedback->close();
+                                    return;
+                                } else {
+                                    echo "<script>alert('Failed to prepare the query: " . $conn->error . "');</script>";
+                                }
+                            } else {
+                                echo "<script>alert('Missing employee or admin data.');</script>";
+                            }
+                        }
+                    */
+                    ?>
 
                     <!-- Back Button -->
                     <div class="text-center mt-3">

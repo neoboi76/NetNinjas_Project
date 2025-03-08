@@ -208,8 +208,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 
-
-
 document.getElementById("savePassword").addEventListener("submit", function(event) {
 
     event.preventDefault(); 
@@ -449,36 +447,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 document.addEventListener("DOMContentLoaded", function () {
+    const feedbackList = document.getElementById("feedback");
+
+    /*
     const feedbackRequests = [
         { from: "100234", to: "100567", date: "03/07/2025", feedback: "Great team player, always helpful." },
         { from: "100789", to: "100432", date: "03/05/2025", feedback: "Consistently meets deadlines with quality work." },
         { from: "100321", to: "100654", date: "03/03/2025", feedback: "Shows strong leadership skills in projects." }
     ];
+    */
 
-    const feedbackContainer = document.getElementById("feedback");
-
-    function renderFeedback() {
-        feedbackContainer.innerHTML = "";
+    if (feedbackRequests.length > 0) {
         feedbackRequests.forEach(request => {
-            const feedbackDiv = document.createElement("div");
-            feedbackDiv.classList.add("feedback-request");
-            feedbackDiv.innerHTML = `
-                <div style="display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 5px;">
-                    <span><strong>Feedback by:</strong> ${request.from}</span>
-                    <span><strong>For:</strong> ${request.to}</span>
-                    <span><strong>Posted:</strong> ${request.date}</span>
-                </div>
-                <div>
-                    ${request.feedback}
-                </div>
+            const feedbackItem = document.createElement("div");
+            feedbackItem.classList.add("feedback-item");
+
+            feedbackItem.innerHTML = `
+                <span><strong>Feedback by:</strong> ${request.from}</span>
+                <span><strong>For:</strong> ${request.to}</span>
+                <span><strong>Posted:</strong> ${request.date}</span>
+                <div>${request.feedback}</div>
             `;
-            feedbackContainer.appendChild(feedbackDiv);
+
+            feedbackList.appendChild(feedbackItem);
         });
+    } else {
+        feedbackList.innerHTML = "<p>No feedback records found.</p>";
     }
-
-
-    renderFeedback();
 });
+
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
@@ -565,5 +562,3 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }
     });
 });
-
-

@@ -1,3 +1,7 @@
+<?php
+    include('getadmdetail.php');
+?>
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -173,16 +177,10 @@
                             <button>Add profile picture</button>
                         </div>
 
-<<<<<<< HEAD
-                        <input type="number" maxlength="6" placeholder="Employee ID" required>
-                        <input type="text" placeholder="Phone/Cellphone Number" required>
-                        <input type="text" placeholder="Role" required>
-=======
                         <form method="POST">
                         <input type="text" name = "emp_id_add" placeholder="Employee ID" required>
                         <input type="text" name = "emp_phoneNum_add" placeholder="Phone/Cellphone Number" required>
                         <input type="text" name = "emp_role_add" placeholder="Role" required>
->>>>>>> 24de07baca247434d7934e264c534c500938e169
                         <input type="text" placeholder="Department" required>
 
                         <div class="employee-name-fields">
@@ -243,18 +241,11 @@
                             <button>Edit profile picture</button>
                         </div>
 
-<<<<<<< HEAD
-                        <input type="number" maxlength="6" placeholder="Employee ID" required>
-                        <input type="text" placeholder="Phone/Cellphone Number" required>
-                        <input type="text" placeholder="Role" required>
-                        <input type="text" placeholder="Department" required>
-=======
                         <form method="POST">
                         <input name = "edit_emp_ID" type="text" placeholder="Employee ID" required>
                         <input name = "edit_emp_PhoneNum" type="text" placeholder="Phone/Cellphone Number" required>
                         <input name = "edit_emp_role" type="text" placeholder="Role" required>
                         <input name = "edit_emp_dept" type="text" placeholder="Department" required>
->>>>>>> 24de07baca247434d7934e264c534c500938e169
 
                         <div class="employee-name-fields">
                             <input name = "edit_emp_fname" type="text" placeholder="First Name" required>
@@ -457,44 +448,99 @@
             <div id="leaveRequests"></div>
         </div>
 
-
         <div id="feedback" class="tab-pane fade">
+            <div id="feedbackList" class="feedback-list">
+            <?php 
+                include 'connection.php';
 
+                // Assuming the logged-in admin's ID is stored in a session variable, for example:
+                $adminId = $_SESSION['ADM_ID'];  // Replace this with your actual session variable that stores the admin ID
+
+                // Fetch feedback for the logged-in admin only
+                $sql_fetch_feedback = "SELECT * FROM evaluation WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC";
+                $stmt = $conn->prepare($sql_fetch_feedback);
+                $stmt->bind_param("i", $adminId); // Bind the admin ID to the query
+
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) { ?>
+                        <div class="feedback-item">
+                            <div class="feedback-header">
+                                <span><strong>Feedback by:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
+                                <span><strong>For:</strong> <?php echo $row['ADM_ID_FK_EVAL']; ?></span>
+                                <span><strong>Posted:</strong> <?php echo $row['EVAL_DATE']; ?></span><br>
+                            </div>
+                            <div class="feedback-text">
+                                <?php echo $row['EVAL_NOTE']; ?>
+                            </div>
+                        </div>
+                    <?php }
+                } else {
+                    echo "<p>No feedback records found.</p>";
+                }
+                
+                $stmt->close();
+                $conn->close();
+            ?>
+
+                <!--
+                <div class="feedback-item">
+                    <span><strong>Feedback by:</strong> 100234</span> <br>
+                    <span><strong>For:</strong> 100567</span> <br>
+                    <span><strong>Posted:</strong> 03/07/2025</span> <br>
+                    <div>Great team player, always helpful.</div>
+                </div>
+
+                <div class="feedback-item">
+                    <span><strong>Feedback by:</strong> 100789</span> <br>
+                    <span><strong>For:</strong> 100432</span> <br>
+                    <span><strong>Posted:</strong> 03/05/2025</span> <br>
+                    <div>Consistently meets deadlines with quality work.</div>
+                </div>
+
+                <div class="feedback-item">
+                    <span><strong>Feedback by:</strong> 100321</span> <br>
+                    <span><strong>For:</strong> 100654</span> <br>
+                    <span><strong>Posted:</strong> 03/03/2025</span> <br>
+                    <div>Shows strong leadership skills in projects.</div>
+                </div>
+                -->
+            </div>
         </div>
+
 
         <!-- SAMPLE CONTENT MAKE DYNAMIC SOON -->
 
+        <!-- SALARY PORTION -->
         <div id="salary" class="tab-pane fade">
             <div class="salary-container">
                 <button id="createInvoiceBtn" class="btn btn-primary create-invoice">Create Invoice</button>
             </div>
+                <!-- PHP SCRIPT TO DYNAMICALLY LOAD SALARY LISTS -->
+                <div id="salaryList" class="salary-list">
+                    <?php 
+                        include 'connection.php';
 
-            <div id="salaryList" class="salary-list">
-                <div class="salary-item">
-                    <span><strong>Employee ID:</strong> 111111</span> <br>
-                    <span><strong>Salary:</strong> ₱5,000.00</span> <br>
-                    <span><strong>Date:</strong> 03/01/2025</span>
-                </div>
+                        $sql_fetch_salaries = "SELECT * FROM payroll ORDER BY P_DATE DESC";
+                        $result = $conn->query($sql_fetch_salaries);
 
-                <div class="salary-item">
-                    <span><strong>Employee ID:</strong> 222222</span> <br>
-                    <span><strong>Salary:</strong> ₱6,200.00</span> <br>
-                    <span><strong>Date:</strong> 03/01/2025</span>
-                </div>
-
-                <div class="salary-item">
-                    <span><strong>Employee ID:</strong> 333333</span> <br>
-                    <span><strong>Salary:</strong> ₱4,500</span> <br>
-                    <span><strong>Date:</strong> 02/25/2025</span>
-                </div>
-
-                <div class="salary-item">
-                    <span><strong>Employee ID:</strong> 444444</span> <br>
-                    <span><strong>Salary:</strong> ₱7,000.00</span> <br>
-                    <span><strong>Date:</strong> 02/20/2025</span>
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) { ?>
+                                <div class="salary-item">
+                                    <span><strong>Employee ID:</strong> <?php echo $row['EMP_ID']; ?></span> <br>
+                                    <span><strong>Salary:</strong> ₱<?php echo number_format($row['P_AMT'], 2); ?></span> <br>
+                                    <span><strong>Date:</strong> <?php echo $row['P_DATE']; ?></span>
+                                </div>
+                            <?php }
+                        } else {
+                            echo "<p>No salary records found.</p>";
+                        }
+                        $conn->close();
+                    ?>
                 </div>
             </div>
-
         </div>
 
         <!-- Invoice Popup Modal -->
@@ -508,7 +554,7 @@
                 <input type="number" id="modalSalary">
 
                 <label>Date:</label>
-                <input type="date" id="modalDate">
+                <input type="date" id="modalDate" >
 
                 <div class="modal-buttons">
                     <button type="submit" id="saveInvoiceBtn" style="background-color: green"
@@ -518,7 +564,6 @@
                 </div>
             </div>
         </div>
-
 
         <!-- SAMPLE CONTENT MAKE DYNAMIC SOON -->
         <div id="profileModal" class="profile-modal">

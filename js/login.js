@@ -33,10 +33,21 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
     })
     .then(response => response.json())
     .then(data => {
+        // Debugging: Log the response data to check what's returned
+        console.log("Login Response Data:", data);
+
         // Check if login was successful
         if (data.success) {
-            // Redirect to the employee page if login is successful
-            window.location.href = "employee.php";
+            if (data.redirect === "employee.php") {
+                // Redirect to employee page if the user is an employee
+                window.location.href = "employee.php";
+            } else if (data.redirect === "admin.php") {
+                // Redirect to admin page if the user is an admin
+                window.location.href = "admin.php";
+            } else {
+                // Handle unexpected redirect case
+                alert("Unexpected redirect URL received. Please try again.");
+            }
         } else {
             // Clear fields and show error message if login fails
             idField.value = "";

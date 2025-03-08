@@ -21,28 +21,30 @@ if (isset($_SESSION['EMP_ID'])) {
     // Get the EMP_ID from the session
     $empId = $_SESSION['EMP_ID'];
 
-    // Prepare and execute the query to get employee details
-    $stmt = $conn->prepare("SELECT EMP_ID, EMP_PASS, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_PHONENUM, EMP_BIRTH, EMP_JOINED FROM employee WHERE EMP_ID = ?");
+    // Prepare and execute the query to get employee and admin details
+    $stmt = $conn->prepare("
+        SELECT e.EMP_ID, e.EMP_PASS, e.EMP_FNAME, e.EMP_LNAME, e.EMP_POS, 
+               e.EMP_PHONENUM, e.EMP_BIRTH, e.EMP_JOINED, e.ADM_ID_FK_EMP,
+               a.ADM_FNAME, a.ADM_LNAME
+        FROM employee e
+        LEFT JOIN administrator a ON e.ADM_ID_FK_EMP = a.ADM_ID
+        WHERE e.EMP_ID = ?
+    ");
     $stmt->bind_param("i", $empId);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        // Fetch the employee details
+        // Fetch the employee and admin details
         $employee = $result->fetch_assoc();
-       #echo json_encode(["success" => true, "data" => $employee]);
+        #echo json_encode(["success" => true, "data" => $employee]);
     } else {
-       #echo json_encode(["success" => false, "message" => "Employee not found"]);
+        #echo json_encode(["success" => false, "message" => "Employee not found"]);
     }
 } else {
-     #echo json_encode(["success" => false, "message" => "User not logged in"]);
+    #echo json_encode(["success" => false, "message" => "User not logged in"]);
 }
-// Check if the session variable is set
-if (isset($_SESSION['EMP_ID'])) {
-   # echo "EMP_ID in session: " . $_SESSION['EMP_ID'];
-} else {
-   #echo "EMP_ID not set in session.";
-}
+
 // Close the database connection
 $conn->close();
 ?>
