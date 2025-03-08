@@ -115,18 +115,18 @@ include('getempdetail.php'); // or use require()
 
                     <!-- Case Report Form -->
                     <div class="form-container p-4 mt-3">
-                        <form>
+                        <form method="POST">
                             <div class="row mb-3">
                                 <!-- Activity Input -->
                                 <div class="col-md-8">
                                     <label for="activity" class="form-label">Activity</label>
-                                    <input type="text" class="form-control" id="activity" placeholder="Enter activity">
+                                    <input name = "emp_case_activity" type="text" class="form-control" id="activity" placeholder="Enter activity">
                                 </div>
 
                                 <!-- Date Input -->
                                 <div class="col-md-4">
                                     <label for="date" class="form-label">Date</label>
-                                    <input type="date" class="form-control" id="date">
+                                    <input name = "emp_case_date" type="date" class="form-control" id="date">
                                 </div>
                             </div>
 
@@ -134,25 +134,62 @@ include('getempdetail.php'); // or use require()
                                 <!-- Work Accomplished Textarea -->
                                 <div class="col-md-9">
                                     <label for="work" class="form-label">Work Accomplished</label>
-                                    <textarea class="form-control" id="work" rows="4"
+                                    <textarea name = "emp_case_accomplished" class="form-control" id="work" rows="4"
                                         placeholder="Describe the work accomplished"></textarea>
                                 </div>
 
                                 <!-- Time Input -->
                                 <div class="col-md-3">
                                     <label for="time" class="form-label">Time</label>
-                                    <input type="time" class="form-control" id="time">
+                                    <input name = "emp_case_time" type="time" class="form-control" id="time">
                                 </div>
                             </div>
 
                             <!-- Submit Button -->
                             <div class="text-end">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button name ="emp_case_submit" type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+
+            <!-- PHP CASE REPORT-->
+            <?php 
+                include "connection.php";
+            
+                if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['emp_case_submit'])){
+                    $emp_case_activity = $_POST['emp_case_activity'];
+                    $emp_case_date = $_POST['emp_case_date'];
+                    $emp_case_accomplished = $_POST['emp_case_accomplished'];
+                    $emp_case_time = $_POST['emp_case_time'];
+            
+                    if(isset($_SESSION['EMP_ID'])){
+                        $case_emp_id = $_SESSION['EMP_ID'];
+            
+                        $case_sql_add = "INSERT INTO report (RPT_ACT, RPT_ACCOMP, RPT_DATE, RPT_TIME, EMP_ID) VALUES (?, ?, ?, ?, ?)";
+                        $case_db_add = $conn->prepare($case_sql_add);
+                        $case_db_add->bind_param("ssssi", $emp_case_activity, $emp_case_accomplished, $emp_case_date, $emp_case_time, $case_emp_id);
+            
+                        // Execute statement
+                        if($case_db_add->execute()) {
+                            echo "<script>alert('Case Report Successfully Submitted!');</script>";
+                            echo "<script>window.location.href = window.location.href;</script>";
+                        } else {
+                            echo "<script>alert('Error: " . $case_db_add->error . "');</script>";
+                            echo "<script>window.location.href = window.location.href;</script>";
+                        }
+            
+                        $case_db_add->close();
+                    } else {
+                        echo "<script>alert('Error: Employee ID is missing!');</script>";
+                        echo "<script>window.location.href = window.location.href;</script>";
+                    }
+                }
+            
+                $conn->close();
+            ?>
+
             <div id="documents" class="tab-pane fade">
 
 
