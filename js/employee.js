@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 });
 
-
+/*
 document.getElementById("savePassword").addEventListener("submit", function(event) {
 
     event.preventDefault(); 
@@ -197,6 +197,33 @@ document.getElementById("savePassword").addEventListener("submit", function(even
     }
 
 });
+*/
 
+document.getElementById("savePassword").addEventListener("click", function(event) {
+    event.preventDefault(); // Prevent form submission
 
+    const currentPassword = document.getElementById("currentPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
+    // Check if the new password and confirm password match
+    if (newPassword !== confirmPassword) {
+        alert("New password and confirm password do not match.");
+    }
+
+    // Check if any of the fields are empty
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        alert("Please fill in all fields.");
+    }
+
+    // Create a FormData object to send the data to the server
+    const formData = new FormData();
+    formData.append("currentPassword", currentPassword);
+    formData.append("newPassword", newPassword);
+
+    // Send the data to the PHP script using Fetch API
+    fetch("update_password.php", {
+        method: "POST",
+        body: formData
+    })
+});
