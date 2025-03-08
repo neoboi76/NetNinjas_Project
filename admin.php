@@ -677,10 +677,10 @@
                 </div>
 
                 <div class="profile-info">
-                    <p><strong>Role:</strong> Admin</p>
+                    <p><strong>Role:</strong> Admin - <?php echo $admin['ADM_POS']; ?></p>
                     <div class="password-section">
                         <label><strong>Password:</strong></label>
-                        <input type="password" value="<?php echo $admin['ADM_PASS']; ?>" id="mainPassword" disabled>
+                        <input type="password" value="<?php echo $employee['ADM_PASS']; ?>" id="mainPassword" disabled>
                         <a href="#" id="changePasswordLink">Change password?</a>
                     </div>
                 </div>

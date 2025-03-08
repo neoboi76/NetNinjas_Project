@@ -666,8 +666,44 @@ include('getempdetail.php'); // or use require()
             <div id="salary" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
                     <h4 class="mb-3 text-center"><b>Invoices</b></h4>
+                    <div class="salary-list">
+                        <?php 
+                            include 'connection.php';
 
-                    <!-- Salary Deposit Entries -->
+                            // Assuming the logged-in employee's ID is stored in a session variable, for example:
+                            $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
+
+                            // Fetch evaluations for the logged-in employee only
+                            $sql_fetch_feedback = "SELECT * FROM payroll WHERE EMP_ID_FK_PAY = ? ORDER BY P_DATE DESC";
+                            $stmt = $conn->prepare($sql_fetch_feedback);
+                            $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
+
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    // Format the date
+                                    $formattedDate = date('F Y', strtotime($row['P_DATE'])); // Converts date to "Month Year" format
+                                    ?>
+                                    <div class="salary-item">
+                                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                            <b>₱<?php echo $row['P_AMT']; ?> was deposited for <?php echo $formattedDate; ?></b>
+                                            <span class="badge bg-secondary"><?php echo $row['P_DATE']; ?></span>
+                                        </a>
+                                    </div>
+                                    <?php
+                                }
+                            } else {
+                                echo "<p>No feedback records found.</p>";
+                            }
+                            
+                            $stmt->close();
+                            $conn->close();
+                        ?>
+                    </div>
+
+                    <!-- 
                     <div class="list-group">
                         <a href="#"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
@@ -690,6 +726,7 @@ include('getempdetail.php'); // or use require()
                             <span class="badge bg-secondary">04/30/2024</span>
                         </a>
                     </div>
+                    -->
                 </div>
             </div>
         </div>

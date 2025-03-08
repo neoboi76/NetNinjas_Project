@@ -200,6 +200,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const salaryList = document.getElementById("salary");
+
+    if (salaryRequests.length > 0) {
+        salaryRequests.forEach(request => {
+            const salaryItem = document.createElement("div");
+            salaryRequests.classList.add("salary-item");
+
+            /*
+            salaryRequests.innerHTML = `
+                <a href="#"
+                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <b>₱100,000.00 was deposited for January 2024</b>
+                        <span class="badge bg-secondary">01/31/2024</span>
+                </a>
+                <h6 class="mb-1"><b> ${request.from}</b></h6>
+                <p class="mb-1">${request.feedback}</p>
+                <small class="text-muted">${request.date}</small>
+            `;
+            */
+
+            salaryList.appendChild(salaryItem);
+        });
+    } else {
+        salaryList.innerHTML = "<p>No feedback records found.</p>";
+    }
+});
+
 /*
 document.getElementById("savePassword").addEventListener("submit", function(event) {
 
