@@ -12,6 +12,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 $id = $data['id'];
 $password = $data['password'];
 
+/*
 // Database connection details
 $servername = "34.92.138.155";
 $username = "root";  // Replace with your DB username
@@ -25,6 +26,10 @@ $conn = new mysqli($servername, $username, $password_db, $dbname);
 if ($conn->connect_error) {
     die(json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]));
 }
+*/
+
+// change this as necessary
+include 'connection.php';
 
 // Prepare and bind the query to prevent SQL injection
 $stmt = $conn->prepare("SELECT EMP_PASS FROM employee WHERE EMP_ID = ?");
