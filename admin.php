@@ -447,7 +447,7 @@
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) { ?>
                                     <div class="feedback-history-item">
-                                        <div class="feedback--history-header">
+                                        <div class="feedback-history-header">
                                             <span><strong>Feedback to:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
                                             <span><strong>Posted:</strong> <?php echo $row['EVAL_DATE']; ?></span><br>
                                         </div>
@@ -514,13 +514,69 @@
                     <button class="custom-btn" id="viewReportsBtn">View Reports</button>
                     <button class="custom-btn" id="viewDocumentsBtn">View Documents</button>
                 </div>
-                <div class="content-box mt-3"></div>
+                <div class="content-box mt-3">
+                    <div id="empReports" class="tab-pane fade">
+                        <div class="reports-container">
+                            <div class="report-list">
+                                <?php 
+                                    include 'connection.php';
+
+                                    // Assuming the logged-in admin's ID is stored in a session variable, for example:
+                                    $adminId = $_SESSION['ADM_ID'];  // Replace this with your actual session variable that stores the admin ID
+
+                                    // Fetch feedback for the logged-in admin only
+                                    $sql_fetch_feedback = "SELECT r.*, e.EMP_FNAME, e.EMP_LNAME 
+                                                            FROM report r
+                                                            JOIN employee e ON r.EMP_ID = e.EMP_ID
+                                                            ORDER BY r.RPT_DATE DESC";
+                                    $stmt = $conn->prepare($sql_fetch_feedback);
+
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) { ?>
+                                            <div class="report-item">
+                                                <div class="report-header">
+                                                    <span><strong>Report ID:</strong> <?php echo $row['RPT_NUM']; ?></span>
+                                                    <span><strong>Activity:</strong> <?php echo $row['RPT_ACT']; ?></span>
+                                                    <span><strong>Date:</strong> <?php echo $row['RPT_DATE']; ?></span>
+                                                    <span><strong>Time:</strong> <?php echo $row['RPT_TIME']; ?></span>
+                                                    <span><strong>DONE BY:</strong> <?php echo $row['EMP_ID'] . " (" . $row['EMP_FNAME'] . " " . $row['EMP_LNAME'] . ")" ; ?></span><br>
+                                                </div>
+                                                <div class="report-text">
+                                                    <?php echo $row['RPT_ACCOMP']; ?>
+                                                </div>
+                                            </div>
+                                        <?php }
+                                    } else {
+                                        echo "<p>No feedback records found.</p>";
+                                    }
+                                    
+                                    $stmt->close();
+                                    $conn->close();
+                                ?>
+                                <!--
+                                <div class="report-item">
+                                    <div class="report-header">
+                                        <span class="report-date">01/01/2025</span>
+                                    </div>
+                                    <div class="report-text">
+                                        <h5>Employee Performance Report</h5>
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel semper ligula. Aliquam erat volutpat. Duis vel justo in metus consectetur rutrum. Integer euismod est vel diam lobortis, et dictum neque semper. Nulla facilisi. Donec euismod orci vel neque euismod, at ullamcorper urna bibendum. Nulla facilisi. Sed vel semper ligula.</p>
+                                    </div>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!--
         <div id="empDocuments" class="tab-pane fade d-none">
             <div class="documents-container">
-                <!-- Add & Remove Buttons -->
                 <div class="d-flex justify-content-between mb-3">
                     <input type="file" id="fileInput" class="form-control w-50">
                     <button id="addDocumentBtn" class="btn btn-success">Add Document</button>
@@ -564,6 +620,7 @@
                 </div>
             </div>
         </div>
+        -->
 
         
         <div id="leave" class="tab-pane fade">

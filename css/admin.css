@@ -531,14 +531,48 @@ button {
     background-color: #006ee4;
 }
 
+
+/************** FOR THE VIEW REPORTS/CASES/DOCUMENTS *******************/
 /* Content Box */
 .content-box {
     background-color: #f8f9fa;
     border-radius: 10px;
-    min-height: 250px;
+    min-height: 500px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+#empReports{
+    padding: 50px;
+}
+
+.reports-container {
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd; /* Subtle border */
+}
+
+.reports-list {
+    display: flex;
+    flex-direction: column;
+    background: #f4f4f4; /* Light gray background */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd; /* Subtle border */
+}
+
+.report-item {
+    display: flex;
+    flex-direction: column;
+    background: #f4f4f4; /* Light gray background */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 5px solid #ddd; /* Subtle border */
+}
+
+/***************** LEAVE **********************/
 .leave-container {
     width: 50%;
     margin: auto;

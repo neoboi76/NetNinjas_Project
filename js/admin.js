@@ -322,18 +322,53 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    // DOCUMENTS
     const viewDocumentsBtn = document.getElementById("viewDocumentsBtn");
-    const documentsTab = document.getElementById("documents");
-    const empDocumentsTab = document.getElementById("empDocuments");
+    const viewReportsBtn = document.getElementById("viewReportsBtn");
+    
+    const empReportsTab = document.getElementById("empReports");
+    //const documentsTab = document.getElementById("documents");
+    //const empDocumentsTab = document.getElementById("empDocuments");
 
     viewDocumentsBtn.addEventListener("click", function () {
         // Hide the 'documents' tab
-        documentsTab.classList.add("d-none");
+        empReportsTab.classList.add("d-none");
+
+        //console.log("empReportsTab:", empReportsTab);
+        //console.log("classList:", empReportsTab.classList);
+        
+        // Show the 'empDocuments' tab
+        documentsTab.classList.remove("d-none");
+        documentsTab.classList.add("show", "active");
+    });
+
+    viewReportsBtn.addEventListener("click", function () {
+        // Hide the 'documents' tab
+        //documentsTab.classList.add("d-none");
+
+        //console.log("empReportsTab:", empReportsTab);
+        //console.log("classList:", empReportsTab.classList);
+
+        // Show the 'empReports' tab
+        empReportsTab.classList.remove("d-none");
+        empReportsTab.classList.add("show", "active");
+    });
+
+
+    /*
+    ///// CASE REPORTS
+    const viewReportsBtn = document.getElementById("viewReportsBtn");
+    const empReportsTab = document.getElementById("empDocuments");
+
+    viewReportsBtn.addEventListener("click", function () {
+        // Hide the 'documents' tab
+        empReportsTab.classList.add("d-none");
 
         // Show the 'empDocuments' tab
-        empDocumentsTab.classList.remove("d-none");
-        empDocumentsTab.classList.add("show", "active");
+        empReportsTab.classList.remove("d-none");
+        empReportsTab.classList.add("show", "active");
     });
+    */
 
   /*   function showDocuments() {
         documentsTab.classList.add("show", "active");
