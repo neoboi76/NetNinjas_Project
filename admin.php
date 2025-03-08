@@ -114,9 +114,48 @@
                         <button class="btn btn-primary" id="editEmployeeBtn">Edit Employee</button>
                     </div>
 
-                    <!-- Placeholder for Dynamic Content -->
+                    <!-- Employee Data Table -->
                     <div class="admin-placeholder p-4 rounded">
-                        Future dynamic content goes here
+                        <h4 class="mb-3">Employee List</h4>
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Position</th>
+                                    <th>Phone Number</th>
+                                    <th>Birth Date</th>
+                                    <th>Joined Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                include 'connection.php';
+
+                                $sql = "SELECT EMP_ID, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_PHONENUM, EMP_BIRTH, EMP_JOINED FROM employee";
+                                $result = $conn->query($sql);
+
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<tr>
+                                                <td>{$row['EMP_ID']}</td>
+                                                <td>{$row['EMP_FNAME']}</td>
+                                                <td>{$row['EMP_LNAME']}</td>
+                                                <td>{$row['EMP_POS']}</td>
+                                                <td>{$row['EMP_PHONENUM']}</td>
+                                                <td>{$row['EMP_BIRTH']}</td>
+                                                <td>{$row['EMP_JOINED']}</td>
+                                            </tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='7' class='text-center'>No employees found</td></tr>";
+                                }
+
+                                $conn->close();
+                                ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -152,19 +191,11 @@
                 </div>
             </div>
 
+            <!-- PHP ADD EMPLOYEE-->
             <?php 
-                $host = "34.92.138.155"; 
-                $user = "root2"; 
-                $pass = "O1Bf>i:9/v&kA-@i"; 
-                $db = "web2proj"; 
-                
-                $conn = new mysqli($host, $user, $pass, $db);
+                include 'connection.php';                
 
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-
-                if(isset($_POST['add_employee'])){
+                if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_employee'])){
                     $emp_id_add = $_POST['emp_id_add'];
                     $emp_phoneNum_add = $_POST['emp_phoneNum_add'];
                     $emp_role_add = $_POST['emp_role_add'];
@@ -182,6 +213,7 @@
 
                     if ($emp_adding->execute()) {
                         echo "<script>alert('Employee added successfully!');</script>";
+                        echo "<script>window.location.href = window.location.href;</script>";
                     } else {
                         echo "<script>alert('Error: " . $emp_adding->error . "');</script>";
                     }
@@ -190,11 +222,8 @@
                 }
 
                 $conn->close();
-
-
-
             ?>
-
+        
             <!-- Edit Employee Modal. It must already have content-->
             <div id="employeeEditModal" class="employeeEdit-modal">
                 <div class="employeeEdit-modal-content">
@@ -208,23 +237,79 @@
                             <button>Edit profile picture</button>
                         </div>
 
-                        <input type="text" placeholder="Employee ID" required>
-                        <input type="text" placeholder="Phone/Cellphone Number" required>
-                        <input type="text" placeholder="Role" required>
-                        <input type="text" placeholder="Department" required>
+                        <form method="POST">
+                        <input name = "edit_emp_ID" type="text" placeholder="Employee ID" required>
+                        <input name = "edit_emp_PhoneNum" type="text" placeholder="Phone/Cellphone Number" required>
+                        <input name = "edit_emp_role" type="text" placeholder="Role" required>
+                        <input name = "edit_emp_dept" type="text" placeholder="Department" required>
 
                         <div class="employee-name-fields">
-                            <input type="text" placeholder="First Name" required>
-                            <input type="text" placeholder="Last Name" required>
+                            <input name = "edit_emp_fname" type="text" placeholder="First Name" required>
+                            <input name = "edit_emp_lname" type="text" placeholder="Last Name" required>
                         </div>
 
-                        Birthdate: <input type="date" placeholder="Birthdate" required>
-                        <button class="btn btn-success">Save Changes</button>
-                        <button class="btn btn-success">Delete Employee</button>
+                        Birthdate: <input type="date" name = "edit_emp_bday" placeholder="Birthdate" required>
+                        <button name = "save_emp" class="btn btn-success">Save Changes</button>
+                        <button name = "delete_emp" class="btn btn-success">Delete Employee</button>
+                        </form>
                     </div>
                 </div>
             </div>
 
+            <!-- PHP EDIT EMPLOYEE-->
+            <?php
+                include 'connection.php';
+
+                if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_emp'])){
+                    $edit_emp_ID = $_POST['edit_emp_ID'];
+                    $edit_emp_PhoneNum = $_POST['edit_emp_PhoneNum'];
+                    $edit_emp_role = $_POST['edit_emp_role'];
+                    $edit_emp_fname = $_POST['edit_emp_fname'];
+                    $edit_emp_lname = $_POST['edit_emp_lname'];
+                    $edit_emp_bday = $_POST['edit_emp_bday'];
+                
+                    $dbData_update = "UPDATE employee SET 
+                                        EMP_PHONENUM = ?, 
+                                        EMP_POS = ?,  
+                                        EMP_FNAME = ?, 
+                                        EMP_LNAME = ?, 
+                                        EMP_BIRTH = ? 
+                                    WHERE EMP_ID = ?";
+                
+                    $emp_save = $conn->prepare($dbData_update);
+                    $emp_save->bind_param("sssssi", $edit_emp_PhoneNum, $edit_emp_role, $edit_emp_fname, $edit_emp_lname, $edit_emp_bday, $edit_emp_ID);
+                
+                    if ($emp_save->execute()) {
+                        echo "<script>alert('Employee details updated successfully!');</script>";
+                        echo "<script>window.location.href = window.location.href;</script>"; // Prevents form resubmission on refresh
+                    } else {
+                        echo "<script>alert('Error updating employee: " . $emp_save->error . "');</script>";
+                    }
+                
+                    $emp_save->close();
+                }
+
+                if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_emp'])){
+                    $edit_emp_ID = $_POST['edit_emp_ID'];
+
+                    $dbData_delete = "DELETE FROM employee WHERE EMP_ID = ?";
+                    $emp_delete = $conn->prepare($dbData_delete);
+                    $emp_delete->bind_param("i", $edit_emp_ID);
+
+                    if ($emp_delete->execute()) {
+                        echo "<script>alert('Employee deleted successfully!');</script>";
+                        echo "<script>window.location.href = window.location.href;</script>"; // Prevents form resubmission on refresh
+                    } else {
+                        echo "<script>alert('Error deleting employee: " . $emp_delete->error . "');</script>";
+                    }
+
+                    $emp_delete->close();
+
+                }
+
+                $conn->close();
+
+            ?>
 
             <div id="review" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
