@@ -41,7 +41,7 @@
          <h2 class="mb-4"><b>Login to Your Account</b></h2>
          <form id="loginForm">
             <div class="mb-3">
-               <input type="text" class="form-control" id="idText" style="background-color: lightblue;"
+               <input type="text" maxlength="6" class="form-control" id="idText" style="background-color: lightblue;"
                   placeholder="Admin/Employee ID" required>
             </div>
             <div class="mb-3 password-container">
@@ -54,7 +54,7 @@
       </div>
    </section>
 
-
+   
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"></script>

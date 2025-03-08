@@ -134,7 +134,7 @@
                             <button>Add profile picture</button>
                         </div>
 
-                        <input type="text" placeholder="Employee ID" required>
+                        <input type="number" maxlength="6" placeholder="Employee ID" required>
                         <input type="text" placeholder="Phone/Cellphone Number" required>
                         <input type="text" placeholder="Role" required>
                         <input type="text" placeholder="Department" required>
@@ -163,7 +163,7 @@
                             <button>Edit profile picture</button>
                         </div>
 
-                        <input type="text" placeholder="Employee ID" required>
+                        <input type="number" maxlength="6" placeholder="Employee ID" required>
                         <input type="text" placeholder="Phone/Cellphone Number" required>
                         <input type="text" placeholder="Role" required>
                         <input type="text" placeholder="Department" required>
@@ -231,7 +231,7 @@
         <div id="department" class="tab-pane fade">
 
             <div class="d-flex align-items-center gap-2">
-                <input type="text" id="employeeId" placeholder="Employee ID" class="form-control">
+                <input type="number" maxlength="6" id="employeeId" placeholder="Employee ID" class="form-control">
                 <button id="addDepartment" class="btn btn-size" style="background-color: green;">+</button>
                 <button id="clearDepartments" style="background-color: red;" class="btn btn-size">🗑</button>
             </div>
@@ -359,7 +359,7 @@
             <div class="modal-content">
                 <h2 id="modalTitle"></h2>
                 <label>Employee ID:</label>
-                <input type="text" id="modalEmployeeId">
+                <input type="number" maxlength="6" id="modalEmployeeId">
 
                 <label>Salary:</label>
                 <input type="number" id="modalSalary">

@@ -45,8 +45,8 @@
                         placeholder="Email" required>
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" id="idText" style="background-color: lightblue;"
-                        placeholder="Employee ID" required>
+                    <input type="number" maxlength="6" class="form-control" id="idText"
+                        style="background-color: lightblue;" placeholder="Employee ID" required>
                 </div>
                 <div class="mb-3 password-container">
                     <input type="password" id="passwordText" class="form-control" style="background-color: lightblue;"
