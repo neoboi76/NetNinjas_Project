@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 });
 
-
+/*
 document.getElementById("savePassword").addEventListener("submit", function(event) {
 
     event.preventDefault(); 
@@ -233,6 +233,78 @@ document.getElementById("savePassword").addEventListener("submit", function(even
     }
 
 });
+*/
+/*
+document.getElementById("savePassword").addEventListener("click", function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    const currentPassword = document.getElementById("currentPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    // Check if the new password and confirm password match
+    if (newPassword !== confirmPassword) {
+        alert("New password and confirm password do not match.");
+    }
+
+    // Check if any of the fields are empty
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        alert("Please fill in all fields.");
+    }
+
+    // Create a FormData object to send the data to the server
+    const formData = new FormData();
+    formData.append("currentPassword", currentPassword);
+    formData.append("newPassword", newPassword);
+
+    // Send the data to the PHP script using Fetch API
+    fetch("update_AdminPW.php", {
+        method: "POST",
+        body: formData
+    })
+});
+*/
+
+document.getElementById("changePasswordAdmin").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form from submitting the traditional way
+
+    // Get values from input fields
+    const currentPassword = document.getElementById("currentPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    // Simple front-end validation
+    if (newPassword !== confirmPassword) {
+        alert("New Password and Confirm Password do not match!");
+        return;
+    }
+
+    // Send data to the backend via AJAX (using Fetch API)
+    fetch("updateAdminPW.php", {
+        method: "POST",
+        body: JSON.stringify({
+            currentPassword: currentPassword,
+            newPassword: newPassword
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Password updated successfully!");
+            // Close the modal
+            document.getElementById("passwordModal").style.display = "none";
+        } else {
+            alert("Error updating password: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+});
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const addEmployeeBtn = document.getElementById("addEmployeeBtn");

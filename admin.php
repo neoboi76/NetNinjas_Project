@@ -893,7 +893,7 @@
                 <h4 class="text-center">Change Password</h4>
 
                 <div class="password-container">
-                    <form action="">
+                    <form id="changePasswordAdmin">
                         <input type="password" id="currentPassword" placeholder="Current Password">
                         <input type="password" id="newPassword" placeholder="New Password">
                         <input type="password" id="confirmPassword" placeholder="Confirm Password">
@@ -904,7 +904,7 @@
         </div>
 
     </section>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
