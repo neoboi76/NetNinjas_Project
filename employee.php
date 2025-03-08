@@ -191,118 +191,74 @@ include('getempdetail.php'); // or use require()
             ?>
 
             <div id="documents" class="tab-pane fade">
-
-
                 <div class="documents-container">
-
-
                     <h5><b>Documents</b></h5>
-
-
                     <div class="table-responsive">
-
-
                         <table class="table table-bordered">
-
-
                             <thead class="table-light">
-
-
                                 <!--  SAMPLE CONTENTS -->
-
-
                                 <tr>
-
-
                                     <th>Date</th>
-
-
                                     <th>Department</th>
-
-
                                     <th>File Type</th>
-
-
                                     <th>File Name</th>
-
-
                                     <th>Actions</th>
-
-
                                 </tr>
-
-
                             </thead>
-
-
                             <tbody>
+                                <?php 
+                                    include 'connection.php';
 
+                                    $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
+                                    $stmt = $conn->prepare($sql_fetch_feedback);
 
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
 
-
-
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) { ?>
+                                            <tr>
+                                                <td><?php echo $row['F_DATE']; ?></td>
+                                                <td><?php echo $row['F_DEPT']; ?></td>
+                                                <td><?php echo $row['F_TYPE']; ?></td>
+                                                <td><?php echo $row['F_NAME']; ?></td>
+                                                <td><a href="<?php echo $row['F_PATH']; ?>" download="<?php echo $row['F_NAME']; ?>"
+                                                        class="btn btn-primary">Download</a></td>
+                                            </tr>
+                                        <?php }
+                                    } else {
+                                        echo "<p>No feedback records found.</p>";
+                                    }
+                                    
+                                    $stmt->close();
+                                    $conn->close();
+                                ?>
+                                <!--
                                 <tr>
-
-
                                     <td>01/01/2025</td>
-
-
                                     <td>HR</td>
-
-
                                     <td>PDF</td>
-
-
                                     <td>Employee_Handbook.pdf</td>
-
-
                                     <td><a href="./Test/Manifesto.pdf" download="CommmunistManifesto.pdf"
                                             class="btn btn-primary">Download</a></td>
-
-
                                 </tr>
-
-
                                 <tr>
-
-
                                     <td>02/01/2025</td>
-
-
                                     <td>Finance</td>
-
-
                                     <td>Excel</td>
-
-
                                     <td>Budget_2025.xlsx</td>
-
-
                                     <td><a href="./Test/ass.jpg" download="Sauce.jpg"
                                             class="btn btn-primary">Download</a></td>
-
-
                                 </tr>
-
-
+                                -->
                             </tbody>
-
-
                         </table>
-
-
                     </div>
-
-
                 </div>
-
-
             </div>
 
 
             <div id="records" class="tab-pane fade">
-
-
 
                 <!-- Placeholder for future content -->
 
@@ -311,184 +267,89 @@ include('getempdetail.php'); // or use require()
 
 
                     <h5><b>Track Work Evaluation</b></h5>
-
-
                 </div>
-
-
-
-
-
                 <!-- Work Evaluation Table -->
-
-
                 <div class="container p-3">
-
-
                     <div class="evaluation-container p-3" style="background-color: #b0b0b0; border-radius: 10px;">
-
-
                         <form id="evaluationForm">
-
-
                             <table class="table table-bordered text-center">
-
-
                                 <thead>
-
-
                                     <tr class="bg-secondary text-white">
-
-
                                         <th colspan="4">Performance Standards</th>
-
-
                                     </tr>
-
-
                                     <tr>
-
-
                                         <th>Criteria</th>
-
-
                                         <th>Poor</th>
-
-
                                         <th>Good</th>
-
-
                                         <th>Great</th>
-
-
                                     </tr>
-
-
                                 </thead>
-
-
                                 <tbody>
-
-
                                     <!-- Row Template -->
-
-
                                     <tr>
-
-
                                         <td>Work quality</td>
-
-
                                         <td><input type="radio" name="work_quality" value="Poor"></td>
-
-
                                         <td><input type="radio" name="work_quality" value="Good"></td>
-
-
                                         <td><input type="radio" name="work_quality" value="Great"></td>
                                     </tr>
-
-
                                     <tr>
-
-
                                         <td>Work autonomy</td>
-
                                         <td><input type="radio" name="work_autonomy" value="Poor"></td>
                                         <td><input type="radio" name="work_autonomy" value="Good"></td>
                                         <td><input type="radio" name="work_autonomy" value="Great"></td>
                                     </tr>
-
-
                                     <tr>
-
-
                                         <td>Shows initiative</td>
                                         <td><input type="radio" name="shows_initiative" value="Poor"></td>
                                         <td><input type="radio" name="shows_initiative" value="Good"></td>
                                         <td><input type="radio" name="shows_initiative" value="Great"></td>
-
                                     </tr>
-
-
                                     <tr>
-
-
                                         <td>Productivity</td>
                                         <td><input type="radio" name="productivity" value="Poor"></td>
                                         <td><input type="radio" name="productivity" value="Good"></td>
                                         <td><input type="radio" name="productivity" value="Great"></td>
                                     </tr>
-
-
                                     <tr>
-
-
                                         <td>Integrity</td>
                                         <td><input type="radio" name="integrity" value="Poor"></td>
                                         <td><input type="radio" name="integrity" value="Good"></td>
                                         <td><input type="radio" name="integrity" value="Great"></td>
                                     </tr>
-
-
                                     <tr>
-
-
                                         <td>Technical Skills</td>
                                         <td><input type="radio" name="technical_skills" value="Poor"></td>
                                         <td><input type="radio" name="technical_skills" value="Good"></td>
                                         <td><input type="radio" name="technical_skills" value="Great"></td>
-
                                     </tr>
-
-
                                     <tr>
                                         <td>Creativity</td>
                                         <td><input type="radio" name="creativity" value="Poor"></td>
                                         <td><input type="radio" name="creativity" value="Good"></td>
                                         <td><input type="radio" name="creativity" value="Great"></td>
-
                                     </tr>
-
                                     <tr>
-
                                         <td>Attendance</td>
                                         <td><input type="radio" name="attendance" value="Poor"></td>
                                         <td><input type="radio" name="attendance" value="Good"></td>
                                         <td><input type="radio" name="attendance" value="Great"></td>
-
                                     </tr>
-
                                     <tr>
-
                                         <td>Teamwork</td>
-
                                         <td><input type="radio" name="teamwork" value="Poor"></td>
-
                                         <td><input type="radio" name="teamwork" value="Good"></td>
-
                                         <td><input type="radio" name="teamwork" value="Great"></td>
 
                                     </tr>
-
                                 </tbody>
-
                             </table>
-
                             <!-- Submit Button -->
-
                             <div class="text-center">
-
                                 <button type="submit" class="btn btn-primary">Submit Evaluation</button>
-
                             </div>
-
                         </form>
-
                     </div>
-
                 </div>
-
             </div>
 
             <div id="leave" class="tab-pane fade">
