@@ -22,7 +22,7 @@ if (isset($_SESSION['ADM_ID'])) {
     $adminId = $_SESSION['ADM_ID'];
 
     // Prepare and execute the query to get admin details
-    $stmt = $conn->prepare("SELECT ADM_ID, ADM_FNAME, ADM_LNAME, ADM_POS FROM administrator WHERE ADM_ID = ?");
+    $stmt = $conn->prepare("SELECT ADM_ID, ADM_FNAME, ADM_LNAME, ADM_POS, ADM_DATE FROM administrator WHERE ADM_ID = ?");
     $stmt->bind_param("i", $adminId);
     $stmt->execute();
     $result = $stmt->get_result();

@@ -43,7 +43,7 @@
     <section class="sidebar">
         <img src="./images/profilePlaceholder.png" class="img-thumbnail"
             style="contain: cover; width: 120px; height: 120px;">
-        <p>Admin ID: <b>969696</b></p>
+        <p>Admin ID: <b><?php echo $admin['ADM_ID']; ?></b></p>
         <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link" id="announcement1" href="#announcement"
                     data-bs-toggle="tab">Announcement</a></li>
@@ -571,15 +571,15 @@
                 <span class="close-btn">&larr;</span>
                 <div class="profile-header">
                     <img src="./images/profilePlaceholder.png" alt="Profile Picture" class="profile-img">
-                    <h3>Admin ID: 969696</h3>
-                    <p>Joined in 01/01/2025</p>
+                    <h3>Admin ID: <?php echo $admin['ADM_ID']; ?></h3>
+                    <p>Joined in <?php echo $admin['ADM_DATE']; ?></p>
                 </div>
 
                 <div class="profile-info">
                     <p><strong>Role:</strong> Admin</p>
                     <div class="password-section">
                         <label><strong>Password:</strong></label>
-                        <input type="password" value="1234" id="mainPassword" disabled>
+                        <input type="password" value="<?php echo $admin['ADM_PASS']; ?>" id="mainPassword" disabled>
                         <a href="#" id="changePasswordLink">Change password?</a>
                     </div>
                 </div>
