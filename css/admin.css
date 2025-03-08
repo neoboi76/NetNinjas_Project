@@ -636,6 +636,44 @@ button {
     margin-top: 5px;
 }
 
+/*********** REVIEW LIST ***********/
+.feedback-history-list {
+    background: #ffffff; 
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+    width: 100%; 
+}
+
+.feedback-history-item {
+    display: flex;
+    flex-direction: column;
+    background: #f4f4f4; 
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    width: 100%; 
+}
+
+.feedback-history-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 200px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    text-align: left; 
+}
+
+.feedback-history-text {
+    font-size: 18px;
+    color: #3d3d3d;
+    margin-top: 5px;
+    text-align: left;
+}
+
+
 /* Styling for invoice entries */
 .salary-list {
     background: #f8f8f8;

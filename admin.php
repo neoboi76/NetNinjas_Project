@@ -350,48 +350,136 @@
 
             <div id="review" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
-
                     <!-- Top Buttons -->
                     <div class="d-flex mb-3 align-center">
                         <button class="btn btn-primary" id="feedbackHistoryBtn">View Feedback History</button>
                     </div>
 
-
-                    <form action="">
+                    <form method="POST">
                         <div id="reviewContent">
                             <div class="mb-3">
-                                <input style="border: 3px solid #b1b1b1; padding: 5px;" type="text"
+                                <input name="review-emp-id" style="border: 3px solid #b1b1b1; padding: 5px;" type="text"
                                     class="form-control bg-light" placeholder="Employee ID">
                             </div>
 
                             <div class="mb-3">
-                                <input style="border: 3px solid #b1b1b1; padding: 5px;" type="text"
+                                <input name="review-subj" style="border: 3px solid #b1b1b1; padding: 5px;" type="text"
                                     class="form-control bg-light" placeholder="Subject">
                             </div>
 
                             <!-- Feedback Text Area -->
                             <div class="mb-3">
-                                <textarea style="border: 3px solid #b1b1b1; padding: 15px;"
+                                <textarea name="review-text" style="border: 3px solid #b1b1b1; padding: 15px;"
                                     class="form-control bg-light" rows="5" placeholder="Write Feedback"></textarea>
                             </div>
 
                             <!-- Submit Button -->
                             <div style="background-color: #f8f9fa; border: none;" class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" name ="submit_emp_feedback" class="btn btn-primary">Submit</button>
                             </div>
                     </form>
-
+                    <?php
+                        /*
+                       // Include database connection
+                       include 'db_connection.php';
+                       
+                       // Enable error reporting for debugging
+                       mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+                       
+                       if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_emp_feedback'])) {
+                           // Get form values
+                           $emp_id = trim($_POST['review-emp-id']);  // Ensure no extra spaces
+                           $review_text = trim($_POST['review-text']);
+                           $eval_date = date("Y-m-d"); // Today's date
+                           $admin_id = isset($admin) ? $admin : null; // Check if $admin is set
+                       
+                           // Debugging log
+                           error_log("Emp ID: $emp_id, Admin ID: $admin_id, Date: $eval_date, Feedback: $review_text");
+                       
+                           // Validate input
+                           if (empty($emp_id) || empty($review_text) || empty($admin_id)) {
+                               die("<script>alert('Missing required fields.');</script>");
+                           }
+                       
+                           // Prepare SQL statement
+                           $sql = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) 
+                                   VALUES (?, ?, ?, ?)";
+                       
+                           try {
+                               $stmt = $conn->prepare($sql);
+                               $stmt->bind_param("ssii", $review_text, $eval_date, $emp_id, $admin_id);
+                       
+                               if ($stmt->execute()) {
+                                   echo "<script>alert('Feedback submitted successfully!');</script>";
+                               } else {
+                                   echo "<script>alert('Error submitting feedback.');</script>";
+                               }
+                       
+                               $stmt->close();
+                           } catch (Exception $e) {
+                               error_log("SQL Error: " . $e->getMessage());
+                               die("<script>alert('Database error: " . addslashes($e->getMessage()) . "');</script>");
+                           }
+                       
+                           $conn->close();
+                        }
+                        */
+                    ?>
                 </div>
-
+                
                 <!-- Feedback History (Initially Hidden) -->
                 <div id="feedbackHistoryContent" class="text-center d-none">
-                    <h5 class="text-muted">You currently have no feedbacks given.</h5>
-                </div>
+                    <div id="feedbackHistoryList" class="feedback-history-list">
+                        <?php 
+                            include 'connection.php';
 
-                <div class="text-center mt-3">
-                    <button id="backToReviewBtn" class="btn btn-secondary">Back</button>
-                </div>
+                            // Assuming the logged-in admin's ID is stored in a session variable, for example:
+                            $adminId = $_SESSION['ADM_ID'];  // Replace this with your actual session variable that stores the admin ID
 
+                            // Fetch feedback for the logged-in admin only
+                            $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC";
+                            $stmt = $conn->prepare($sql_fetch_feedback);
+                            $stmt->bind_param("i", $adminId); // Bind the admin ID to the query
+
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) { ?>
+                                    <div class="feedback-history-item">
+                                        <div class="feedback--history-header">
+                                            <span><strong>Feedback to:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
+                                            <span><strong>Posted:</strong> <?php echo $row['EVAL_DATE']; ?></span><br>
+                                        </div>
+                                        <div class="feedback-history-text">
+                                            <?php echo $row['EVAL_NOTE']; ?>
+                                        </div>
+                                    </div>
+                                <?php }
+                            } else {
+                                echo "<p>No feedback sent records found.</p>";
+                            }
+                            
+                            $stmt->close();
+                            $conn->close();
+                        ?>
+                        <!--
+                        <div id="feedbackHistoryItem" class="feedback-history-item">
+                            <div class="feedback-history-header">
+                                    <span><strong>Feedback To:</strong> TEST SIGMA </span>
+                                    <span><strong>Posted:</strong> TEST SIGMA </span><br>
+                             </div>
+                            <div class="feedback-history-text">
+                                <br>WHAT THE SIGMA?!</br>
+                            </div>
+                        </div>
+                        -->
+                    </div>
+                    <!--<h5 class="text-muted">You currently have no feedbacks given.</h5>-->
+                    <div class="text-center mt-3">
+                        <button id="backToReviewBtn" class="btn btn-secondary">Back</button>
+                    </div>
+                </div>
             </div>
         </div>
 
