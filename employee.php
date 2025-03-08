@@ -458,18 +458,18 @@ include('getempdetail.php'); // or use require()
                 <div class="container p-4 bg-light rounded">
                     <h4 class="mb-3"><b>Leave Request Form</b></h4>
 
-                    <form>
+                    <form method="POST">
                         <!-- Reason Field -->
                         <div class="mb-3">
                             <label for="reason" class="form-label">Reason</label>
-                            <textarea id="reason" class="form-control" rows="3"
+                            <textarea name = "leave_reason" id="reason" class="form-control" rows="3"
                                 placeholder="Enter your reason"></textarea>
                         </div>
 
                         <!-- Description Field -->
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea id="description" class="form-control" rows="3"
+                            <textarea name = "leave_descript" id="description" class="form-control" rows="3"
                                 placeholder="Provide additional details"></textarea>
                         </div>
 
@@ -477,23 +477,61 @@ include('getempdetail.php'); // or use require()
                             <!-- Date of Leave -->
                             <div class="col-md-6">
                                 <label for="dateLeave" class="form-label">Date of Leave</label>
-                                <input type="date" id="dateLeave" class="form-control">
+                                <input name = "leave_start" type="date" id="dateLeave" class="form-control">
                             </div>
 
                             <!-- Date of Return -->
                             <div class="col-md-6">
                                 <label for="dateReturn" class="form-label">Date of Return</label>
-                                <input type="date" id="dateReturn" class="form-control">
+                                <input name = "leave_return" type="date" id="dateReturn" class="form-control">
                             </div>
                         </div>
 
                         <!-- Submit Button -->
                         <div class="mt-3 text-center">
-                            <button type="submit" class="btn btn-primary w-10">Submit</button>
+                            <button name = "leave_emp_submit" type="submit" class="btn btn-primary w-10">Submit</button>
                         </div>
                     </form>
                 </div>
             </div>
+
+            <!--PHP LEAVE REQUEST-->
+            <?php 
+                include 'connection.php';
+
+                if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['leave_emp_submit'])){
+                    $leave_reason = $_POST['leave_reason'];
+                    $leave_descript = $_POST['leave_descript'];
+                    $leave_start = $_POST['leave_start'];
+                    $leave_return = $_POST['leave_return'];
+
+                    if(isset($_SESSION['EMP_ID'])){
+                        $leave_emp_id = $_SESSION['EMP_ID'];
+
+                        $leave_rq_sql = "INSERT INTO leave_request (LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, EMP_ID) 
+                         VALUES (?, ?, ?, ?, ?)";
+        
+                        $leave_rq_dbadd = $conn->prepare($leave_rq_sql);
+                        $leave_rq_dbadd->bind_param("ssssi", $leave_reason, $leave_descript, $leave_start, $leave_return, $leave_emp_id);
+
+                        if ($leave_rq_dbadd->execute()) {
+                            echo "<script>alert('Leave request submitted successfully!');</script>";
+                            echo "<script>window.location.href = window.location.href;</script>";
+                        } else {
+                            echo "<script>alert('Error submitting leave request: " . $leave_rq_dbadd->error . "');</script>";
+                            echo "<script>window.location.href = window.location.href;</script>";
+                        }
+                        $leave_rq_dbadd->close();
+                    } else {
+                        echo "<script>alert('Error: Employee ID is missing. Please log in again.');</script>";
+                        echo "<script>window.location.href = window.location.href;</script>";
+                    }
+                }
+
+                $conn->close()
+
+            ?>
+
             <div id="feedback" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
                     <!-- Feedback Viewing Section -->

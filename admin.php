@@ -263,7 +263,6 @@
             <!-- PHP EDIT EMPLOYEE-->
             <?php
                 include 'connection.php';
-
                 if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_emp'])){
                     $edit_emp_ID = $_POST['edit_emp_ID'];
                     $edit_emp_PhoneNum = $_POST['edit_emp_PhoneNum'];
@@ -271,6 +270,23 @@
                     $edit_emp_fname = $_POST['edit_emp_fname'];
                     $edit_emp_lname = $_POST['edit_emp_lname'];
                     $edit_emp_bday = $_POST['edit_emp_bday'];
+
+                    $check_emp_db_save = "SELECT EMP_ID FROM employee WHERE EMP_ID = ?";
+                    $check_db_save = $conn->prepare($check_emp_db_save);
+                    $check_db_save->bind_param("i", $edit_emp_ID);
+                    $check_db_save->execute();
+                    $result_save = $check_db_save->get_result();
+                
+                    if ($result_save->num_rows == 0) {
+                         echo "<script>
+                                    alert('Error: Employee ID does not exist!');
+                                    window.location.href = window.location.href; // Reloads the page without stopping execution
+                                </script>";
+                        $check_db_save->close();
+                        return; // Stops the operation
+                    }
+                
+                    $check_db_save->close();
                 
                     $dbData_update = "UPDATE employee SET 
                                         EMP_PHONENUM = ?, 
@@ -295,6 +311,23 @@
 
                 if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_emp'])){
                     $edit_emp_ID = $_POST['edit_emp_ID'];
+
+                    $check_emp_db_delete = "SELECT EMP_ID FROM employee WHERE EMP_ID = ?";
+                    $check_db_delete = $conn->prepare($check_emp_db_delete);
+                    $check_db_delete->bind_param("i", $edit_emp_ID);
+                    $check_db_delete->execute();
+                    $result_delete = $check_db_delete->get_result();
+
+                    if ($result_delete->num_rows == 0) {
+                        echo "<script>
+                                alert('Error: Employee ID does not exist!');
+                                window.location.href = window.location.href; // Reloads the page without stopping execution
+                              </script>";
+                        $check_db_delete->close();
+                        return; // Stops the process
+                    }
+
+                    $check_db_delete->close();
 
                     $dbData_delete = "DELETE FROM employee WHERE EMP_ID = ?";
                     $emp_delete = $conn->prepare($dbData_delete);
@@ -444,9 +477,77 @@
             </div>
         </div>
 
+        
         <div id="leave" class="tab-pane fade">
-            <div id="leaveRequests"></div>
+            <?php 
+                include 'connection.php';
+                $get_leaveRQ = "SELECT lr.LEAVERQ_ID, lr.LEAVERQ_REASON, lr.LEAVERQ_DESCRIPT, 
+                                        lr.LEAVERQ_DATELEAVE, lr.LEAVERQ_RETURN, lr.LEAVERQ_STATUS, 
+                                        e.EMP_ID, e.EMP_FNAME, e.EMP_LNAME 
+                                FROM leave_request lr
+                                JOIN employee e ON lr.EMP_ID = e.EMP_ID
+                                WHERE lr.LEAVERQ_STATUS = 'Pending'
+                                ORDER BY lr.LEAVERQ_DATELEAVE ASC";
+        
+                $check = $conn->query($get_leaveRQ);
+        
+                if($check->num_rows > 0){
+                    while ($row = $check->fetch_assoc()) {
+                        echo "<div class='leave-request' style='background: #ddd; padding: 15px; margin: 15px 0; border-radius: 5px; display: flex; align-items: center; justify-content: space-between;'>";
+                        
+                        // Left side: Leave Details
+                        echo "<div class='leave-details' style='flex-grow: 1;'>";
+                        echo "<p><strong>" . $row['EMP_FNAME'] . " " . $row['EMP_LNAME'] . " (ID: " . $row['EMP_ID'] . ")</strong></p>";
+                        echo "<p><strong>Leave Date:</strong> " . date("F j, Y", strtotime($row['LEAVERQ_DATELEAVE'])) . " to " . date("F j, Y", strtotime($row['LEAVERQ_RETURN'])) . "</p>";
+                        echo "<p><strong>Reason:</strong> " . $row['LEAVERQ_REASON'] . "</p>";
+                        echo "<p><strong>Description:</strong> " . $row['LEAVERQ_DESCRIPT'] . "</p>";
+                        echo "</div>"; // End of leave-details div
+        
+                        // Right side: Buttons
+                        echo "<div class='action-buttons' style='display: flex; gap: 5px;'>";
+                        
+                        // Approve Button
+                        echo "<button class='approve-btn' style='background: green; color: white; padding: 5px; border: none; border-radius: 3px; width: 30px; height: 30px;' data-id='" . $row['LEAVERQ_ID'] . "'>✅</button>";
+        
+                        // Deny Button (Yellow Box with Minus Sign)
+                        echo "<button class='deny-btn' style='background: yellow; color: black; padding: 5px; border: none; border-radius: 3px; width: 30px; height: 30px;' data-id='" . $row['LEAVERQ_ID'] . "'>➖</button>";
+        
+                        echo "</div>"; // End of action-buttons div
+                        echo "</div>"; // End of leave-request div
+                    }
+                } 
+                else {
+                    echo "<p>No leave requests found.</p>";
+                }
+        
+                $conn->close();
+            ?>
         </div>
+
+        <!-- Script to handle approve or deny-->
+        <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("click", function (event) {
+                if (event.target.classList.contains("approve-btn") || event.target.classList.contains("deny-btn")) {
+                    const requestDiv = event.target.closest(".leave-request");
+                    requestDiv.remove(); // Remove from UI
+
+                    const leaveId = event.target.getAttribute("data-id");
+                    const action = event.target.classList.contains("approve-btn") ? "approve" : "deny";
+
+                    fetch("leave_handling.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: `leave_id=${leaveId}&action=${action}`
+                    })
+                    .then(response => response.text())
+                    .then(data => console.log(data))
+                    .catch(error => console.error("Error:", error));
+                }
+            });
+        });
+        </script>
+
 
         <div id="feedback" class="tab-pane fade">
             <div id="feedbackList" class="feedback-list">
