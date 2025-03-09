@@ -686,15 +686,69 @@ include('getempdetail.php'); // or use require()
                 <h4 class="text-center">Change Password</h4>
 
                 <div class="password-container">
-                    <form action="">
-                        <input type="password" id="currentPassword" placeholder="Current Password">
-                        <input type="password" id="newPassword" placeholder="New Password">
-                        <input type="password" id="confirmPassword" placeholder="Confirm Password">
-                        <button id="savePassword" type="submit" class="btn btn-success">Save Password</button>
+                    <form method = "POST">
+                        <input name="emp_old_pass" type="password" id="currentPassword" placeholder="Current Password" required>
+                        <input name="emp_newpass" type="password" id="newPassword" placeholder="New Password" required>
+                        <input name="emp_confirm_pass" type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                        <button name="change_pass_submit" type="submit" class="btn btn-success">Save Password</button>
                     </form>
                 </div>
             </div>
         </div>
+
+        <?php
+           include "connection.php";
+
+           if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_pass_submit'])) {
+               // Get user input
+               $currentPassword = $_POST["emp_old_pass"];
+               $newPassword = $_POST["emp_newpass"];
+               $confirmPassword = $_POST["emp_confirm_pass"];
+           
+               // Get employee ID from session
+               $emp_ID = $_SESSION["EMP_ID"] ?? null; 
+           
+               if (!$emp_ID) {
+                   echo "<script>alert('User not logged in.'); window.location.href='profile.php';</script>";
+                   exit();
+               }
+           
+               // Check if current password is correct
+               $check_old_pass = "SELECT EMP_PASS FROM employee WHERE EMP_ID = ?";
+               $checker_oldp = $conn->prepare($check_old_pass);
+               $checker_oldp->bind_param("i", $emp_ID);
+               $checker_oldp->execute();
+               $checker_oldp->bind_result($dbPassword);
+               $checker_oldp->fetch();
+               $checker_oldp->close();
+           
+               if ($dbPassword !== $currentPassword) {
+                   echo "<script>alert('Incorrect current password.'); window.location.href='profile.php';</script>";
+                   exit();
+               }
+           
+               // Check if new password matches confirm password
+               if ($newPassword !== $confirmPassword) {
+                   echo "<script>alert('New password and confirm password do not match.'); window.location.href='profile.php';</script>";
+                   exit();
+               }
+           
+               // Update password
+               $update_Pass = "UPDATE employee SET EMP_PASS = ? WHERE EMP_ID = ?";
+               $updating_emp_pass = $conn->prepare($update_Pass);
+               $updating_emp_pass->bind_param("si", $newPassword, $emp_ID);
+           
+               if ($updating_emp_pass->execute()) {
+                   echo "<script>alert('Password updated successfully.'); window.location.href='employee.php';</script>";
+               } else {
+                   echo "<script>alert('Error updating password.'); window.location.href='employee.php';</script>";
+               }
+           
+               // Close connections
+               $updating_emp_pass->close();
+               $conn->close();
+           }
+        ?>
 
     </section>
 

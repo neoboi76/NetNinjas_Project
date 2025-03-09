@@ -131,13 +131,14 @@
                                     <th>Phone Number</th>
                                     <th>Birth Date</th>
                                     <th>Joined Date</th>
+                                    <th>Email</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 include 'connection.php';
 
-                                $sql = "SELECT EMP_ID, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_PHONENUM, EMP_BIRTH, EMP_JOINED FROM employee";
+                                $sql = "SELECT EMP_ID, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_PHONENUM, EMP_BIRTH, EMP_JOINED, EMP_EMAIL FROM employee";
                                 $result = $conn->query($sql);
 
                                 if ($result->num_rows > 0) {
@@ -150,12 +151,13 @@
                                                 <td>{$row['EMP_PHONENUM']}</td>
                                                 <td>{$row['EMP_BIRTH']}</td>
                                                 <td>{$row['EMP_JOINED']}</td>
+                                                <td>{$row['EMP_EMAIL']}</td> <!-- Display the new Email column -->
                                             </tr>";
                                     }
                                 } else {
-                                    echo "<tr><td colspan='7' class='text-center'>No employees found</td></tr>";
+                                    echo "<tr><td colspan='8' class='text-center'>No employees found</td></tr>";
                                 }
-
+            
                                 $conn->close();
                                 ?>
                             </tbody>
@@ -355,76 +357,76 @@
                         <button class="btn btn-primary" id="feedbackHistoryBtn">View Feedback History</button>
                     </div>
 
-                    <form method="POST">
+
+                    <form method = "POST">
                         <div id="reviewContent">
                             <div class="mb-3">
-                                <input name="review-emp-id" style="border: 3px solid #b1b1b1; padding: 5px;" type="text"
+                                <input name = "adm_emp_send" style="border: 3px solid #b1b1b1; padding: 5px;" type="text"
                                     class="form-control bg-light" placeholder="Employee ID">
                             </div>
 
                             <div class="mb-3">
-                                <input name="review-subj" style="border: 3px solid #b1b1b1; padding: 5px;" type="text"
+                                <input name = "adm_subject" style="border: 3px solid #b1b1b1; padding: 5px;" type="text"
                                     class="form-control bg-light" placeholder="Subject">
                             </div>
 
                             <!-- Feedback Text Area -->
                             <div class="mb-3">
-                                <textarea name="review-text" style="border: 3px solid #b1b1b1; padding: 15px;"
+                                <textarea name = "adm_feedback" style="border: 3px solid #b1b1b1; padding: 15px;"
                                     class="form-control bg-light" rows="5" placeholder="Write Feedback"></textarea>
                             </div>
 
                             <!-- Submit Button -->
                             <div style="background-color: #f8f9fa; border: none;" class="d-flex justify-content-center">
-                                <button type="submit" name ="submit_emp_feedback" class="btn btn-primary">Submit</button>
+                                <button name = "adm_review_sub" type="submit" class="btn btn-primary">Submit</button>
                             </div>
                     </form>
+
+                    <!-- PHP Review work in progress-->
                     <?php
-                        /*
-                       // Include database connection
-                       include 'db_connection.php';
-                       
-                       // Enable error reporting for debugging
-                       mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-                       
-                       if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_emp_feedback'])) {
-                           // Get form values
-                           $emp_id = trim($_POST['review-emp-id']);  // Ensure no extra spaces
-                           $review_text = trim($_POST['review-text']);
-                           $eval_date = date("Y-m-d"); // Today's date
-                           $admin_id = isset($admin) ? $admin : null; // Check if $admin is set
-                       
-                           // Debugging log
-                           error_log("Emp ID: $emp_id, Admin ID: $admin_id, Date: $eval_date, Feedback: $review_text");
-                       
-                           // Validate input
-                           if (empty($emp_id) || empty($review_text) || empty($admin_id)) {
-                               die("<script>alert('Missing required fields.');</script>");
-                           }
-                       
-                           // Prepare SQL statement
-                           $sql = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) 
-                                   VALUES (?, ?, ?, ?)";
-                       
-                           try {
-                               $stmt = $conn->prepare($sql);
-                               $stmt->bind_param("ssii", $review_text, $eval_date, $emp_id, $admin_id);
-                       
-                               if ($stmt->execute()) {
-                                   echo "<script>alert('Feedback submitted successfully!');</script>";
-                               } else {
-                                   echo "<script>alert('Error submitting feedback.');</script>";
-                               }
-                       
-                               $stmt->close();
-                           } catch (Exception $e) {
-                               error_log("SQL Error: " . $e->getMessage());
-                               die("<script>alert('Database error: " . addslashes($e->getMessage()) . "');</script>");
-                           }
-                       
-                           $conn->close();
+                    /*
+                        include "connection.php";
+                        
+                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adm_review_sub'])) {
+                            $emp_id = $_POST['adm_emp_send'];
+                            $adm_subject = $_POST['adm_subject'];
+                            $adm_feedback = $_POST['adm_feedback'];
+                            $admin_id = $_SESSION["ADM_ID"] ?? null;
+                        
+                            if ($admin_id === null) {
+                                echo "<script>alert('Admin not logged in.'); window.location.href='admin.php';</script>";
+                                exit();
+                            }
+        
+                            $check_emp = "SELECT * FROM employee WHERE EMP_ID = ?";
+                            $checker = $conn->prepare($check_emp);
+                            $checker->bind_param("i", $emp_id);
+                            $checker->execute();
+                            $result = $checker->get_result();
+                        
+                            if ($result->num_rows > 0) {
+                                // Employee ID exists, proceed with insertion
+                                $give_feedback = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) VALUES (?, NOW(), ?, ?)";
+                                $adm_give_feed = $conn->prepare($give_feedback);
+                                $adm_give_feed->bind_param("sii", $adm_feedback, $emp_id, $admin_id);
+                        
+                                if ($adm_give_feed->execute()) {
+                                    echo "<script>alert('Feedback successfully submitted!'); window.location.href='admin.php';</script>";
+                                } else {
+                                    echo "<script>alert('Error submitting feedback: " . $adm_give_feed->error . "'); window.location.href='admin.php';</script>";
+                                }
+                                $adm_give_feed->close();
+                            } else {
+                                // Employee ID does not exist
+                                echo "<script>alert('Error: Employee ID not found!'); window.location.href='admin.php';</script>";
+                            }
+                        
+                            $checker->close();
+                            $conn->close();
                         }
-                        */
+                    */
                     ?>
+
                 </div>
                 
                 <!-- Feedback History (Initially Hidden) -->
@@ -893,12 +895,65 @@
                 <h4 class="text-center">Change Password</h4>
 
                 <div class="password-container">
-                    <form id="changePasswordAdmin">
-                        <input type="password" id="currentPassword" placeholder="Current Password">
-                        <input type="password" id="newPassword" placeholder="New Password">
-                        <input type="password" id="confirmPassword" placeholder="Confirm Password">
-                        <button id="savePassword" type="submit" class="btn btn-success">Save Password</button>
+                    <form method = "POST">
+                        <input name = "old_pass_admin" type="password" id="currentPassword" placeholder="Current Password">
+                        <input name = "new_pass_admin" type="password" id="newPassword" placeholder="New Password">
+                        <input name = "confirm_new_admin" type="password" id="confirmPassword" placeholder="Confirm Password">
+                        <button name = "admin_changepass_submit" id="savePassword" type="submit" class="btn btn-success">Save Password</button>
                     </form>
+
+                    <!--PHP CHANGE PASS ADMIN-->
+                    <?php 
+                        include  "connection.php";
+
+                        if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['admin_changepass_submit'])){
+                            $admin_ID = $_SESSION["ADM_ID"] ?? null;
+                            if ($admin_ID === null) {
+                                echo "<script>alert('Admin not logged in.'); window.location.href='admin.php';</script>";
+                                exit();
+                            }
+
+                            $old_pass_admin = $_POST['old_pass_admin'];
+                            $new_pass_admin = $_POST['new_pass_admin'];
+                            $confirm_new_admin = $_POST["confirm_new_admin"];
+
+                            $sql_pass_checker = "SELECT ADM_PASS FROM administrator WHERE ADM_ID = ?";
+                            $adm_pass_checker = $conn->prepare($sql_pass_checker);
+                            $adm_pass_checker->bind_param("i", $admin_ID);
+                            $adm_pass_checker->execute();
+                            $adm_pass_checker->bind_result($dbPassword);
+                            $adm_pass_checker->fetch();
+                            $adm_pass_checker->close();
+
+                            // Check if old password is correct
+                            if ($old_pass_admin !== $dbPassword) {
+                                echo "<script>alert('Incorrect current password.'); window.location.href='admin.php';</script>";
+                                exit();
+                            }
+
+                            // Check if new passwords match
+                            if ($new_pass_admin !== $confirm_new_admin) {
+                                echo "<script>alert('New password and confirm password do not match.'); window.location.href='admin.php';</script>";
+                                exit();
+                            }
+
+                            // Update password
+                            $adm_pass_update = "UPDATE administrator SET ADM_PASS = ? WHERE ADM_ID = ?";
+                            $update_admpass = $conn->prepare($adm_pass_update);
+                            $update_admpass->bind_param("si", $new_pass_admin, $admin_ID);
+
+                            if ($update_admpass->execute()) {
+                                echo "<script>alert('Password updated successfully.'); window.location.href='admin.php';</script>";
+                            } else {
+                                echo "<script>alert('Error updating password.'); window.location.href='admin.php';</script>";
+                            }
+
+                            // Close connections
+                            $update_admpass->close();
+                            $conn->close();
+                        }
+                    ?>
+
                 </div>
             </div>
         </div>
