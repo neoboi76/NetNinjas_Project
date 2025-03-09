@@ -643,51 +643,40 @@ include('getempdetail.php'); // or use require()
                             <button type="submit" name="submit_feedback" class="btn btn-success">Submit Feedback</button>
                         </div>
                     </form> 
-                    
-                    
+
                     <?php
-                    /*
-                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_feedback'])) {
-                            // Ensure the employee variable is set and contains the necessary information.
-        
-                            if (isset($employee['EMP_ID']) && isset($employee['ADM_ID_FK_EMP'])) {
-                                // Get the employee and admin IDs
-                                $employeeId = $employee['EMP_ID'];  // Employee being reviewed
-                                $adminId = $employee['ADM_ID_FK_EMP'];  // Admin providing feedback
+                        // Include your database connection
+                        include 'connection.php';
 
-                                // Sanitize the feedback input
-                                $feedback = htmlspecialchars($_POST['feedback-text']);
+                        // If you have the employee details, such as $employee['EMP_ID']
+                        $empId = $employee['EMP_ID'];  // Assuming $employee['EMP_ID'] contains the logged-in employee's ID
+                        $admId = $employee['ADM_ID_FK_EMP']; // Set the admin ID, or you can fetch this dynamically based on the logged-in admin
 
-                                // Get the current date
-                                $evalDate = date('Y-m-d');
+                        if (isset($_POST['submit_feedback'])) {
+                            // Get the feedback text from the form
+                            $feedbackText = $_POST['feedback-text'];
+                            
+                            // Sanitize the input to prevent SQL injection
+                            $feedbackText = mysqli_real_escape_string($conn, $feedbackText);
 
-                                // Prepare the SQL query to insert the feedback
-                                $dbData_insert = "INSERT INTO evaluation (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) 
-                                                VALUES (?, ?, ?, ?)";
-                                $insert_feedback = $conn->prepare($dbData_insert);
-                                if ($insert_feedback) {
-                                    // Bind parameters to the query
-                                    $insert_feedback->bind_param("ssii", $feedback, $evalDate, $employeeId, $adminId);
-
-                                    // Execute the query
-                                    if ($insert_feedback->execute()) {
-                                        echo "<script>alert('Thank you for your feedback!');</script>";
-                                        echo "<script>window.location.href = window.location.href;</script>";  // Prevents form resubmission on refresh
-                                    } else {
-                                        echo "<script>alert('Error submitting feedback: " . $insert_feedback->error . "');</script>";
-                                    }
-                                    
-                                    // Close the prepared statement
-                                    $insert_feedback->close();
-                                    return;
-                                } else {
-                                    echo "<script>alert('Failed to prepare the query: " . $conn->error . "');</script>";
-                                }
+                            // Validate feedback (optional)
+                            if (empty($feedbackText)) {
+                                #echo "Feedback cannot be empty.";
                             } else {
-                                echo "<script>alert('Missing employee or admin data.');</script>";
+                                // Prepare the SQL query to insert feedback into the evaluation table
+                                $sql = "INSERT INTO evaluation (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) 
+                                        VALUES ('$feedbackText', NOW(), $empId, $admId)";
+                                
+                                if ($conn->query($sql) === TRUE) {
+                                    #echo "Feedback submitted successfully.";
+                                } else {
+                                    #echo "Error: " . $sql . "<br>" . $conn->error;
+                                }
                             }
                         }
-                    */
+
+                        // Close the database connection
+                        $conn->close();
                     ?>
 
                     <!-- Back Button -->
