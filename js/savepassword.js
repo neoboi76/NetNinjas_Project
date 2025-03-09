@@ -1,5 +1,5 @@
 document.getElementById("savePassword").addEventListener("click", function(event) {
-    event.preventDefault();  // Prevent the default form submission
+    event.preventDefault();  // Prevents the form from submitting (REMOVE THIS LINE)
 
     const currentPassword = document.getElementById("currentPassword").value;
     const newPassword = document.getElementById("newPassword").value;
@@ -26,7 +26,7 @@ document.getElementById("savePassword").addEventListener("click", function(event
         method: "POST",
         body: formData
     })
-    .then(response => response.json())
+    .then(response => response.json()) // THIS LINE CAUSES THE ERROR!
     .then(data => {
         if (data.success) {
             alert("Password updated successfully.");
