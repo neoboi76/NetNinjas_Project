@@ -384,6 +384,7 @@
 
                     <!-- PHP Review work in progress-->
                     <?php
+                    /*
                         include "connection.php";
                         
                         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adm_review_sub'])) {
@@ -423,6 +424,7 @@
                             $checker->close();
                             $conn->close();
                         }
+                        */
                     ?>
 
                 </div>
