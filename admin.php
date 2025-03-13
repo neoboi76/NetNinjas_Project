@@ -410,6 +410,7 @@ include('getadmdetail.php');
 
                     <!-- PHP Review work in progress-->
                     <?php
+<<<<<<< HEAD
                     include "connection.php";
 
                     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["adm_review_sub"])) {
@@ -449,6 +450,49 @@ include('getadmdetail.php');
                         $checker->close();
                         $conn->close();
                     }
+=======
+                    /*
+                        include "connection.php";
+                        
+                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adm_review_sub'])) {
+                            $emp_id = $_POST['adm_emp_send'];
+                            $adm_subject = $_POST['adm_subject'];
+                            $adm_feedback = $_POST['adm_feedback'];
+                            $admin_id = $_SESSION["ADM_ID"] ?? null;
+                        
+                            if ($admin_id === null) {
+                                echo "<script>alert('Admin not logged in.'); window.location.href='admin.php';</script>";
+                                exit();
+                            }
+        
+                            $check_emp = "SELECT * FROM employee WHERE EMP_ID = ?";
+                            $checker = $conn->prepare($check_emp);
+                            $checker->bind_param("i", $emp_id);
+                            $checker->execute();
+                            $result = $checker->get_result();
+                        
+                            if ($result->num_rows > 0) {
+                                // Employee ID exists, proceed with insertion
+                                $give_feedback = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) VALUES (?, NOW(), ?, ?)";
+                                $adm_give_feed = $conn->prepare($give_feedback);
+                                $adm_give_feed->bind_param("sii", $adm_feedback, $emp_id, $admin_id);
+                        
+                                if ($adm_give_feed->execute()) {
+                                    echo "<script>alert('Feedback successfully submitted!'); window.location.href='admin.php';</script>";
+                                } else {
+                                    echo "<script>alert('Error submitting feedback: " . $adm_give_feed->error . "'); window.location.href='admin.php';</script>";
+                                }
+                                $adm_give_feed->close();
+                            } else {
+                                // Employee ID does not exist
+                                echo "<script>alert('Error: Employee ID not found!'); window.location.href='admin.php';</script>";
+                            }
+                        
+                            $checker->close();
+                            $conn->close();
+                        }
+                        */
+>>>>>>> 9d85bb91d8cd1bd4a1adf688aef0aeb358edae23
                     ?>
 
                 </div>
