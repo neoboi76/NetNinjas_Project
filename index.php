@@ -51,10 +51,21 @@
             </div>
             <button id="login" type="submit" class="btn btn-primary btn-login">Log In</button>
          </form>
+
+         <div class="privacy-notice text-center mt-3 p-2">
+            <small>
+               Barangay San Antonio values your privacy. In compliance with the Data Privacy Act of 2012, we ensure that
+               any personal information collected through this website is protected and used solely for official
+               barangay purposes. Once operational, the barangay will have full control over the website and its data
+               management, ensuring transparency and accountability in handling your information. If you have any
+               concerns regarding data privacy, please reach out to the barangay office.
+            </small>
+         </div>
+
       </div>
    </section>
 
-   
+
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"></script>

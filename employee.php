@@ -43,11 +43,7 @@ include('getempdetail.php'); // or use require()
 
     <section class="sidebar">
         <img src="./images/juoross.jpg" class="img-thumbnail" style="contain: cover; width: 120px; height: 120px;">
-        <!--
-        <p>Employee ID: <b> 696969</b></p>
-        <p>First Name: <b>Juoross Phillip</b></p>
-        <p>Last Name: <b>Jose</b></p>
-        -->
+
         <p>Employee ID: <b><?php echo $employee['EMP_ID']; ?></b></p>
         <p>First Name: <b><?php echo $employee['EMP_FNAME']; ?></b></p>
         <p>Last Name: <b><?php echo $employee['EMP_LNAME']; ?></b></p>
@@ -61,7 +57,6 @@ include('getempdetail.php'); // or use require()
                             Report</a></li>
                     <li><a class="dropdown-item" href="#documents" data-bs-toggle="tab">Documents</a>
                     </li>
-                    <li><a class="dropdown-item" href="#records" data-bs-toggle="tab">Records</a></li>
                 </ul>
             </li>
             <li class="nav-item leave"><a class="nav-link" id="leave1" href="#leave" data-bs-toggle="tab">Leave</a></li>
@@ -77,9 +72,34 @@ include('getempdetail.php'); // or use require()
                 style="contain: cover; width: 75px; height: 75px; border-radius: 50%;">
             <p style="color: white">&nbsp;&nbsp;<b>Settings</b></p>
         </div>
-        <h2 id="pageTitle"><b>Welcome</b></h2>
+        <h2 id="pageTitle"><b>Announcement</b></h2>
         <div class="tab-content">
-            <div id="welcome" class="tab-pane fade show active">Welcome!</div>
+            <div id="welcome" class="tab-pane fade show active">
+                <div class="container-fluid p-3">
+                    <div class="row">
+                        <!-- Large Content Box -->
+                        <div class="col-md-8">
+                            <div class="content-placeholder content-container1">
+                                <p>Future Dynamic Content 1</p>
+                            </div>
+                        </div>
+                        <!-- Small Content Box -->
+                        <div class="col-md-4">
+                            <div class="content-placeholder content-container2">
+                                <p>Future Dynamic Content 2</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <!-- Full Width Content Box -->
+                        <div class="col-12">
+                            <div class="content-placeholder content-container3">
+                                <p>Future Dynamic Content 3</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="announcement" class="tab-pane fade">
                 <div class="container-fluid p-3">
                     <div class="row">
@@ -112,39 +132,39 @@ include('getempdetail.php'); // or use require()
                     <div class="content-box text-center d-flex">
                         <div id="assignedCases" class="tab-pane p-2 bg-light rounded">
                             <div class="assignedCases-list">
-                                <?php 
-                                    include 'connection.php';
+                                <?php
+                                include 'connection.php';
 
-                                    // Assuming the logged-in employee's ID is stored in a session variable, for example:
-                                    $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
+                                // Assuming the logged-in employee's ID is stored in a session variable, for example:
+                                $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
+                                
+                                // Fetch evaluations for the logged-in employee only
+                                $sql_fetch_feedback = "SELECT * FROM cases WHERE EMP_ID_FK_CASE = ? ORDER BY CASE_DATE DESC";
+                                $stmt = $conn->prepare($sql_fetch_feedback);
+                                $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
+                                
+                                $stmt->execute();
+                                $result = $stmt->get_result();
 
-                                    // Fetch evaluations for the logged-in employee only
-                                    $sql_fetch_feedback = "SELECT * FROM cases WHERE EMP_ID_FK_CASE = ? ORDER BY CASE_DATE DESC";
-                                    $stmt = $conn->prepare($sql_fetch_feedback);
-                                    $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
-
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
-
-                                    if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) { ?>
-                                            <div class="assignedCases-item">
-                                                <div class="assignedCases-header">
-                                                    <span><strong>ID:</strong> <?php echo $row['CASE_ID']; ?></span>
-                                                    <span><strong>Subject:</strong> <?php echo $row['CASE_SUBJ']; ?></span>
-                                                    <span><strong>Issued:</strong> <?php echo $row['CASE_DATE']; ?></span>
-                                                </div>
-                                                <div class="assignedCases-text">
-                                                   <span><?php echo $row['CASE_DESC']; ?></span>
-                                                </div>
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) { ?>
+                                        <div class="assignedCases-item">
+                                            <div class="assignedCases-header">
+                                                <span><strong>ID:</strong> <?php echo $row['CASE_ID']; ?></span>
+                                                <span><strong>Subject:</strong> <?php echo $row['CASE_SUBJ']; ?></span>
+                                                <span><strong>Issued:</strong> <?php echo $row['CASE_DATE']; ?></span>
                                             </div>
-                                        <?php }
-                                    } else {
-                                        echo "<p>No feedback records found.</p>";
-                                    }
-                                    
-                                    $stmt->close();
-                                    $conn->close();
+                                            <div class="assignedCases-text">
+                                                <span><?php echo $row['CASE_DESC']; ?></span>
+                                            </div>
+                                        </div>
+                                    <?php }
+                                } else {
+                                    echo "<p>No feedback records found.</p>";
+                                }
+
+                                $stmt->close();
+                                $conn->close();
                                 ?>
                             </div>
                         </div>
@@ -157,13 +177,14 @@ include('getempdetail.php'); // or use require()
                                 <!-- Activity Input -->
                                 <div class="col-md-8">
                                     <label for="activity" class="form-label">Activity</label>
-                                    <input name = "emp_case_activity" type="text" class="form-control" id="activity" placeholder="Enter activity">
+                                    <input name="emp_case_activity" type="text" class="form-control" id="activity"
+                                        placeholder="Enter activity">
                                 </div>
 
                                 <!-- Date Input -->
                                 <div class="col-md-4">
                                     <label for="date" class="form-label">Date</label>
-                                    <input name = "emp_case_date" type="date" class="form-control" id="date">
+                                    <input name="emp_case_date" type="date" class="form-control" id="date">
                                 </div>
                             </div>
 
@@ -171,20 +192,20 @@ include('getempdetail.php'); // or use require()
                                 <!-- Work Accomplished Textarea -->
                                 <div class="col-md-9">
                                     <label for="work" class="form-label">Work Accomplished</label>
-                                    <textarea name = "emp_case_accomplished" class="form-control" id="work" rows="4"
+                                    <textarea name="emp_case_accomplished" class="form-control" id="work" rows="4"
                                         placeholder="Describe the work accomplished"></textarea>
                                 </div>
 
                                 <!-- Time Input -->
                                 <div class="col-md-3">
                                     <label for="time" class="form-label">Time</label>
-                                    <input name = "emp_case_time" type="time" class="form-control" id="time">
+                                    <input name="emp_case_time" type="time" class="form-control" id="time">
                                 </div>
                             </div>
 
                             <!-- Submit Button -->
                             <div class="text-end">
-                                <button name ="emp_case_submit" type="submit" class="btn btn-primary">Submit</button>
+                                <button name="emp_case_submit" type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -192,39 +213,39 @@ include('getempdetail.php'); // or use require()
             </div>
 
             <!-- PHP CASE REPORT-->
-            <?php 
-                include "connection.php";
-            
-                if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['emp_case_submit'])){
-                    $emp_case_activity = $_POST['emp_case_activity'];
-                    $emp_case_date = $_POST['emp_case_date'];
-                    $emp_case_accomplished = $_POST['emp_case_accomplished'];
-                    $emp_case_time = $_POST['emp_case_time'];
-            
-                    if(isset($_SESSION['EMP_ID'])){
-                        $case_emp_id = $_SESSION['EMP_ID'];
-            
-                        $case_sql_add = "INSERT INTO report (RPT_ACT, RPT_ACCOMP, RPT_DATE, RPT_TIME, EMP_ID) VALUES (?, ?, ?, ?, ?)";
-                        $case_db_add = $conn->prepare($case_sql_add);
-                        $case_db_add->bind_param("ssssi", $emp_case_activity, $emp_case_accomplished, $emp_case_date, $emp_case_time, $case_emp_id);
-            
-                        // Execute statement
-                        if($case_db_add->execute()) {
-                            echo "<script>alert('Case Report Successfully Submitted!');</script>";
-                            echo "<script>window.location.href = window.location.href;</script>";
-                        } else {
-                            echo "<script>alert('Error: " . $case_db_add->error . "');</script>";
-                            echo "<script>window.location.href = window.location.href;</script>";
-                        }
-            
-                        $case_db_add->close();
+            <?php
+            include "connection.php";
+
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['emp_case_submit'])) {
+                $emp_case_activity = $_POST['emp_case_activity'];
+                $emp_case_date = $_POST['emp_case_date'];
+                $emp_case_accomplished = $_POST['emp_case_accomplished'];
+                $emp_case_time = $_POST['emp_case_time'];
+
+                if (isset($_SESSION['EMP_ID'])) {
+                    $case_emp_id = $_SESSION['EMP_ID'];
+
+                    $case_sql_add = "INSERT INTO report (RPT_ACT, RPT_ACCOMP, RPT_DATE, RPT_TIME, EMP_ID) VALUES (?, ?, ?, ?, ?)";
+                    $case_db_add = $conn->prepare($case_sql_add);
+                    $case_db_add->bind_param("ssssi", $emp_case_activity, $emp_case_accomplished, $emp_case_date, $emp_case_time, $case_emp_id);
+
+                    // Execute statement
+                    if ($case_db_add->execute()) {
+                        echo "<script>alert('Case Report Successfully Submitted!');</script>";
+                        echo "<script>window.location.href = window.location.href;</script>";
                     } else {
-                        echo "<script>alert('Error: Employee ID is missing!');</script>";
+                        echo "<script>alert('Error: " . $case_db_add->error . "');</script>";
                         echo "<script>window.location.href = window.location.href;</script>";
                     }
+
+                    $case_db_add->close();
+                } else {
+                    echo "<script>alert('Error: Employee ID is missing!');</script>";
+                    echo "<script>window.location.href = window.location.href;</script>";
                 }
-            
-                $conn->close();
+            }
+
+            $conn->close();
             ?>
 
             <div id="documents" class="tab-pane fade">
@@ -243,32 +264,32 @@ include('getempdetail.php'); // or use require()
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php 
-                                    include 'connection.php';
+                                <?php
+                                include 'connection.php';
 
-                                    $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
-                                    $stmt = $conn->prepare($sql_fetch_feedback);
+                                $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
+                                $stmt = $conn->prepare($sql_fetch_feedback);
 
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
+                                $stmt->execute();
+                                $result = $stmt->get_result();
 
-                                    if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) { ?>
-                                            <tr>
-                                                <td><?php echo $row['F_DATE']; ?></td>
-                                                <td><?php echo $row['F_DEPT']; ?></td>
-                                                <td><?php echo $row['F_TYPE']; ?></td>
-                                                <td><?php echo $row['F_NAME']; ?></td>
-                                                <td><a href="<?php echo $row['F_PATH']; ?>" download="<?php echo $row['F_NAME']; ?>"
-                                                        class="btn btn-primary">Download</a></td>
-                                            </tr>
-                                        <?php }
-                                    } else {
-                                        echo "<p>No feedback records found.</p>";
-                                    }
-                                    
-                                    $stmt->close();
-                                    $conn->close();
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) { ?>
+                                        <tr>
+                                            <td><?php echo $row['F_DATE']; ?></td>
+                                            <td><?php echo $row['F_DEPT']; ?></td>
+                                            <td><?php echo $row['F_TYPE']; ?></td>
+                                            <td><?php echo $row['F_NAME']; ?></td>
+                                            <td><a href="<?php echo $row['F_PATH']; ?>" download="<?php echo $row['F_NAME']; ?>"
+                                                    class="btn btn-primary">Download</a></td>
+                                        </tr>
+                                    <?php }
+                                } else {
+                                    echo "<p>No feedback records found.</p>";
+                                }
+
+                                $stmt->close();
+                                $conn->close();
                                 ?>
                                 <!--
                                 <tr>
@@ -294,101 +315,6 @@ include('getempdetail.php'); // or use require()
                 </div>
             </div>
 
-
-            <div id="records" class="tab-pane fade">
-
-                <!-- Placeholder for future content -->
-
-
-                <div class="content-header p-3 bg-light">
-
-
-                    <h5><b>Track Work Evaluation</b></h5>
-                </div>
-                <!-- Work Evaluation Table -->
-                <div class="container p-3">
-                    <div class="evaluation-container p-3" style="background-color: #b0b0b0; border-radius: 10px;">
-                        <form id="evaluationForm">
-                            <table class="table table-bordered text-center">
-                                <thead>
-                                    <tr class="bg-secondary text-white">
-                                        <th colspan="4">Performance Standards</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Criteria</th>
-                                        <th>Poor</th>
-                                        <th>Good</th>
-                                        <th>Great</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Row Template -->
-                                    <tr>
-                                        <td>Work quality</td>
-                                        <td><input type="radio" name="work_quality" value="Poor"></td>
-                                        <td><input type="radio" name="work_quality" value="Good"></td>
-                                        <td><input type="radio" name="work_quality" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Work autonomy</td>
-                                        <td><input type="radio" name="work_autonomy" value="Poor"></td>
-                                        <td><input type="radio" name="work_autonomy" value="Good"></td>
-                                        <td><input type="radio" name="work_autonomy" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Shows initiative</td>
-                                        <td><input type="radio" name="shows_initiative" value="Poor"></td>
-                                        <td><input type="radio" name="shows_initiative" value="Good"></td>
-                                        <td><input type="radio" name="shows_initiative" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Productivity</td>
-                                        <td><input type="radio" name="productivity" value="Poor"></td>
-                                        <td><input type="radio" name="productivity" value="Good"></td>
-                                        <td><input type="radio" name="productivity" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Integrity</td>
-                                        <td><input type="radio" name="integrity" value="Poor"></td>
-                                        <td><input type="radio" name="integrity" value="Good"></td>
-                                        <td><input type="radio" name="integrity" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Technical Skills</td>
-                                        <td><input type="radio" name="technical_skills" value="Poor"></td>
-                                        <td><input type="radio" name="technical_skills" value="Good"></td>
-                                        <td><input type="radio" name="technical_skills" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Creativity</td>
-                                        <td><input type="radio" name="creativity" value="Poor"></td>
-                                        <td><input type="radio" name="creativity" value="Good"></td>
-                                        <td><input type="radio" name="creativity" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Attendance</td>
-                                        <td><input type="radio" name="attendance" value="Poor"></td>
-                                        <td><input type="radio" name="attendance" value="Good"></td>
-                                        <td><input type="radio" name="attendance" value="Great"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Teamwork</td>
-                                        <td><input type="radio" name="teamwork" value="Poor"></td>
-                                        <td><input type="radio" name="teamwork" value="Good"></td>
-                                        <td><input type="radio" name="teamwork" value="Great"></td>
-
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <!-- Submit Button -->
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Submit Evaluation</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
             <div id="leave" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
                     <h4 class="mb-3"><b>Leave Request Form</b></h4>
@@ -397,14 +323,14 @@ include('getempdetail.php'); // or use require()
                         <!-- Reason Field -->
                         <div class="mb-3">
                             <label for="reason" class="form-label">Reason</label>
-                            <textarea name = "leave_reason" id="reason" class="form-control" rows="3"
+                            <textarea name="leave_reason" id="reason" class="form-control" rows="3"
                                 placeholder="Enter your reason"></textarea>
                         </div>
 
                         <!-- Description Field -->
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea name = "leave_descript" id="description" class="form-control" rows="3"
+                            <textarea name="leave_descript" id="description" class="form-control" rows="3"
                                 placeholder="Provide additional details"></textarea>
                         </div>
 
@@ -412,93 +338,93 @@ include('getempdetail.php'); // or use require()
                             <!-- Date of Leave -->
                             <div class="col-md-6">
                                 <label for="dateLeave" class="form-label">Date of Leave</label>
-                                <input name = "leave_start" type="date" id="dateLeave" class="form-control">
+                                <input name="leave_start" type="date" id="dateLeave" class="form-control">
                             </div>
 
                             <!-- Date of Return -->
                             <div class="col-md-6">
                                 <label for="dateReturn" class="form-label">Date of Return</label>
-                                <input name = "leave_return" type="date" id="dateReturn" class="form-control">
+                                <input name="leave_return" type="date" id="dateReturn" class="form-control">
                             </div>
                         </div>
 
                         <!-- Submit Button -->
                         <div class="mt-3 text-center">
-                            <button name = "leave_emp_submit" type="submit" class="btn btn-primary w-10">Submit</button>
+                            <button name="leave_emp_submit" type="submit" class="btn btn-primary w-10">Submit</button>
                         </div>
                     </form>
                 </div>
             </div>
 
             <!--PHP LEAVE REQUEST-->
-            <?php 
-                include 'connection.php';
+            <?php
+            include 'connection.php';
 
-                if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['leave_emp_submit'])){
-                    $leave_reason = $_POST['leave_reason'];
-                    $leave_descript = $_POST['leave_descript'];
-                    $leave_start = $_POST['leave_start'];
-                    $leave_return = $_POST['leave_return'];
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['leave_emp_submit'])) {
+                $leave_reason = $_POST['leave_reason'];
+                $leave_descript = $_POST['leave_descript'];
+                $leave_start = $_POST['leave_start'];
+                $leave_return = $_POST['leave_return'];
 
-                    if(isset($_SESSION['EMP_ID'])){
-                        $leave_emp_id = $_SESSION['EMP_ID'];
+                if (isset($_SESSION['EMP_ID'])) {
+                    $leave_emp_id = $_SESSION['EMP_ID'];
 
-                        $leave_rq_sql = "INSERT INTO leave_request (LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, EMP_ID) 
+                    $leave_rq_sql = "INSERT INTO leave_request (LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, EMP_ID) 
                          VALUES (?, ?, ?, ?, ?)";
-        
-                        $leave_rq_dbadd = $conn->prepare($leave_rq_sql);
-                        $leave_rq_dbadd->bind_param("ssssi", $leave_reason, $leave_descript, $leave_start, $leave_return, $leave_emp_id);
 
-                        if ($leave_rq_dbadd->execute()) {
-                            echo "<script>alert('Leave request submitted successfully!');</script>";
-                            echo "<script>window.location.href = window.location.href;</script>";
-                        } else {
-                            echo "<script>alert('Error submitting leave request: " . $leave_rq_dbadd->error . "');</script>";
-                            echo "<script>window.location.href = window.location.href;</script>";
-                        }
-                        $leave_rq_dbadd->close();
+                    $leave_rq_dbadd = $conn->prepare($leave_rq_sql);
+                    $leave_rq_dbadd->bind_param("ssssi", $leave_reason, $leave_descript, $leave_start, $leave_return, $leave_emp_id);
+
+                    if ($leave_rq_dbadd->execute()) {
+                        echo "<script>alert('Leave request submitted successfully!');</script>";
+                        echo "<script>window.location.href = window.location.href;</script>";
                     } else {
-                        echo "<script>alert('Error: Employee ID is missing. Please log in again.');</script>";
+                        echo "<script>alert('Error submitting leave request: " . $leave_rq_dbadd->error . "');</script>";
                         echo "<script>window.location.href = window.location.href;</script>";
                     }
+                    $leave_rq_dbadd->close();
+                } else {
+                    echo "<script>alert('Error: Employee ID is missing. Please log in again.');</script>";
+                    echo "<script>window.location.href = window.location.href;</script>";
                 }
+            }
 
-                $conn->close()
+            $conn->close()
 
-            ?>
+                ?>
 
             <div id="feedback" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
                     <!-- Feedback Viewing Section -->
                     <div class="list-group">
-                        <?php 
-                            include 'connection.php';
+                        <?php
+                        include 'connection.php';
 
-                            // Assuming the logged-in employee's ID is stored in a session variable, for example:
-                            $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
+                        // Assuming the logged-in employee's ID is stored in a session variable, for example:
+                        $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
+                        
+                        // Fetch evaluations for the logged-in employee only
+                        $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE EMP_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC";
+                        $stmt = $conn->prepare($sql_fetch_feedback);
+                        $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
+                        
+                        $stmt->execute();
+                        $result = $stmt->get_result();
 
-                            // Fetch evaluations for the logged-in employee only
-                            $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE EMP_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC";
-                            $stmt = $conn->prepare($sql_fetch_feedback);
-                            $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) { ?>
+                                <div class="feedback-item">
+                                    <h6 class="mb-1"><b>From: <?php echo $employee['ADM_FNAME']; ?></b></h6>
+                                    <p class="mb-1"> <?php echo $row['EVAL_NOTE']; ?></p>
+                                    <small class="text-muted"><?php echo $row['EVAL_DATE']; ?></small>
+                                </div>
+                            <?php }
+                        } else {
+                            echo "<p>No feedback records found.</p>";
+                        }
 
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) { ?>
-                                    <div class="feedback-item">
-                                        <h6 class="mb-1"><b>From: <?php echo $employee['ADM_FNAME']; ?></b></h6>
-                                        <p class="mb-1"> <?php echo $row['EVAL_NOTE']; ?></p>
-                                        <small class="text-muted"><?php echo $row['EVAL_DATE']; ?></small>
-                                    </div>
-                                <?php }
-                            } else {
-                                echo "<p>No feedback records found.</p>";
-                            }
-                            
-                            $stmt->close();
-                            $conn->close();
+                        $stmt->close();
+                        $conn->close();
                         ?>
                     </div>
                     <!--
@@ -528,53 +454,55 @@ include('getempdetail.php'); // or use require()
 
             <div id="reviewSuperior" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
-                    <h4 class="mb-3 text-center"><b>Review Your Direct Superior (<?php echo $employee['ADM_FNAME'] . " " . $employee['ADM_LNAME']; ?>)</b></h4>
+                    <h4 class="mb-3 text-center"><b>Review Your Direct Superior
+                            (<?php echo $employee['ADM_FNAME'] . " " . $employee['ADM_LNAME']; ?>)</b></h4>
                     <!-- Make the name of the superior dynamic.-->
 
-                    <form method ="POST">
+                    <form method="POST">
                         <div class="mb-3">
                             <label for="superiorFeedback" class="form-label">Your Feedback</label>
                             <textarea name="feedback-text" class="form-control" id="superiorFeedback" rows="4"
                                 placeholder="Write your feedback here..."></textarea>
                         </div>
                         <div class="text-center">
-                            <button type="submit" name="submit_feedback" class="btn btn-success">Submit Feedback</button>
+                            <button type="submit" name="submit_feedback" class="btn btn-success">Submit
+                                Feedback</button>
                         </div>
-                    </form> 
+                    </form>
 
                     <?php
-                        // Include your database connection
-                        include 'connection.php';
+                    // Include your database connection
+                    include 'connection.php';
 
-                        // If you have the employee details, such as $employee['EMP_ID']
-                        $empId = $employee['EMP_ID'];  // Assuming $employee['EMP_ID'] contains the logged-in employee's ID
-                        $admId = $employee['ADM_ID_FK_EMP']; // Set the admin ID, or you can fetch this dynamically based on the logged-in admin
+                    // If you have the employee details, such as $employee['EMP_ID']
+                    $empId = $employee['EMP_ID'];  // Assuming $employee['EMP_ID'] contains the logged-in employee's ID
+                    $admId = $employee['ADM_ID_FK_EMP']; // Set the admin ID, or you can fetch this dynamically based on the logged-in admin
+                    
+                    if (isset($_POST['submit_feedback'])) {
+                        // Get the feedback text from the form
+                        $feedbackText = $_POST['feedback-text'];
 
-                        if (isset($_POST['submit_feedback'])) {
-                            // Get the feedback text from the form
-                            $feedbackText = $_POST['feedback-text'];
-                            
-                            // Sanitize the input to prevent SQL injection
-                            $feedbackText = mysqli_real_escape_string($conn, $feedbackText);
+                        // Sanitize the input to prevent SQL injection
+                        $feedbackText = mysqli_real_escape_string($conn, $feedbackText);
 
-                            // Validate feedback (optional)
-                            if (empty($feedbackText)) {
-                                #echo "Feedback cannot be empty.";
-                            } else {
-                                // Prepare the SQL query to insert feedback into the evaluation table
-                                $sql = "INSERT INTO evaluation (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) 
+                        // Validate feedback (optional)
+                        if (empty($feedbackText)) {
+                            #echo "Feedback cannot be empty.";
+                        } else {
+                            // Prepare the SQL query to insert feedback into the evaluation table
+                            $sql = "INSERT INTO evaluation (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) 
                                         VALUES ('$feedbackText', NOW(), $empId, $admId)";
-                                
-                                if ($conn->query($sql) === TRUE) {
-                                    #echo "Feedback submitted successfully.";
-                                } else {
-                                    #echo "Error: " . $sql . "<br>" . $conn->error;
-                                }
+
+                            if ($conn->query($sql) === TRUE) {
+                                #echo "Feedback submitted successfully.";
+                            } else {
+                                #echo "Error: " . $sql . "<br>" . $conn->error;
                             }
                         }
+                    }
 
-                        // Close the database connection
-                        $conn->close();
+                    // Close the database connection
+                    $conn->close();
                     ?>
 
                     <!-- Back Button -->
@@ -591,39 +519,40 @@ include('getempdetail.php'); // or use require()
                 <div class="container p-4 bg-light rounded">
                     <h4 class="mb-3 text-center"><b>Invoices</b></h4>
                     <div class="salary-list">
-                        <?php 
-                            include 'connection.php';
+                        <?php
+                        include 'connection.php';
 
-                            // Assuming the logged-in employee's ID is stored in a session variable, for example:
-                            $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
+                        // Assuming the logged-in employee's ID is stored in a session variable, for example:
+                        $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
+                        
+                        // Fetch evaluations for the logged-in employee only
+                        $sql_fetch_feedback = "SELECT * FROM payroll WHERE EMP_ID_FK_PAY = ? ORDER BY P_DATE DESC";
+                        $stmt = $conn->prepare($sql_fetch_feedback);
+                        $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
+                        
+                        $stmt->execute();
+                        $result = $stmt->get_result();
 
-                            // Fetch evaluations for the logged-in employee only
-                            $sql_fetch_feedback = "SELECT * FROM payroll WHERE EMP_ID_FK_PAY = ? ORDER BY P_DATE DESC";
-                            $stmt = $conn->prepare($sql_fetch_feedback);
-                            $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
-
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    // Format the date
-                                    $formattedDate = date('F Y', strtotime($row['P_DATE'])); // Converts date to "Month Year" format
-                                    ?>
-                                    <div class="salary-item">
-                                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                            <b>₱<?php echo $row['P_AMT']; ?> was deposited for <?php echo $formattedDate; ?></b>
-                                            <span class="badge bg-secondary"><?php echo $row['P_DATE']; ?></span>
-                                        </a>
-                                    </div>
-                                    <?php
-                                }
-                            } else {
-                                echo "<p>No feedback records found.</p>";
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                // Format the date
+                                $formattedDate = date('F Y', strtotime($row['P_DATE'])); // Converts date to "Month Year" format
+                                ?>
+                                <div class="salary-item">
+                                    <a href="#"
+                                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                        <b>₱<?php echo $row['P_AMT']; ?> was deposited for <?php echo $formattedDate; ?></b>
+                                        <span class="badge bg-secondary"><?php echo $row['P_DATE']; ?></span>
+                                    </a>
+                                </div>
+                                <?php
                             }
-                            
-                            $stmt->close();
-                            $conn->close();
+                        } else {
+                            echo "<p>No feedback records found.</p>";
+                        }
+
+                        $stmt->close();
+                        $conn->close();
                         ?>
                     </div>
 
@@ -686,10 +615,12 @@ include('getempdetail.php'); // or use require()
                 <h4 class="text-center">Change Password</h4>
 
                 <div class="password-container">
-                    <form method = "POST">
-                        <input name="emp_old_pass" type="password" id="currentPassword" placeholder="Current Password" required>
+                    <form method="POST">
+                        <input name="emp_old_pass" type="password" id="currentPassword" placeholder="Current Password"
+                            required>
                         <input name="emp_newpass" type="password" id="newPassword" placeholder="New Password" required>
-                        <input name="emp_confirm_pass" type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                        <input name="emp_confirm_pass" type="password" id="confirmPassword"
+                            placeholder="Confirm Password" required>
                         <button name="change_pass_submit" type="submit" class="btn btn-success">Save Password</button>
                     </form>
                 </div>
@@ -697,57 +628,57 @@ include('getempdetail.php'); // or use require()
         </div>
 
         <?php
-           include "connection.php";
+        include "connection.php";
 
-           if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_pass_submit'])) {
-               // Get user input
-               $currentPassword = $_POST["emp_old_pass"];
-               $newPassword = $_POST["emp_newpass"];
-               $confirmPassword = $_POST["emp_confirm_pass"];
-           
-               // Get employee ID from session
-               $emp_ID = $_SESSION["EMP_ID"] ?? null; 
-           
-               if (!$emp_ID) {
-                   echo "<script>alert('User not logged in.'); window.location.href='profile.php';</script>";
-                   exit();
-               }
-           
-               // Check if current password is correct
-               $check_old_pass = "SELECT EMP_PASS FROM employee WHERE EMP_ID = ?";
-               $checker_oldp = $conn->prepare($check_old_pass);
-               $checker_oldp->bind_param("i", $emp_ID);
-               $checker_oldp->execute();
-               $checker_oldp->bind_result($dbPassword);
-               $checker_oldp->fetch();
-               $checker_oldp->close();
-           
-               if ($dbPassword !== $currentPassword) {
-                   echo "<script>alert('Incorrect current password.'); window.location.href='profile.php';</script>";
-                   exit();
-               }
-           
-               // Check if new password matches confirm password
-               if ($newPassword !== $confirmPassword) {
-                   echo "<script>alert('New password and confirm password do not match.'); window.location.href='profile.php';</script>";
-                   exit();
-               }
-           
-               // Update password
-               $update_Pass = "UPDATE employee SET EMP_PASS = ? WHERE EMP_ID = ?";
-               $updating_emp_pass = $conn->prepare($update_Pass);
-               $updating_emp_pass->bind_param("si", $newPassword, $emp_ID);
-           
-               if ($updating_emp_pass->execute()) {
-                   echo "<script>alert('Password updated successfully.'); window.location.href='employee.php';</script>";
-               } else {
-                   echo "<script>alert('Error updating password.'); window.location.href='employee.php';</script>";
-               }
-           
-               // Close connections
-               $updating_emp_pass->close();
-               $conn->close();
-           }
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_pass_submit'])) {
+            // Get user input
+            $currentPassword = $_POST["emp_old_pass"];
+            $newPassword = $_POST["emp_newpass"];
+            $confirmPassword = $_POST["emp_confirm_pass"];
+
+            // Get employee ID from session
+            $emp_ID = $_SESSION["EMP_ID"] ?? null;
+
+            if (!$emp_ID) {
+                echo "<script>alert('User not logged in.'); window.location.href='profile.php';</script>";
+                exit();
+            }
+
+            // Check if current password is correct
+            $check_old_pass = "SELECT EMP_PASS FROM employee WHERE EMP_ID = ?";
+            $checker_oldp = $conn->prepare($check_old_pass);
+            $checker_oldp->bind_param("i", $emp_ID);
+            $checker_oldp->execute();
+            $checker_oldp->bind_result($dbPassword);
+            $checker_oldp->fetch();
+            $checker_oldp->close();
+
+            if ($dbPassword !== $currentPassword) {
+                echo "<script>alert('Incorrect current password.'); window.location.href='profile.php';</script>";
+                exit();
+            }
+
+            // Check if new password matches confirm password
+            if ($newPassword !== $confirmPassword) {
+                echo "<script>alert('New password and confirm password do not match.'); window.location.href='profile.php';</script>";
+                exit();
+            }
+
+            // Update password
+            $update_Pass = "UPDATE employee SET EMP_PASS = ? WHERE EMP_ID = ?";
+            $updating_emp_pass = $conn->prepare($update_Pass);
+            $updating_emp_pass->bind_param("si", $newPassword, $emp_ID);
+
+            if ($updating_emp_pass->execute()) {
+                echo "<script>alert('Password updated successfully.'); window.location.href='employee.php';</script>";
+            } else {
+                echo "<script>alert('Error updating password.'); window.location.href='employee.php';</script>";
+            }
+
+            // Close connections
+            $updating_emp_pass->close();
+            $conn->close();
+        }
         ?>
 
     </section>

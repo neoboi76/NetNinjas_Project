@@ -56,22 +56,6 @@ document.querySelectorAll('.nav-link, .dropdown-item').forEach(item => {
                 });
                 break;
 
-            case "Department":
-                navId.forEach(link => {
-
-                    link.classList.remove('classBg');
-
-                });
-                pageId.innerHTML = `<b>Department</b>`;
-                document.getElementById('department1').classList.add('classBg');
-                contentId.forEach(link => {
-
-                    link.classList.remove('show active');
-                    link.classList.add('show active');
-
-                });
-                break;
-
             case "Report":
                 navId.forEach(link => {
 

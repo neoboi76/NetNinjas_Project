@@ -59,16 +59,6 @@ document.querySelectorAll('.nav-link, .dropdown-item').forEach(item => {
                 });
             break;
 
-            case "Records":
-                pageId.innerHTML = `<b>Report / Records</b>`;
-                contentId.forEach(link => {
-
-                    link.classList.remove('show active');
-                    link.classList.add('show active');
-
-                });
-            break;
-
             case "Leave":
                 navId.forEach(link => {
 
