@@ -130,7 +130,7 @@
                                     <th>Position</th>
                                     <th>Phone Number</th>
                                     <th>Birth Date</th>
-                                    <th>Joined Date</th>
+                                    <th>Status</th>
                                     <th>Email</th>
                                 </tr>
                             </thead>
@@ -138,7 +138,7 @@
                                 <?php
                                 include 'connection.php';
 
-                                $sql = "SELECT EMP_ID, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_PHONENUM, EMP_BIRTH, EMP_JOINED, EMP_EMAIL FROM employee";
+                                $sql = "SELECT EMP_ID, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_PHONENUM, EMP_BIRTH, EMP_STATUS, EMP_EMAIL FROM employee";
                                 $result = $conn->query($sql);
 
                                 if ($result->num_rows > 0) {
@@ -150,14 +150,14 @@
                                                 <td>{$row['EMP_POS']}</td>
                                                 <td>{$row['EMP_PHONENUM']}</td>
                                                 <td>{$row['EMP_BIRTH']}</td>
-                                                <td>{$row['EMP_JOINED']}</td>
-                                                <td>{$row['EMP_EMAIL']}</td> <!-- Display the new Email column -->
+                                                <td>{$row['EMP_STATUS']}</td> <!-- Show status here -->
+                                                <td>{$row['EMP_EMAIL']}</td>
                                             </tr>";
                                     }
                                 } else {
                                     echo "<tr><td colspan='8' class='text-center'>No employees found</td></tr>";
                                 }
-            
+
                                 $conn->close();
                                 ?>
                             </tbody>
@@ -424,7 +424,7 @@
                             $checker->close();
                             $conn->close();
                         }
-                    */
+                        */
                     ?>
 
                 </div>
@@ -675,49 +675,50 @@
         </div>
         -->
 
-        
+        <!--PHP LEAVE RQ -->
         <div id="leave" class="tab-pane fade">
             <?php 
                 include 'connection.php';
+
                 $get_leaveRQ = "SELECT lr.LEAVERQ_ID, lr.LEAVERQ_REASON, lr.LEAVERQ_DESCRIPT, 
                                         lr.LEAVERQ_DATELEAVE, lr.LEAVERQ_RETURN, lr.LEAVERQ_STATUS, 
                                         e.EMP_ID, e.EMP_FNAME, e.EMP_LNAME 
                                 FROM leave_request lr
                                 JOIN employee e ON lr.EMP_ID = e.EMP_ID
                                 WHERE lr.LEAVERQ_STATUS = 'Pending'
-                                ORDER BY lr.LEAVERQ_DATELEAVE ASC";
-        
+                                ORDER BY lr.LEAVERQ_ID DESC"; // Order by newest first
+            
                 $check = $conn->query($get_leaveRQ);
-        
+            
                 if($check->num_rows > 0){
                     while ($row = $check->fetch_assoc()) {
                         echo "<div class='leave-request' style='background: #ddd; padding: 15px; margin: 15px 0; border-radius: 5px; display: flex; align-items: center; justify-content: space-between;'>";
-                        
+            
                         // Left side: Leave Details
                         echo "<div class='leave-details' style='flex-grow: 1;'>";
+                        echo "<p><strong>Request ID:</strong> " . $row['LEAVERQ_ID'] . "</p>";
                         echo "<p><strong>" . $row['EMP_FNAME'] . " " . $row['EMP_LNAME'] . " (ID: " . $row['EMP_ID'] . ")</strong></p>";
                         echo "<p><strong>Leave Date:</strong> " . date("F j, Y", strtotime($row['LEAVERQ_DATELEAVE'])) . " to " . date("F j, Y", strtotime($row['LEAVERQ_RETURN'])) . "</p>";
                         echo "<p><strong>Reason:</strong> " . $row['LEAVERQ_REASON'] . "</p>";
                         echo "<p><strong>Description:</strong> " . $row['LEAVERQ_DESCRIPT'] . "</p>";
                         echo "</div>"; // End of leave-details div
-        
+            
                         // Right side: Buttons
                         echo "<div class='action-buttons' style='display: flex; gap: 5px;'>";
-                        
+            
                         // Approve Button
                         echo "<button class='approve-btn' style='background: green; color: white; padding: 5px; border: none; border-radius: 3px; width: 30px; height: 30px;' data-id='" . $row['LEAVERQ_ID'] . "'>✅</button>";
-        
+            
                         // Deny Button (Yellow Box with Minus Sign)
                         echo "<button class='deny-btn' style='background: yellow; color: black; padding: 5px; border: none; border-radius: 3px; width: 30px; height: 30px;' data-id='" . $row['LEAVERQ_ID'] . "'>➖</button>";
-        
+            
                         echo "</div>"; // End of action-buttons div
                         echo "</div>"; // End of leave-request div
                     }
-                } 
-                else {
+                } else {
                     echo "<p>No leave requests found.</p>";
                 }
-        
+            
                 $conn->close();
             ?>
         </div>
