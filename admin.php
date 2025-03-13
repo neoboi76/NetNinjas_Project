@@ -289,7 +289,7 @@
                                 <td>PDF</td>
                                 <td>Employee_Handbook.pdf</td>
                                 <td>
-                                    <a href="./Test/Manifesto.pdf" download="CommunistManifesto.pdf"
+                                    <a href="./Test/Logic.pdf" download="ScienceOfLogic.pdf"
                                         class="btn btn-primary">Download</a>
                                     <button class="btn btn-danger remove-btn">Remove</button>
                                 </td>
@@ -298,9 +298,10 @@
                                 <td>02/01/2025</td>
                                 <td>Finance</td>
                                 <td>Excel</td>
-                                <td>Budget_2025.xlsx</td>
+                                <td>Budget_2025.csv</td>
                                 <td>
-                                    <a href="./Test/ass.jpg" download="Sauce.jpg" class="btn btn-primary">Download</a>
+                                    <a href="./Test/Correlation Exercise.csv" download="Correlation Exercise.csv"
+                                        class="btn btn-primary">Download</a>
                                     <button class="btn btn-danger remove-btn">Remove</button>
                                 </td>
                             </tr>

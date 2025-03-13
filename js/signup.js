@@ -16,7 +16,7 @@ document.getElementById("signupForm").addEventListener("submit", function(event)
     let passwordField = document.getElementById("passwordText");
     let confirmField = document.getElementById("confirmPassword");
 
-    if (emailField.value === "joseIntsek@gmail.com" && idField.value === "696969" && passwordField.value === confirmField.value) {
+    if (emailField.value === "jose@gmail.com" && idField.value === "123456" && passwordField.value === confirmField.value) {
         window.location.href = "employee.php";
     } 
 

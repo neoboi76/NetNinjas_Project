@@ -14,7 +14,7 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
     let idField = document.getElementById("idText");
     let passwordField = document.getElementById("passwordText");
 
-    if (idField.value === "696969" && passwordField.value === "1234") {
+    if (idField.value === "123456" && passwordField.value === "1234") {
         window.location.href = "employee.php";
     } 
 

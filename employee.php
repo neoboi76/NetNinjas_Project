@@ -38,7 +38,7 @@
 
     <section class="sidebar">
         <img src="./images/juoross.jpg" class="img-thumbnail" style="contain: cover; width: 120px; height: 120px;">
-        <p>Employee ID: <b> 696969</b></p>
+        <p>Employee ID: <b> 123456</b></p>
         <p>First Name: <b>Juoross Phillip</b></p>
         <p>Last Name: <b>Jose</b></p>
         <ul class="nav flex-column">
@@ -209,7 +209,7 @@
                                     <td>Employee_Handbook.pdf</td>
 
 
-                                    <td><a href="./Test/Manifesto.pdf" download="CommmunistManifesto.pdf"
+                                    <td><a href="./Test/Logic.pdf" download="ScienceOfLogic.pdf"
                                             class="btn btn-primary">Download</a></td>
 
 
@@ -228,10 +228,10 @@
                                     <td>Excel</td>
 
 
-                                    <td>Budget_2025.xlsx</td>
+                                    <td>Budget_2025.csv</td>
 
 
-                                    <td><a href="./Test/ass.jpg" download="Sauce.jpg"
+                                    <td><a href="./Test/Correlation Exercise.csv" download="Correlation Exercise.csv"
                                             class="btn btn-primary">Download</a></td>
 
 
@@ -491,16 +491,24 @@
                     <!-- Feedback Viewing Section -->
                     <div class="list-group">
                         <div class="list-group-item">
-                            <h6 class="mb-1"><b>From: Maylyn Bautista (Manager)</b></h6>
-                            <p class="mb-1">Heneraaaaaaal! Nangopya ka nanaman! Masisingko ka nanaman ulit saken. Hay
-                                jusko, lagi nalang, di ka na ba nasasawa saaken?</p>
-                            <small class="text-muted">Received on: 02/15/2024</small>
+                            <h6 class="mb-1"><b>From: Mark Reynolds (Manager)</b></h6>
+                            <p class="mb-1"><i>The employee has demonstrated a strong work ethic and consistency in
+                                    meeting deadlines. Their technical skills and problem-solving abilities have
+                                    significantly contributed to team success. However, I encourage them to take more
+                                    initiative in proposing innovative solutions and collaborating more closely with
+                                    colleagues to enhance teamwork. Overall, their performance is commendable, and with
+                                    a bit more leadership initiative, they can achieve greater heights.</i></p>
+                            <small class="text-muted">Received on: 02/10/2024</small>
                         </div>
                         <div class="list-group-item">
-                            <h6 class="mb-1"><b>From: Dr. William Rey (HR)</b></h6>
-                            <p class="mb-1">Mr. Jose, can you give me a good reason why not to terminate you right now?
-                                Your co-worker [Redacted] filed a complaint of sexual assualt, citing that you
-                                "touched my private parts during our break". What do you have to say for yourself?</p>
+                            <h6 class="mb-1"><b>From: Sarah Martinez (HR)</b></h6>
+                            <p class="mb-1"><i>The employee maintains a positive attitude and professionalism in the
+                                    workplace. Their attendance record is excellent, and they consistently adhere to
+                                    company policies. While their integrity and reliability are notable strengths, there
+                                    is room for improvement in communication and creativity. Encouraging them to
+                                    participate in training programs and cross-departmental collaborations would help
+                                    further develop their skills. We appreciate their contributions and look forward to
+                                    their continued growth.</i></p>
                             <small class="text-muted">Received on: 01/10/2024</small>
                         </div>
                     </div>
@@ -515,7 +523,7 @@
 
             <div id="reviewSuperior" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
-                    <h4 class="mb-3 text-center"><b>Review Your Direct Superior (Maylyn Bautista)</b></h4>
+                    <h4 class="mb-3 text-center"><b>Review Your Direct Superior (Mark Reynolds)</b></h4>
                     <!-- Make the name of the superior dynamic.-->
 
                     <form>
@@ -547,22 +555,22 @@
                     <div class="list-group">
                         <a href="#"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>₱100,000.00 was deposited for January 2024</b>
+                            <b>₱1,000.00 was deposited for January 2024</b>
                             <span class="badge bg-secondary">01/31/2024</span>
                         </a>
                         <a href="#"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>₱80,000.00 was deposited for February 2024</b>
+                            <b>₱800.00 was deposited for February 2024</b>
                             <span class="badge bg-secondary">02/29/2024</span>
                         </a>
                         <a href="#"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>₱120,000.00 was deposited for March 2024</b>
+                            <b>₱1,200 was deposited for March 2024</b>
                             <span class="badge bg-secondary">03/31/2024</span>
                         </a>
                         <a href="#"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>₱50,000.00 was deposited for April 2024</b>
+                            <b>₱5,000.00 was deposited for April 2024</b>
                             <span class="badge bg-secondary">04/30/2024</span>
                         </a>
                     </div>
@@ -576,7 +584,7 @@
                 <span class="close-btn">&larr;</span>
                 <div class="profile-header">
                     <img src="./images/juoross.jpg" alt="Profile Picture" class="profile-img">
-                    <h3>Employee ID: 696969</h3>
+                    <h3>Employee ID: 123456</h3>
                     <p>Joined in 01/01/2025</p>
                 </div>
 
@@ -584,8 +592,8 @@
                     <p><strong>First Name:</strong> Juoross Phillip</p>
                     <p><strong>Last Name:</strong> Jose</p>
                     <p><strong>Phone/Cellphone Number:</strong> 123-456-7890</p>
-                    <p><strong>Birthdate:</strong> 06/06/2006</p>
-                    <p><strong>Role:</strong> Janitor</p>
+                    <p><strong>Birthdate:</strong> 06/06/2005</p>
+                    <p><strong>Role:</strong> Supervisor</p>
                     <div class="password-section">
                         <label><strong>Password:</strong></label>
                         <input type="password" value="1234" id="mainPassword" disabled>

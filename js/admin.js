@@ -410,7 +410,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
     const leaveRequests = [
-        { id: 696969, employee: "Juoross Phillip Jose", date: "March 7, 2025", reason: "May date po ako sa sogo. Pasok ako sa lunes. Salamat ssob. Peace out!" },
+        { id: 696969, employee: "Juoross Phillip Jose", date: "March 7, 2025", reason: "I am currently sick. Will go to work on Monday." },
         { id: 222222, employee: "Jane Smith", date: "March 12, 2025", reason: "Attending a family event out of town." },
         { id: 333333, employee: "David Johnson", date: "March 15, 2025", reason: "Taking a personal day to rest and recharge." },
         { id: 444444, employee: "Emily Brown", date: "March 20, 2025", reason: "Need to handle some urgent personal matters." }
