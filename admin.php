@@ -410,7 +410,7 @@ include('getadmdetail.php');
 
                     <!-- PHP Review work in progress-->
                     <?php
-<<<<<<< HEAD
+
                     include "connection.php";
 
                     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["adm_review_sub"])) {
@@ -450,7 +450,7 @@ include('getadmdetail.php');
                         $checker->close();
                         $conn->close();
                     }
-=======
+
                     /*
                         include "connection.php";
                         
@@ -492,7 +492,7 @@ include('getadmdetail.php');
                             $conn->close();
                         }
                         */
->>>>>>> 9d85bb91d8cd1bd4a1adf688aef0aeb358edae23
+
                     ?>
 
                 </div>
@@ -941,11 +941,6 @@ include('getadmdetail.php');
 
                 <div class="profile-info">
                     <p><strong>Role:</strong> Admin - <?php echo $admin['ADM_POS']; ?></p>
-                    <div class="password-section">
-                        <label><strong>Password:</strong></label>
-                        <input type="password" value="<?php echo $employee['ADM_PASS']; ?>" id="mainPassword" disabled>
-                        <a href="#" id="changePasswordLink">Change password?</a>
-                    </div>
                 </div>
             </div>
         </div>

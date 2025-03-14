@@ -131,6 +131,7 @@ include('getempdetail.php'); // or use require()
                     <!-- Placeholder for Future Content -->
                     <div class="content-box text-center d-flex">
                         <div id="assignedCases" class="tab-pane p-2 bg-light rounded">
+                            <h3>Active Assigned Cases</h3>
                             <div class="assignedCases-list">
                                 <?php
                                 include 'connection.php';
@@ -153,6 +154,7 @@ include('getempdetail.php'); // or use require()
                                                 <span><strong>ID:</strong> <?php echo $row['CASE_ID']; ?></span>
                                                 <span><strong>Subject:</strong> <?php echo $row['CASE_SUBJ']; ?></span>
                                                 <span><strong>Issued:</strong> <?php echo $row['CASE_DATE']; ?></span>
+                                                <button class="btn btn-primary">Mark as done</button>
                                             </div>
                                             <div class="assignedCases-text">
                                                 <span><?php echo $row['CASE_DESC']; ?></span>
@@ -178,7 +180,7 @@ include('getempdetail.php'); // or use require()
                                 <div class="col-md-8">
                                     <label for="activity" class="form-label">Activity</label>
                                     <input name="emp_case_activity" type="text" class="form-control" id="activity"
-                                        placeholder="Enter activity">
+                                        placeholder="Enter Case ID">
                                 </div>
 
                                 <!-- Date Input -->
@@ -353,6 +355,27 @@ include('getempdetail.php'); // or use require()
                             <button name="leave_emp_submit" type="submit" class="btn btn-primary w-10">Submit</button>
                         </div>
                     </form>
+                </div>
+
+                <!-- Leave Request History Section -->
+                <div class="container p-4 mt-4 bg-light rounded">
+                    <h4 class="mb-3"><b>Leave Request History</b></h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Reason</th>
+                                    <th>Description</th>
+                                    <th>Date of Leave</th>
+                                    <th>Date of Return</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaveHistory">
+                                <!-- Data will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -555,31 +578,6 @@ include('getempdetail.php'); // or use require()
                         $conn->close();
                         ?>
                     </div>
-
-                    <!-- 
-                    <div class="list-group">
-                        <a href="#"
-                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>₱100,000.00 was deposited for January 2024</b>
-                            <span class="badge bg-secondary">01/31/2024</span>
-                        </a>
-                        <a href="#"
-                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>₱80,000.00 was deposited for February 2024</b>
-                            <span class="badge bg-secondary">02/29/2024</span>
-                        </a>
-                        <a href="#"
-                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>₱120,000.00 was deposited for March 2024</b>
-                            <span class="badge bg-secondary">03/31/2024</span>
-                        </a>
-                        <a href="#"
-                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <b>₱100,000.00 was deposited for April 2024</b>
-                            <span class="badge bg-secondary">04/30/2024</span>
-                        </a>
-                    </div>
-                    -->
                 </div>
             </div>
         </div>
@@ -600,11 +598,11 @@ include('getempdetail.php'); // or use require()
                     <p><strong>Phone/Cellphone Number:</strong> <?php echo $employee['EMP_PHONENUM']; ?></p>
                     <p><strong>Birthdate:</strong> <?php echo $employee['EMP_BIRTH']; ?></p>
                     <p><strong>Role:</strong> <?php echo $employee['EMP_POS']; ?></p>
-                    <div class="password-section">
+                    <!--                     <div class="password-section">
                         <label><strong>Password:</strong></label>
                         <input type="password" value="<?php echo $employee['EMP_PASS']; ?>" id="mainPassword" disabled>
                         <a href="#" id="changePasswordLink">Change password?</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -626,60 +624,6 @@ include('getempdetail.php'); // or use require()
                 </div>
             </div>
         </div>
-
-        <?php
-        include "connection.php";
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_pass_submit'])) {
-            // Get user input
-            $currentPassword = $_POST["emp_old_pass"];
-            $newPassword = $_POST["emp_newpass"];
-            $confirmPassword = $_POST["emp_confirm_pass"];
-
-            // Get employee ID from session
-            $emp_ID = $_SESSION["EMP_ID"] ?? null;
-
-            if (!$emp_ID) {
-                echo "<script>alert('User not logged in.'); window.location.href='profile.php';</script>";
-                exit();
-            }
-
-            // Check if current password is correct
-            $check_old_pass = "SELECT EMP_PASS FROM employee WHERE EMP_ID = ?";
-            $checker_oldp = $conn->prepare($check_old_pass);
-            $checker_oldp->bind_param("i", $emp_ID);
-            $checker_oldp->execute();
-            $checker_oldp->bind_result($dbPassword);
-            $checker_oldp->fetch();
-            $checker_oldp->close();
-
-            if ($dbPassword !== $currentPassword) {
-                echo "<script>alert('Incorrect current password.'); window.location.href='profile.php';</script>";
-                exit();
-            }
-
-            // Check if new password matches confirm password
-            if ($newPassword !== $confirmPassword) {
-                echo "<script>alert('New password and confirm password do not match.'); window.location.href='profile.php';</script>";
-                exit();
-            }
-
-            // Update password
-            $update_Pass = "UPDATE employee SET EMP_PASS = ? WHERE EMP_ID = ?";
-            $updating_emp_pass = $conn->prepare($update_Pass);
-            $updating_emp_pass->bind_param("si", $newPassword, $emp_ID);
-
-            if ($updating_emp_pass->execute()) {
-                echo "<script>alert('Password updated successfully.'); window.location.href='employee.php';</script>";
-            } else {
-                echo "<script>alert('Error updating password.'); window.location.href='employee.php';</script>";
-            }
-
-            // Close connections
-            $updating_emp_pass->close();
-            $conn->close();
-        }
-        ?>
 
     </section>
 

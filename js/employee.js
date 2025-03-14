@@ -162,6 +162,29 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    // Example leave requests (Replace with actual data from backend)
+    let leaveRequests = [
+        { reason: "Medical", description: "Doctor's appointment", start: "2025-03-20", return: "2025-03-21", status: "Pending" },
+        { reason: "Vacation", description: "Family trip", start: "2025-04-01", return: "2025-04-10", status: "Approved" },
+        { reason: "Emergency", description: "Urgent personal matter", start: "2025-03-15", return: "2025-03-16", status: "Denied" }
+    ];
+
+    let leaveHistory = document.getElementById("leaveHistory");
+
+    leaveRequests.forEach(request => {
+        let row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${request.reason}</td>
+            <td>${request.description}</td>
+            <td>${request.start}</td>
+            <td>${request.return}</td>
+            <td><span class="badge ${request.status === 'Approved' ? 'bg-success' : request.status === 'Denied' ? 'bg-danger' : 'bg-warning'}">${request.status}</span></td>
+        `;
+        leaveHistory.appendChild(row);
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
     const feedbackList = document.getElementById("feedback");
 
     /*
@@ -191,32 +214,60 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const salaryList = document.getElementById("salary");
+    const salaryLinks = document.querySelectorAll(".salary-link");
+    const modal = document.getElementById("salaryModal");
+    const closeModal = document.querySelector(".close");
 
-    if (salaryRequests.length > 0) {
-        salaryRequests.forEach(request => {
-            const salaryItem = document.createElement("div");
-            salaryRequests.classList.add("salary-item");
+    // Modal Fields
+    const modalDate = document.getElementById("modal-date");
+    const modalGross = document.getElementById("modal-gross");
+    const modalTax = document.getElementById("modal-tax");
+    const modalSSS = document.getElementById("modal-sss");
+    const modalPhilhealth = document.getElementById("modal-philhealth");
+    const modalPagibig = document.getElementById("modal-pagibig");
+    const modalNet = document.getElementById("modal-net");
 
-            /*
-            salaryRequests.innerHTML = `
-                <a href="#"
-                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <b>₱100,000.00 was deposited for January 2024</b>
-                        <span class="badge bg-secondary">01/31/2024</span>
-                </a>
-                <h6 class="mb-1"><b> ${request.from}</b></h6>
-                <p class="mb-1">${request.feedback}</p>
-                <small class="text-muted">${request.date}</small>
-            `;
-            */
+    // Open modal on click
+    salaryLinks.forEach(link => {
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
 
-            salaryList.appendChild(salaryItem);
+            // Get data attributes from clicked item
+            modalDate.textContent = this.getAttribute("data-date");
+            modalGross.textContent = this.getAttribute("data-gross");
+            modalTax.textContent = this.getAttribute("data-tax");
+            modalSSS.textContent = this.getAttribute("data-sss");
+            modalPhilhealth.textContent = this.getAttribute("data-philhealth");
+            modalPagibig.textContent = this.getAttribute("data-pagibig");
+
+            // Calculate net salary
+            const gross = parseFloat(this.getAttribute("data-gross"));
+            const tax = parseFloat(this.getAttribute("data-tax"));
+            const sss = parseFloat(this.getAttribute("data-sss"));
+            const philhealth = parseFloat(this.getAttribute("data-philhealth"));
+            const pagibig = parseFloat(this.getAttribute("data-pagibig"));
+            const net = gross - (tax + sss + philhealth + pagibig);
+
+            modalNet.textContent = net.toFixed(2); // Display calculated net salary
+
+            // Show modal
+            modal.style.display = "flex";
         });
-    } else {
-        salaryList.innerHTML = "<p>No feedback records found.</p>";
-    }
+    });
+
+    // Close modal when 'X' is clicked
+    closeModal.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    // Close modal when clicking outside modal content
+    window.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
 });
+
 
 /*
 document.getElementById("savePassword").addEventListener("submit", function(event) {
