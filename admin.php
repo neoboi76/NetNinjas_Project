@@ -123,31 +123,31 @@ include('getadmdetail.php');
 
                     <!-- Employee Data Table -->
                     <div class="admin-placeholder p-4 rounded">
-                    <h4 class="mb-3">Employee List</h4>
-                    <table class="table table-bordered table-striped">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>Employee ID</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Position</th>
-                                <th>Department</th> <!-- Department added here -->
-                                <th>Birth Date</th>
-                                <th>Status</th>
-                                <th>Email</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            include 'connection.php';
+                        <h4 class="mb-3">Employee List</h4>
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Position</th>
+                                    <th>Department</th> <!-- Department added here -->
+                                    <th>Birth Date</th>
+                                    <th>Status</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                include 'connection.php';
 
-                            // Adjust SQL query to include department
-                            $sql = "SELECT EMP_ID, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_DEPARTMENT, EMP_BIRTH, EMP_STATUS, EMP_EMAIL FROM employee";
-                            $result = $conn->query($sql);
+                                // Adjust SQL query to include department
+                                $sql = "SELECT EMP_ID, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_DEPARTMENT, EMP_BIRTH, EMP_STATUS, EMP_EMAIL FROM employee";
+                                $result = $conn->query($sql);
 
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<tr>
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<tr>
                                             <td>{$row['EMP_ID']}</td>
                                             <td>{$row['EMP_FNAME']}</td>
                                             <td>{$row['EMP_LNAME']}</td>
@@ -157,16 +157,16 @@ include('getadmdetail.php');
                                             <td>{$row['EMP_STATUS']}</td>
                                             <td>{$row['EMP_EMAIL']}</td>
                                         </tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='8' class='text-center'>No employees found</td></tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='8' class='text-center'>No employees found</td></tr>";
-                            }
 
-                            $conn->close();
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
+                                $conn->close();
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -192,7 +192,7 @@ include('getadmdetail.php');
                             <!--  Add email variable -->
                             <input type="text" name="emp_email_add" placeholder="Email" required>
                             <input type="text" name="emp_role_add" placeholder="Role" required>
-                            <input type="text" name ="emp_dept_add" placeholder="Department" required>
+                            <input type="text" name="emp_dept_add" placeholder="Department" required>
 
                             <div class="employee-name-fields">
                                 <input type="text" name="emp_fname_add" placeholder="First Name" required>
@@ -208,59 +208,59 @@ include('getadmdetail.php');
 
             <!-- PHP ADD EMPLOYEE-->
             <?php
-                include 'connection.php';
+            include 'connection.php';
 
-                if ($_SERVER["REQUEST_METHOD"] == "POST" &&isset($_POST['add_employee'])) {
-                        // Collect data from form
-                        $emp_id = $_POST['emp_id_add'];
-                        $emp_email = $_POST['emp_email_add'];
-                        $emp_role = $_POST['emp_role_add'];
-                        $emp_dept = $_POST['emp_dept_add'];
-                        $emp_fname = $_POST['emp_fname_add'];
-                        $emp_lname = $_POST['emp_lname_add'];
-                        $emp_bday = $_POST['emp_bday_add'];
-                    
-                        // Default values
-                        $emp_pass = 'vivanetninjas'; // Default password or you can generate random
-                        $emp_joined = date('Y-m-d'); // Auto set current date as joined date
-                        $adm_id_fk_emp = 0; // Assuming default admin ID is 0 (change as needed)
-                    
-                        // Prepare SQL statement
-                        $emp_adding = $conn->prepare("
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_employee'])) {
+                // Collect data from form
+                $emp_id = $_POST['emp_id_add'];
+                $emp_email = $_POST['emp_email_add'];
+                $emp_role = $_POST['emp_role_add'];
+                $emp_dept = $_POST['emp_dept_add'];
+                $emp_fname = $_POST['emp_fname_add'];
+                $emp_lname = $_POST['emp_lname_add'];
+                $emp_bday = $_POST['emp_bday_add'];
+
+                // Default values
+                $emp_pass = 'vivanetninjas'; // Default password or you can generate random
+                $emp_joined = date('Y-m-d'); // Auto set current date as joined date
+                $adm_id_fk_emp = 0; // Assuming default admin ID is 0 (change as needed)
+            
+                // Prepare SQL statement
+                $emp_adding = $conn->prepare("
                             INSERT INTO employee 
                             (EMP_ID, EMP_PASS, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_DEPARTMENT, EMP_EMAIL, EMP_BIRTH, EMP_JOINED, ADM_ID_FK_EMP) 
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                         ");
-                    
-                        // Bind parameters
-                        $emp_adding->bind_param(
-                            "issssssssi",
-                            $emp_id,
-                            $emp_pass,
-                            $emp_fname,
-                            $emp_lname,
-                            $emp_role,
-                            $emp_dept,
-                            $emp_email,
-                            $emp_bday,
-                            $emp_joined,
-                            $adm_id_fk_emp
-                        );
-                    
-                        // Execute and check result
-                        if ($emp_adding->execute()) {
-                            echo "<script>alert('Employee added successfully!');</script>";
-                            echo "<script>window.location.href = window.location.href;</script>";
-                        } else {
-                            echo "<script>alert('Error: " . $emp_adding->error . "');</script>";
-                        }
-                    
-                        // Close statement
-                        $emp_adding->close();
-                    }
-                    
-                    // Close connection
-                    $conn->close();
+
+                // Bind parameters
+                $emp_adding->bind_param(
+                    "issssssssi",
+                    $emp_id,
+                    $emp_pass,
+                    $emp_fname,
+                    $emp_lname,
+                    $emp_role,
+                    $emp_dept,
+                    $emp_email,
+                    $emp_bday,
+                    $emp_joined,
+                    $adm_id_fk_emp
+                );
+
+                // Execute and check result
+                if ($emp_adding->execute()) {
+                    echo "<script>alert('Employee added successfully!');</script>";
+                    echo "<script>window.location.href = window.location.href;</script>";
+                } else {
+                    echo "<script>alert('Error: " . $emp_adding->error . "');</script>";
+                }
+
+                // Close statement
+                $emp_adding->close();
+            }
+
+            // Close connection
+            $conn->close();
             ?>
 
             <!-- Edit Employee Modal. It must already have content-->
@@ -302,33 +302,33 @@ include('getadmdetail.php');
 
             <!-- PHP EDIT && DELETE EMPLOYEE-->
             <?php
-                include 'connection.php';
+            include 'connection.php';
 
-                // Handle EDIT / UPDATE EMPLOYEE
-                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_emp'])) {
-                    // Collect form data
-                    $edit_emp_ID = $_POST['edit_emp_ID'];
-                    $edit_emp_email = $_POST['edit_emp_email'];
-                    $edit_emp_role = $_POST['edit_emp_role'];
-                    $edit_emp_dept = $_POST['edit_emp_dept'];
-                    $edit_emp_fname = $_POST['edit_emp_fname'];
-                    $edit_emp_lname = $_POST['edit_emp_lname'];
-                    $edit_emp_bday = $_POST['edit_emp_bday'];
+            // Handle EDIT / UPDATE EMPLOYEE
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_emp'])) {
+                // Collect form data
+                $edit_emp_ID = $_POST['edit_emp_ID'];
+                $edit_emp_email = $_POST['edit_emp_email'];
+                $edit_emp_role = $_POST['edit_emp_role'];
+                $edit_emp_dept = $_POST['edit_emp_dept'];
+                $edit_emp_fname = $_POST['edit_emp_fname'];
+                $edit_emp_lname = $_POST['edit_emp_lname'];
+                $edit_emp_bday = $_POST['edit_emp_bday'];
 
-                    // Check if employee exists
-                    $check_emp_db_save = $conn->prepare("SELECT EMP_ID FROM employee WHERE EMP_ID = ?");
-                    $check_emp_db_save->bind_param("i", $edit_emp_ID);
-                    $check_emp_db_save->execute();
-                    $result_save = $check_emp_db_save->get_result();
+                // Check if employee exists
+                $check_emp_db_save = $conn->prepare("SELECT EMP_ID FROM employee WHERE EMP_ID = ?");
+                $check_emp_db_save->bind_param("i", $edit_emp_ID);
+                $check_emp_db_save->execute();
+                $result_save = $check_emp_db_save->get_result();
 
-                    if ($result_save->num_rows == 0) {
-                        echo "<script>alert('Error: Employee ID does not exist!'); window.location.replace(window.location.pathname);</script>";
-                        $check_emp_db_save->close();
-                    } else {
-                        $check_emp_db_save->close();
+                if ($result_save->num_rows == 0) {
+                    echo "<script>alert('Error: Employee ID does not exist!'); window.location.replace(window.location.pathname);</script>";
+                    $check_emp_db_save->close();
+                } else {
+                    $check_emp_db_save->close();
 
-                        // Update employee
-                        $emp_save = $conn->prepare("
+                    // Update employee
+                    $emp_save = $conn->prepare("
                             UPDATE employee SET 
                                 EMP_EMAIL = ?, 
                                 EMP_POS = ?,  
@@ -339,60 +339,60 @@ include('getadmdetail.php');
                             WHERE EMP_ID = ?
                         ");
 
-                        $emp_save->bind_param(
-                            "ssssssi",
-                            $edit_emp_email,
-                            $edit_emp_role,
-                            $edit_emp_dept,
-                            $edit_emp_fname,
-                            $edit_emp_lname,
-                            $edit_emp_bday,
-                            $edit_emp_ID
-                        );
+                    $emp_save->bind_param(
+                        "ssssssi",
+                        $edit_emp_email,
+                        $edit_emp_role,
+                        $edit_emp_dept,
+                        $edit_emp_fname,
+                        $edit_emp_lname,
+                        $edit_emp_bday,
+                        $edit_emp_ID
+                    );
 
-                        if ($emp_save->execute()) {
-                            echo "<script>alert('Employee details updated successfully!'); window.location.replace(window.location.pathname);</script>";
-                        } else {
-                            echo "<script>alert('Error updating employee: " . $emp_save->error . "'); window.location.replace(window.location.pathname);</script>";
-                        }
-
-                        $emp_save->close();
-                    }
-                }
-
-                // Handle DELETE EMPLOYEE
-                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_emp'])) {
-                    // Collect employee ID to delete
-                    $edit_emp_ID = $_POST['edit_emp_ID'];
-
-                    // Check if employee exists
-                    $check_emp_db_delete = $conn->prepare("SELECT EMP_ID FROM employee WHERE EMP_ID = ?");
-                    $check_emp_db_delete->bind_param("i", $edit_emp_ID);
-                    $check_emp_db_delete->execute();
-                    $result_delete = $check_emp_db_delete->get_result();
-
-                    if ($result_delete->num_rows == 0) {
-                        echo "<script>alert('Error: Employee ID does not exist!'); window.location.replace(window.location.pathname);</script>";
-                        $check_emp_db_delete->close();
+                    if ($emp_save->execute()) {
+                        echo "<script>alert('Employee details updated successfully!'); window.location.replace(window.location.pathname);</script>";
                     } else {
-                        $check_emp_db_delete->close();
-
-                        // Delete employee
-                        $emp_delete = $conn->prepare("DELETE FROM employee WHERE EMP_ID = ?");
-                        $emp_delete->bind_param("i", $edit_emp_ID);
-
-                        if ($emp_delete->execute()) {
-                            echo "<script>alert('Employee deleted successfully!'); window.location.replace(window.location.pathname);</script>";
-                        } else {
-                            echo "<script>alert('Error deleting employee: " . $emp_delete->error . "'); window.location.replace(window.location.pathname);</script>";
-                        }
-
-                        $emp_delete->close();
+                        echo "<script>alert('Error updating employee: " . $emp_save->error . "'); window.location.replace(window.location.pathname);</script>";
                     }
-                }
 
-                // Close connection
-                $conn->close();
+                    $emp_save->close();
+                }
+            }
+
+            // Handle DELETE EMPLOYEE
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_emp'])) {
+                // Collect employee ID to delete
+                $edit_emp_ID = $_POST['edit_emp_ID'];
+
+                // Check if employee exists
+                $check_emp_db_delete = $conn->prepare("SELECT EMP_ID FROM employee WHERE EMP_ID = ?");
+                $check_emp_db_delete->bind_param("i", $edit_emp_ID);
+                $check_emp_db_delete->execute();
+                $result_delete = $check_emp_db_delete->get_result();
+
+                if ($result_delete->num_rows == 0) {
+                    echo "<script>alert('Error: Employee ID does not exist!'); window.location.replace(window.location.pathname);</script>";
+                    $check_emp_db_delete->close();
+                } else {
+                    $check_emp_db_delete->close();
+
+                    // Delete employee
+                    $emp_delete = $conn->prepare("DELETE FROM employee WHERE EMP_ID = ?");
+                    $emp_delete->bind_param("i", $edit_emp_ID);
+
+                    if ($emp_delete->execute()) {
+                        echo "<script>alert('Employee deleted successfully!'); window.location.replace(window.location.pathname);</script>";
+                    } else {
+                        echo "<script>alert('Error deleting employee: " . $emp_delete->error . "'); window.location.replace(window.location.pathname);</script>";
+                    }
+
+                    $emp_delete->close();
+                }
+            }
+
+            // Close connection
+            $conn->close();
             ?>
 
             <!-- Enable Employee Modal -->
@@ -401,40 +401,41 @@ include('getadmdetail.php');
                     <span class="employeeEnable-close">&times;</span>
                     <h3>Enable Employee</h3>
                     <form method="POST">
-                        <input name = "emp_enable_adm" type="text" name="enable_emp_ID" placeholder="Enter Employee ID" required>
-                        <button name = "emp_enable_sub" class="btn btn-success" name="enable_employee">Enable</button>
+                        <input name="emp_enable_adm" type="text" name="enable_emp_ID" placeholder="Enter Employee ID"
+                            required>
+                        <button name="emp_enable_sub" class="btn btn-success" name="enable_employee">Enable</button>
                     </form>
                 </div>
             </div>
 
             <!-- PHP ENABLE -->
             <?php
-                include "connection.php";
-                // Check if enable button was pressed
-                if (isset($_POST['emp_enable_sub'])) {
-                    $emp_id = $_POST['emp_enable_adm']; // Get employee ID from input
+            include "connection.php";
+            // Check if enable button was pressed
+            if (isset($_POST['emp_enable_sub'])) {
+                $emp_id = $_POST['emp_enable_adm']; // Get employee ID from input
+            
+                // Check if employee exists
+                $check_sql = "SELECT * FROM employee WHERE EMP_ID = '$emp_id'";
+                $result = $conn->query($check_sql);
 
-                    // Check if employee exists
-                    $check_sql = "SELECT * FROM employee WHERE EMP_ID = '$emp_id'";
-                    $result = $conn->query($check_sql);
-
-                    if ($result->num_rows > 0) {
-                        // Employee exists, update status to 'Active'
-                        $update_sql = "UPDATE employee SET EMP_STATUS = 'Active' WHERE EMP_ID = '$emp_id'";
-                        if ($conn->query($update_sql) === TRUE) {
-                            // Success alert
-                            echo "<script>alert('Employee ID $emp_id has been enabled (set to Active).'); window.location.href = window.location.href;</script>";
-                        } else {
-                            // Error on update
-                            echo "<script>alert('Error updating employee status. Please try again.'); window.location.href = window.location.href;</script>";
-                        }
+                if ($result->num_rows > 0) {
+                    // Employee exists, update status to 'Active'
+                    $update_sql = "UPDATE employee SET EMP_STATUS = 'Active' WHERE EMP_ID = '$emp_id'";
+                    if ($conn->query($update_sql) === TRUE) {
+                        // Success alert
+                        echo "<script>alert('Employee ID $emp_id has been enabled (set to Active).'); window.location.href = window.location.href;</script>";
                     } else {
-                        // Employee ID does not exist
-                        echo "<script>alert('Error: Employee ID does not exist!'); window.location.href = window.location.href;</script>";
+                        // Error on update
+                        echo "<script>alert('Error updating employee status. Please try again.'); window.location.href = window.location.href;</script>";
                     }
+                } else {
+                    // Employee ID does not exist
+                    echo "<script>alert('Error: Employee ID does not exist!'); window.location.href = window.location.href;</script>";
                 }
+            }
 
-                $conn->close(); // Close connection
+            $conn->close(); // Close connection
             ?>
 
             <!-- Disable Employee Modal -->
@@ -443,39 +444,40 @@ include('getadmdetail.php');
                     <span class="employeeDisable-close">&times;</span>
                     <h3>Disable Employee</h3>
                     <form method="POST">
-                        <input name = "emp_disable_adm" type="text" name="disable_emp_ID" placeholder="Enter Employee ID" required>
-                        <button name = "emp_disable_sub" class="btn btn-danger" name="disable_employee">Disable</button>
+                        <input name="emp_disable_adm" type="text" name="disable_emp_ID" placeholder="Enter Employee ID"
+                            required>
+                        <button name="emp_disable_sub" class="btn btn-danger" name="disable_employee">Disable</button>
                     </form>
                 </div>
             </div>
 
             <!-- PHP DISABLE -->
             <?php
-                include "connection.php";
-                if (isset($_POST['emp_disable_sub'])) {
-                    $emp_id = $_POST['emp_disable_adm']; // Get employee ID input
-                
-                    // Check if employee exists
-                    $check_sql = "SELECT * FROM employee WHERE EMP_ID = '$emp_id'";
-                    $result = $conn->query($check_sql);
-                
-                    if ($result->num_rows > 0) {
-                        // Employee exists, set status to 'Inactive'
-                        $update_sql = "UPDATE employee SET EMP_STATUS = 'Inactive' WHERE EMP_ID = '$emp_id'";
-                        if ($conn->query($update_sql) === TRUE) {
-                            // Success message
-                            echo "<script>alert('Employee ID $emp_id has been disabled (set to Inactive).'); window.location.href = window.location.href;</script>";
-                        } else {
-                            // If query failed
-                            echo "<script>alert('Error disabling employee. Please try again.'); window.location.href = window.location.href;</script>";
-                        }
+            include "connection.php";
+            if (isset($_POST['emp_disable_sub'])) {
+                $emp_id = $_POST['emp_disable_adm']; // Get employee ID input
+            
+                // Check if employee exists
+                $check_sql = "SELECT * FROM employee WHERE EMP_ID = '$emp_id'";
+                $result = $conn->query($check_sql);
+
+                if ($result->num_rows > 0) {
+                    // Employee exists, set status to 'Inactive'
+                    $update_sql = "UPDATE employee SET EMP_STATUS = 'Inactive' WHERE EMP_ID = '$emp_id'";
+                    if ($conn->query($update_sql) === TRUE) {
+                        // Success message
+                        echo "<script>alert('Employee ID $emp_id has been disabled (set to Inactive).'); window.location.href = window.location.href;</script>";
                     } else {
-                        // Employee not found
-                        echo "<script>alert('Error: Employee ID does not exist!'); window.location.href = window.location.href;</script>";
+                        // If query failed
+                        echo "<script>alert('Error disabling employee. Please try again.'); window.location.href = window.location.href;</script>";
                     }
+                } else {
+                    // Employee not found
+                    echo "<script>alert('Error: Employee ID does not exist!'); window.location.href = window.location.href;</script>";
                 }
-                
-                $conn->close(); // Close connection
+            }
+
+            $conn->close(); // Close connection
             ?>
 
 
@@ -634,32 +636,32 @@ include('getadmdetail.php');
                             </thead>
                             <tbody id="caseTableBody">
                                 <!-- Assigned cases will be added here -->
-                                <?php 
-                                    include "connection.php";
-                            
-                                    // Fetch all cases from the database
-                                    $query = "SELECT CASE_ID, EMP_ID_FK_CASE, CASE_SUBJ, CASE_DESC, CASE_DATE, CASE_STATUS FROM cases ORDER BY CASE_ID DESC";
-                                    $result = mysqli_query($conn, $query);
-                            
-                                    // Check if there are any cases
-                                    if (mysqli_num_rows($result) > 0) {
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            echo "<tr>";
-                                            echo "<td>" . htmlspecialchars($row['CASE_ID']) . "</td>"; // Tracking #
-                                            echo "<td>" . htmlspecialchars($row['EMP_ID_FK_CASE']) . "</td>"; // Employee ID
-                                            echo "<td>" . htmlspecialchars($row['CASE_SUBJ']) . "</td>"; // Activity
-                                            echo "<td>" . htmlspecialchars($row['CASE_DESC']) . "</td>"; // Description
-                                            echo "<td>" . htmlspecialchars($row['CASE_DATE']) . "</td>"; // Date Assigned
-                                            echo "<td>" . htmlspecialchars($row['CASE_STATUS']) . "</td>"; // Status
-                                            echo "</tr>";
-                                        }
-                                    } else {
-                                        // No cases found
-                                        echo "<tr><td colspan='6' class='text-center'>No cases found.</td></tr>";
+                                <?php
+                                include "connection.php";
+
+                                // Fetch all cases from the database
+                                $query = "SELECT CASE_ID, EMP_ID_FK_CASE, CASE_SUBJ, CASE_DESC, CASE_DATE, CASE_STATUS FROM cases ORDER BY CASE_ID DESC";
+                                $result = mysqli_query($conn, $query);
+
+                                // Check if there are any cases
+                                if (mysqli_num_rows($result) > 0) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        echo "<tr>";
+                                        echo "<td>" . htmlspecialchars($row['CASE_ID']) . "</td>"; // Tracking #
+                                        echo "<td>" . htmlspecialchars($row['EMP_ID_FK_CASE']) . "</td>"; // Employee ID
+                                        echo "<td>" . htmlspecialchars($row['CASE_SUBJ']) . "</td>"; // Activity
+                                        echo "<td>" . htmlspecialchars($row['CASE_DESC']) . "</td>"; // Description
+                                        echo "<td>" . htmlspecialchars($row['CASE_DATE']) . "</td>"; // Date Assigned
+                                        echo "<td>" . htmlspecialchars($row['CASE_STATUS']) . "</td>"; // Status
+                                        echo "</tr>";
                                     }
-                            
-                                    // Close the connection
-                                    mysqli_close($conn);
+                                } else {
+                                    // No cases found
+                                    echo "<tr><td colspan='6' class='text-center'>No cases found.</td></tr>";
+                                }
+
+                                // Close the connection
+                                mysqli_close($conn);
                                 ?>
                             </tbody>
                         </table>
@@ -677,11 +679,11 @@ include('getadmdetail.php');
             <form method="POST">
                 <div class="form-group">
                     <label class="form-label">Employee ID:</label>
-                    <input name = "adm_case_emp_ID" type="text" class="form-control" id="employeeId" required>
+                    <input name="adm_case_emp_ID" type="text" class="form-control" id="employeeId" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Activity:</label>
-                    <input name = "adm_case_act" type="text" class="form-control" id="activity" required>
+                    <input name="adm_case_act" type="text" class="form-control" id="activity" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description:</label>
@@ -690,49 +692,50 @@ include('getadmdetail.php');
                     <div contenteditable="true" id="descriptionBox" class="form-control"
                         style="min-height: 100px; border: 1px solid #ccc; padding: 10px;">
                     </div>
-                    <input name =  "adm_case_desc" type="hidden" name="description" id="hiddenDescription">
+                    <input name="adm_case_desc" type="hidden" name="description" id="hiddenDescription">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Date Assigned:</label>
-                    <input name = "adm_case_date" type="date" class="form-control" id="dateAssigned" required>
+                    <input name="adm_case_date" type="date" class="form-control" id="dateAssigned" required>
                 </div>
                 <div class="text-center mt-3">
-                    <button name = "adm_case_sub" type="submit" class="btn btn-success" id="assignCase">Assign Case</button>
+                    <button name="adm_case_sub" type="submit" class="btn btn-success" id="assignCase">Assign
+                        Case</button>
                     <button type="button" class="btn btn-secondary" id="closeModal">Cancel</button>
                 </div>
             </form>
         </div>
 
         <!-- PHP ASSIGN CASE -->
-        <?php 
-            include "connection.php";
-            if (isset($_POST['adm_case_sub'])) {
+        <?php
+        include "connection.php";
+        if (isset($_POST['adm_case_sub'])) {
 
-                // Collect and sanitize form inputs
-                $empID = mysqli_real_escape_string($conn, $_POST['adm_case_emp_ID']);
-                $caseSubject = mysqli_real_escape_string($conn, $_POST['adm_case_act']);
-                $caseDesc = mysqli_real_escape_string($conn, $_POST['adm_case_desc']);
-                $caseDate = mysqli_real_escape_string($conn, $_POST['adm_case_date']);
-                $caseStatus = "In Progress"; // Default case status
-            
-                // Prepare and execute the insert query with CASE_STATUS included
-                $sql = "INSERT INTO cases (CASE_SUBJ, CASE_DATE, CASE_DESC, CASE_STATUS, EMP_ID_FK_CASE) 
+            // Collect and sanitize form inputs
+            $empID = mysqli_real_escape_string($conn, $_POST['adm_case_emp_ID']);
+            $caseSubject = mysqli_real_escape_string($conn, $_POST['adm_case_act']);
+            $caseDesc = mysqli_real_escape_string($conn, $_POST['adm_case_desc']);
+            $caseDate = mysqli_real_escape_string($conn, $_POST['adm_case_date']);
+            $caseStatus = "In Progress"; // Default case status
+        
+            // Prepare and execute the insert query with CASE_STATUS included
+            $sql = "INSERT INTO cases (CASE_SUBJ, CASE_DATE, CASE_DESC, CASE_STATUS, EMP_ID_FK_CASE) 
                         VALUES (?, ?, ?, ?, ?)";
-            
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ssssi", $caseSubject, $caseDate, $caseDesc, $caseStatus, $empID);
-            
-                // Check execution and respond accordingly
-                if ($stmt->execute()) {
-                    echo "<script>alert('Case successfully assigned to Employee ID: $empID'); window.location.href='admin.php';</script>";
-                } else {
-                    echo "<script>alert('Failed to assign case: " . $stmt->error . "'); window.history.back();</script>";
-                }
-            
-                // Close the statement and connection
-                $stmt->close();
-                $conn->close();
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssi", $caseSubject, $caseDate, $caseDesc, $caseStatus, $empID);
+
+            // Check execution and respond accordingly
+            if ($stmt->execute()) {
+                echo "<script>alert('Case successfully assigned to Employee ID: $empID'); window.location.href='admin.php';</script>";
+            } else {
+                echo "<script>alert('Failed to assign case: " . $stmt->error . "'); window.history.back();</script>";
             }
+
+            // Close the statement and connection
+            $stmt->close();
+            $conn->close();
+        }
         ?>
 
         <div id="documents" class="tab-pane fade">
@@ -811,7 +814,6 @@ include('getadmdetail.php');
                                 <thead class="table-light">
                                     <tr>
                                         <th>Date</th>
-                                        <th>Department</th>
                                         <th>File Type</th>
                                         <th>File Name</th>
                                         <th>Actions</th>
@@ -831,7 +833,6 @@ include('getadmdetail.php');
                                         while ($row = $result->fetch_assoc()) { ?>
                                             <tr>
                                                 <td><?php echo $row['F_DATE']; ?></td>
-                                                <td><?php echo $row['F_DEPT']; ?></td>
                                                 <td><?php echo $row['F_TYPE']; ?></td>
                                                 <td><?php echo $row['F_NAME']; ?></td>
                                                 <td>

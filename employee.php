@@ -113,29 +113,29 @@ include('getempdetail.php'); // or use require()
 
             <!-- PHP FOR DONE HANDLING-->
             <?php
-                include 'connection.php';
+            include 'connection.php';
 
-                // Get the logged-in employee's ID
-                $employeeId = $_SESSION['EMP_ID']; // Adjust this based on your session variable
-                
-                // -------------------- HANDLE "MARK AS DONE" ACTION -------------------
-                if (isset($_POST['case_id_done'])) {
-                    $caseId = intval($_POST['case_id_done']); // Sanitize input to ensure it's an integer
-                
-                    // Update case status to 'Done'
-                    $sql_update = "UPDATE cases SET CASE_STATUS = 'Done' WHERE CASE_ID = ? AND EMP_ID_FK_CASE = ?";
-                    $stmt_update = $conn->prepare($sql_update);
-                    $stmt_update->bind_param("ii", $caseId, $employeeId);
-                
-                    if ($stmt_update->execute()) {
-                        echo "<script>alert('Case marked as done successfully!'); window.location.href=window.location.href;</script>";
-                    } else {
-                        echo "<script>alert('Failed to mark case as done: " . $stmt_update->error . "');</script>";
-                    }
-                
-                    $stmt_update->close();
+            // Get the logged-in employee's ID
+            $employeeId = $_SESSION['EMP_ID']; // Adjust this based on your session variable
+            
+            // -------------------- HANDLE "MARK AS DONE" ACTION -------------------
+            if (isset($_POST['case_id_done'])) {
+                $caseId = intval($_POST['case_id_done']); // Sanitize input to ensure it's an integer
+            
+                // Update case status to 'Done'
+                $sql_update = "UPDATE cases SET CASE_STATUS = 'Done' WHERE CASE_ID = ? AND EMP_ID_FK_CASE = ?";
+                $stmt_update = $conn->prepare($sql_update);
+                $stmt_update->bind_param("ii", $caseId, $employeeId);
+
+                if ($stmt_update->execute()) {
+                    echo "<script>alert('Case marked as done successfully!'); window.location.href=window.location.href;</script>";
+                } else {
+                    echo "<script>alert('Failed to mark case as done: " . $stmt_update->error . "');</script>";
                 }
-                // ---------------------------------------------------------------------
+
+                $stmt_update->close();
+            }
+            // ---------------------------------------------------------------------
             ?>
 
             <div id="caseReport" class="tab-pane fade">
@@ -160,8 +160,10 @@ include('getempdetail.php'); // or use require()
 
                                         <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
                                             <div><strong>ID:</strong> <?php echo htmlspecialchars($row['CASE_ID']); ?></div>
-                                            <div><strong>Subject:</strong> <?php echo htmlspecialchars($row['CASE_SUBJ']); ?></div>
-                                            <div><strong>Issued:</strong> <?php echo htmlspecialchars($row['CASE_DATE']); ?></div>
+                                            <div><strong>Subject:</strong> <?php echo htmlspecialchars($row['CASE_SUBJ']); ?>
+                                            </div>
+                                            <div><strong>Issued:</strong> <?php echo htmlspecialchars($row['CASE_DATE']); ?>
+                                            </div>
                                             <!-- Form to mark as done -->
                                             <form method="POST" action="" class="m-0">
                                                 <input type="hidden" name="case_id_done" value="<?php echo $row['CASE_ID']; ?>">
@@ -648,9 +650,10 @@ include('getempdetail.php'); // or use require()
                 <div class="profile-info">
                     <p><strong>First Name:</strong> <?php echo $employee['EMP_FNAME']; ?></p>
                     <p><strong>Last Name:</strong> <?php echo $employee['EMP_LNAME']; ?></p>
-                    <p><strong>Phone/Cellphone Number:</strong> <?php echo $employee['EMP_PHONENUM']; ?></p>
+                    <!--  <p><strong>Department:</strong></p> -->
                     <p><strong>Birthdate:</strong> <?php echo $employee['EMP_BIRTH']; ?></p>
                     <p><strong>Role:</strong> <?php echo $employee['EMP_POS']; ?></p>
+                    <p><strong>Status:</strong></p>
                     <!--                     <div class="password-section">
                         <label><strong>Password:</strong></label>
                         <input type="password" value="<?php echo $employee['EMP_PASS']; ?>" id="mainPassword" disabled>

@@ -53,13 +53,11 @@
          </form>
 
          <div class="privacy-notice text-center mt-3 p-2">
-            <small>
-               Barangay San Antonio values your privacy. In compliance with the Data Privacy Act of 2012, we ensure that
-               any personal information collected through this website is protected and used solely for official
-               barangay purposes. Once operational, the barangay will have full control over the website and its data
-               management, ensuring transparency and accountability in handling your information. If you have any
-               concerns regarding data privacy, please reach out to the barangay office.
-            </small>
+            Barangay San Antonio values your privacy. In compliance with the Data Privacy Act of 2012, we ensure that
+            any personal information collected through this website is protected and used solely for official
+            barangay purposes. Once operational, the barangay will have full control over the website and its data
+            management, ensuring transparency and accountability in handling your information. If you have any
+            concerns regarding data privacy, please reach out to the barangay office.
          </div>
 
       </div>
