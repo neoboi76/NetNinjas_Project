@@ -765,7 +765,7 @@ include('getadmdetail.php');
             });
         </script>
 
-
+        <!-- PHP Feedback-->
         <div id="feedback" class="tab-pane fade">
             <div id="feedbackList" class="feedback-list">
                 <?php
@@ -775,7 +775,7 @@ include('getadmdetail.php');
                 $adminId = $_SESSION['ADM_ID']; // Admin ID to whom the feedback is addressed
 
                 // Fetch feedback records for this admin, ordered by latest date and highest EVAL_ID
-                $sql_fetch_feedback = "SELECT * FROM evaluation WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC, EVAL_ID DESC";
+                $sql_fetch_feedback = "SELECT * FROM evaluation WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_ID DESC";
                 $stmt = $conn->prepare($sql_fetch_feedback);
                 $stmt->bind_param("i", $adminId); // Bind admin ID for secure query
 
