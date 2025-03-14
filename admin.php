@@ -410,89 +410,45 @@ include('getadmdetail.php');
 
                     <!-- PHP Review work in progress-->
                     <?php
-<<<<<<< HEAD
-                    include "connection.php";
-
-                    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["adm_review_sub"])) {
-                        $emp_id = $_POST['adm_emp_send'];
-                        $adm_subject = $_POST['adm_subject'];
-                        $adm_feedback = $_POST['adm_feedback'];
-                        $admin_id = $_SESSION["ADM_ID"] ?? null;
-
-                        if ($admin_id === null) {
-                            echo "<script>alert('Admin not logged in.'); window.location.href='admin.php';</script>";
-                            exit();
-                        }
-
-                        $check_emp = "SELECT * FROM employee WHERE EMP_ID = ?";
-                        $checker = $conn->prepare($check_emp);
-                        $checker->bind_param("i", $emp_id);
-                        $checker->execute();
-                        $result = $checker->get_result();
-
-                        if ($result->num_rows > 0) {
-                            // Employee ID exists, proceed with insertion
-                            $give_feedback = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) VALUES (?, NOW(), ?, ?)";
-                            $adm_give_feed = $conn->prepare($give_feedback);
-                            $adm_give_feed->bind_param("sii", $adm_feedback, $emp_id, $admin_id);
-
-                            if ($adm_give_feed->execute()) {
-                                echo "<script>alert('Feedback successfully submitted!'); window.location.href='admin.php';</script>";
-                            } else {
-                                echo "<script>alert('Error submitting feedback: " . $adm_give_feed->error . "'); window.location.href='admin.php';</script>";
-                            }
-                            $adm_give_feed->close();
-                        } else {
-                            // Employee ID does not exist
-                            echo "<script>alert('Error: Employee ID not found!'); window.location.href='admin.php';</script>";
-                        }
-
-                        $checker->close();
-                        $conn->close();
-                    }
-=======
-                    /*
                         include "connection.php";
                         
-                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adm_review_sub'])) {
+                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adm_review_sub'])) 
+                        {
                             $emp_id = $_POST['adm_emp_send'];
-                            $adm_subject = $_POST['adm_subject'];
                             $adm_feedback = $_POST['adm_feedback'];
                             $admin_id = $_SESSION["ADM_ID"] ?? null;
                         
-                            if ($admin_id === null) {
+                            if (!$admin_id) {
                                 echo "<script>alert('Admin not logged in.'); window.location.href='admin.php';</script>";
                                 exit();
                             }
-        
-                            $check_emp = "SELECT * FROM employee WHERE EMP_ID = ?";
-                            $checker = $conn->prepare($check_emp);
-                            $checker->bind_param("i", $emp_id);
-                            $checker->execute();
-                            $result = $checker->get_result();
                         
-                            if ($result->num_rows > 0) {
-                                // Employee ID exists, proceed with insertion
-                                $give_feedback = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) VALUES (?, NOW(), ?, ?)";
-                                $adm_give_feed = $conn->prepare($give_feedback);
-                                $adm_give_feed->bind_param("sii", $adm_feedback, $emp_id, $admin_id);
+                            // Check if employee ID exists
+                            $check_sql = "SELECT 1 FROM employee WHERE EMP_ID = ?";
+                            $check_stmt = $conn->prepare($check_sql);
+                            $check_stmt->bind_param("i", $emp_id);
+                            $check_stmt->execute();
+                            $result = $check_stmt->get_result();
                         
-                                if ($adm_give_feed->execute()) {
-                                    echo "<script>alert('Feedback successfully submitted!'); window.location.href='admin.php';</script>";
-                                } else {
-                                    echo "<script>alert('Error submitting feedback: " . $adm_give_feed->error . "'); window.location.href='admin.php';</script>";
-                                }
-                                $adm_give_feed->close();
-                            } else {
-                                // Employee ID does not exist
+                            if ($result->num_rows === 0) {
                                 echo "<script>alert('Error: Employee ID not found!'); window.location.href='admin.php';</script>";
+                                exit();
                             }
+                            $check_stmt->close();
                         
-                            $checker->close();
-                            $conn->close();
+                            // Proceed with insertion if employee exists
+                            $sql = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) VALUES (?, NOW(), ?, ?)";
+                            $stmt = $conn->prepare($sql);
+                            $stmt->bind_param("sii", $adm_feedback, $emp_id, $admin_id);
+                        
+                            if ($stmt->execute()) {
+                                echo "<script>alert('Feedback successfully submitted!'); window.location.href='admin.php';</script>";
+                            } else {
+                                echo "<script>alert('Error: " . $stmt->error . "'); window.location.href='admin.php';</script>";
+                            }
+                    
+                           $stmt->close();
                         }
-                        */
->>>>>>> 9d85bb91d8cd1bd4a1adf688aef0aeb358edae23
                     ?>
 
                 </div>
@@ -503,26 +459,28 @@ include('getadmdetail.php');
                         <?php
                         include 'connection.php';
 
-                        // Assuming the logged-in admin's ID is stored in a session variable, for example:
-                        $adminId = $_SESSION['ADM_ID'];  // Replace this with your actual session variable that stores the admin ID
-                        
-                        // Fetch feedback for the logged-in admin only
-                        $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC";
+                        // Assuming the logged-in admin's ID is stored in a session variable like this:
+                        $adminId = $_SESSION['ADM_ID']; // Admin ID who sent the feedback
+
+                        // Fetch feedback records sent by this admin, ordered by latest date and highest EVAL_ID
+                        $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC, EVAL_ID DESC";
                         $stmt = $conn->prepare($sql_fetch_feedback);
-                        $stmt->bind_param("i", $adminId); // Bind the admin ID to the query
-                        
+                        $stmt->bind_param("i", $adminId); // Bind admin ID for secure query
+
                         $stmt->execute();
                         $result = $stmt->get_result();
 
+                        // Check if there are feedback records
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) { ?>
-                                <div class="feedback-history-item">
-                                    <div class="feedback-history-header">
-                                        <span><strong>Feedback to:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
-                                        <span><strong>Posted:</strong> <?php echo $row['EVAL_DATE']; ?></span><br>
+                                <div class="feedback-history-item" style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
+                                    <div class="feedback-history-header" style="margin-bottom:5px; display:flex; justify-content:space-between; flex-wrap:wrap;">
+                                        <span><strong>Feedback ID:</strong> <?php echo $row['EVAL_ID']; ?></span>
+                                        <span><strong>to Employee ID:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
+                                        <span><strong>Posted on:</strong> <?php echo $row['EVAL_DATE']; ?></span>
                                     </div>
-                                    <div class="feedback-history-text">
-                                        <?php echo $row['EVAL_NOTE']; ?>
+                                    <div class="feedback-history-text" style="margin-top:8px;">
+                                        <?php echo nl2br(htmlspecialchars($row['EVAL_NOTE'])); // Protect and format text ?>
                                     </div>
                                 </div>
                             <?php }
@@ -530,6 +488,7 @@ include('getadmdetail.php');
                             echo "<p>No feedback sent records found.</p>";
                         }
 
+                        // Close connection
                         $stmt->close();
                         $conn->close();
                         ?>
@@ -811,27 +770,29 @@ include('getadmdetail.php');
                 <?php
                 include 'connection.php';
 
-                // Assuming the logged-in admin's ID is stored in a session variable, for example:
-                $adminId = $_SESSION['ADM_ID'];  // Replace this with your actual session variable that stores the admin ID
-                
-                // Fetch feedback for the logged-in admin only
-                $sql_fetch_feedback = "SELECT * FROM evaluation WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC";
+                // Assuming the logged-in admin's ID is stored in a session variable like this:
+                $adminId = $_SESSION['ADM_ID']; // Admin ID to whom the feedback is addressed
+
+                // Fetch feedback records for this admin, ordered by latest date and highest EVAL_ID
+                $sql_fetch_feedback = "SELECT * FROM evaluation WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_ID DESC";
                 $stmt = $conn->prepare($sql_fetch_feedback);
-                $stmt->bind_param("i", $adminId); // Bind the admin ID to the query
-                
+                $stmt->bind_param("i", $adminId); // Bind admin ID for secure query
+
                 $stmt->execute();
                 $result = $stmt->get_result();
 
+                // Check if there are feedback records
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) { ?>
-                        <div class="feedback-item">
-                            <div class="feedback-header">
-                                <span><strong>Feedback by:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
+                        <div class="feedback-item" style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
+                            <div class="feedback-header" style="margin-bottom:5px; display:flex; justify-content:space-between; flex-wrap:wrap;">
+                                <span><strong>Feedback ID:</strong> <?php echo $row['EVAL_ID']; ?></span>
+                                <span><strong>Feedback from Employee ID:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
                                 <span><strong>For:</strong> <?php echo $row['ADM_ID_FK_EVAL']; ?></span>
-                                <span><strong>Posted:</strong> <?php echo $row['EVAL_DATE']; ?></span><br>
+                                <span><strong>Posted on:</strong> <?php echo $row['EVAL_DATE']; ?></span>
                             </div>
-                            <div class="feedback-text">
-                                <?php echo $row['EVAL_NOTE']; ?>
+                            <div class="feedback-text" style="margin-top:8px;">
+                                <?php echo nl2br(htmlspecialchars($row['EVAL_NOTE'])); // Protect against XSS and keep line breaks ?>
                             </div>
                         </div>
                     <?php }
@@ -839,6 +800,7 @@ include('getadmdetail.php');
                     echo "<p>No feedback records found.</p>";
                 }
 
+                // Close connection
                 $stmt->close();
                 $conn->close();
                 ?>
