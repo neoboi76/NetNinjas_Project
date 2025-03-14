@@ -651,9 +651,10 @@ include('getempdetail.php'); // or use require()
                     <p><strong>First Name:</strong> <?php echo $employee['EMP_FNAME']; ?></p>
                     <p><strong>Last Name:</strong> <?php echo $employee['EMP_LNAME']; ?></p>
                     <!--  <p><strong>Department:</strong></p> -->
-                    <p><strong>Birthdate:</strong> <?php echo $employee['EMP_BIRTH']; ?></p>
-                    <p><strong>Role:</strong> <?php echo $employee['EMP_POS']; ?></p>
-                    <p><strong>Status:</strong></p>
+                    <p><strong>Birthdate: </strong> <?php echo $employee['EMP_BIRTH']; ?></p>
+                    <p><strong>Role: </strong> <?php echo $employee['EMP_POS']; ?></p>
+                    <p><strong>Department: </strong> <?php echo $employee['EMP_DEPARTMENT']; ?></p>
+                    <p><strong>Status: </strong><?php echo $employee['EMP_STATUS']; ?></p>
                     <!--                     <div class="password-section">
                         <label><strong>Password:</strong></label>
                         <input type="password" value="<?php echo $employee['EMP_PASS']; ?>" id="mainPassword" disabled>
