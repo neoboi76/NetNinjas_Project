@@ -524,31 +524,34 @@ include('getempdetail.php'); // or use require()
 
                         // Assuming the logged-in employee's ID is stored in a session variable, for example:
                         $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
-                        
-                        // Fetch evaluations for the logged-in employee only
+
+                        // Fetch payroll records for the logged-in employee only
                         $sql_fetch_feedback = "SELECT * FROM payroll WHERE EMP_ID_FK_PAY = ? ORDER BY P_DATE DESC";
                         $stmt = $conn->prepare($sql_fetch_feedback);
                         $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
-                        
+
                         $stmt->execute();
                         $result = $stmt->get_result();
 
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
+                                // Calculate the final deposited amount after deduction
+                                $finalAmount = $row['P_AMT'] - $row['P_DEDUC'];
+
                                 // Format the date
                                 $formattedDate = date('F Y', strtotime($row['P_DATE'])); // Converts date to "Month Year" format
                                 ?>
                                 <div class="salary-item">
                                     <a href="#"
                                         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                        <b>₱<?php echo $row['P_AMT']; ?> was deposited for <?php echo $formattedDate; ?></b>
+                                        <b>₱<?php echo number_format($finalAmount, 2); ?> was deposited for <?php echo $formattedDate; ?> (from ₱<?php echo number_format($row['P_AMT'], 2); ?> with ₱<?php echo number_format($row['P_DEDUC'], 2); ?> deducted)</b>
                                         <span class="badge bg-secondary"><?php echo $row['P_DATE']; ?></span>
                                     </a>
                                 </div>
                                 <?php
                             }
                         } else {
-                            echo "<p>No feedback records found.</p>";
+                            echo "<p>No payroll records found.</p>";
                         }
 
                         $stmt->close();
