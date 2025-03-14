@@ -941,6 +941,7 @@ include('getadmdetail.php');
 
                 <div class="profile-info">
                     <p><strong>Role:</strong> Admin - <?php echo $admin['ADM_POS']; ?></p>
+
                 </div>
             </div>
         </div>

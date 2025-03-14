@@ -381,40 +381,46 @@ include('getempdetail.php'); // or use require()
 
             <!--PHP LEAVE REQUEST-->
             <?php
-            include 'connection.php';
-
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['leave_emp_submit'])) {
-                $leave_reason = $_POST['leave_reason'];
-                $leave_descript = $_POST['leave_descript'];
-                $leave_start = $_POST['leave_start'];
-                $leave_return = $_POST['leave_return'];
-
-                if (isset($_SESSION['EMP_ID'])) {
-                    $leave_emp_id = $_SESSION['EMP_ID'];
-
-                    $leave_rq_sql = "INSERT INTO leave_request (LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, EMP_ID) 
-                         VALUES (?, ?, ?, ?, ?)";
-
-                    $leave_rq_dbadd = $conn->prepare($leave_rq_sql);
-                    $leave_rq_dbadd->bind_param("ssssi", $leave_reason, $leave_descript, $leave_start, $leave_return, $leave_emp_id);
-
-                    if ($leave_rq_dbadd->execute()) {
-                        echo "<script>alert('Leave request submitted successfully!');</script>";
-                        echo "<script>window.location.href = window.location.href;</script>";
+                include 'connection.php';
+                
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['leave_emp_submit'])) {
+                    $leave_reason = $_POST['leave_reason'];
+                    $leave_descript = $_POST['leave_descript'];
+                    $leave_start = $_POST['leave_start'];
+                    $leave_return = $_POST['leave_return'];
+                
+                    if (isset($_SESSION['EMP_ID'])) {
+                        $leave_emp_id = $_SESSION['EMP_ID'];
+                
+                        $leave_rq_sql = "INSERT INTO leave_request (LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, EMP_ID) 
+                                        VALUES (?, ?, ?, ?, ?)";
+                        $leave_rq_dbadd = $conn->prepare($leave_rq_sql);
+                        $leave_rq_dbadd->bind_param("ssssi", $leave_reason, $leave_descript, $leave_start, $leave_return, $leave_emp_id);
+                
+                        if ($leave_rq_dbadd->execute()) {
+                            echo "<script>
+                                    alert('Leave request submitted successfully!');
+                                    window.location.href = 'employee.php'; // Redirect back to same page
+                                </script>";
+                        } else {
+                            echo "<script>
+                                    alert('Error submitting leave request: " . $leave_rq_dbadd->error . "');
+                                    window.location.href = 'employee.php'; // Redirect back to same page
+                                </script>";
+                        }
+                
+                        $leave_rq_dbadd->close();
                     } else {
-                        echo "<script>alert('Error submitting leave request: " . $leave_rq_dbadd->error . "');</script>";
-                        echo "<script>window.location.href = window.location.href;</script>";
+                        echo "<script>
+                                alert('Error: Employee ID is missing. Please log in again.');
+                                window.location.href = 'employee.php'; // Redirect back to same page
+                            </script>";
                     }
-                    $leave_rq_dbadd->close();
-                } else {
-                    echo "<script>alert('Error: Employee ID is missing. Please log in again.');</script>";
-                    echo "<script>window.location.href = window.location.href;</script>";
                 }
-            }
+                
+                $conn->close();
 
-            $conn->close()
-
-                ?>
+            ?>
 
             <div id="feedback" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
@@ -547,31 +553,34 @@ include('getempdetail.php'); // or use require()
 
                         // Assuming the logged-in employee's ID is stored in a session variable, for example:
                         $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
-                        
-                        // Fetch evaluations for the logged-in employee only
+
+                        // Fetch payroll records for the logged-in employee only
                         $sql_fetch_feedback = "SELECT * FROM payroll WHERE EMP_ID_FK_PAY = ? ORDER BY P_DATE DESC";
                         $stmt = $conn->prepare($sql_fetch_feedback);
                         $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
-                        
+
                         $stmt->execute();
                         $result = $stmt->get_result();
 
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
+                                // Calculate the final deposited amount after deduction
+                                $finalAmount = $row['P_AMT'] - $row['P_DEDUC'];
+
                                 // Format the date
                                 $formattedDate = date('F Y', strtotime($row['P_DATE'])); // Converts date to "Month Year" format
                                 ?>
                                 <div class="salary-item">
                                     <a href="#"
                                         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                        <b>₱<?php echo $row['P_AMT']; ?> was deposited for <?php echo $formattedDate; ?></b>
+                                        <b>₱<?php echo number_format($finalAmount, 2); ?> was deposited for <?php echo $formattedDate; ?> (from ₱<?php echo number_format($row['P_AMT'], 2); ?> with ₱<?php echo number_format($row['P_DEDUC'], 2); ?> deducted)</b>
                                         <span class="badge bg-secondary"><?php echo $row['P_DATE']; ?></span>
                                     </a>
                                 </div>
                                 <?php
                             }
                         } else {
-                            echo "<p>No feedback records found.</p>";
+                            echo "<p>No payroll records found.</p>";
                         }
 
                         $stmt->close();
