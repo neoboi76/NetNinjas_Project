@@ -32,6 +32,25 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.addEventListener("DOMContentLoaded", async function () {
+    let profileImages = document.querySelectorAll(".profile-img");
+
+    try {
+        let response = await fetch("fetchpfp.php");
+        let data = await response.json();
+
+        if (data.profilePicture) {
+            profileImages.forEach(img => {
+                img.src = data.profilePicture;
+            });
+        } else {
+            console.error("Profile picture not found in response.");
+        }
+    } catch (error) {
+        console.error("Error fetching profile picture:", error);
+    }
+});
+
 
 document.querySelectorAll('.nav-link, .dropdown-item').forEach(item => {
     item.addEventListener('click', function () {

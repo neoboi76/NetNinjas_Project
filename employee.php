@@ -42,7 +42,7 @@ include('getempdetail.php'); // or use require()
     </section>
 
     <section class="sidebar">
-        <img src="./images/juoross.jpg" class="img-thumbnail" style="contain: cover; width: 120px; height: 120px;">
+        <img src="" class="img-thumbnail profile-img" style="contain: cover; width: 120px; height: 120px;">
 
         <p>Employee ID: <b><?php echo $employee['EMP_ID']; ?></b></p>
         <p>First Name: <b><?php echo $employee['EMP_FNAME']; ?></b></p>
@@ -75,7 +75,7 @@ include('getempdetail.php'); // or use require()
 
     <section class="content">
         <div class="account-icon">
-            <img src="./images/juoross.jpg" width="75px" width="75px" alt="Account"
+            <img src="" class="profile-img" width="75px" width="75px" alt="Account"
                 style="contain: cover; width: 75px; height: 75px; border-radius: 50%;">
             <p style="color: white">&nbsp;&nbsp;<b>Settings</b></p>
         </div>
@@ -647,7 +647,7 @@ include('getempdetail.php'); // or use require()
             <div class="profile-content">
                 <span class="close-btn">&larr;</span>
                 <div class="profile-header">
-                    <img src="./images/juoross.jpg" alt="Profile Picture" class="profile-img">
+                    <img src="" alt="Profile Picture" class="profile-img">
                     <h3>Employee ID: <?php echo $employee['EMP_ID']; ?></h3>
                     <p>Joined in <?php echo $employee['EMP_JOINED']; ?></p>
                 </div>
