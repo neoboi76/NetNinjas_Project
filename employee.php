@@ -88,6 +88,11 @@ include('getempdetail.php'); // or use require()
             </div>
             <div id="announcement" class="tab-pane fade show active">
                 <div class="container-fluid p-3">
+                    <div class="text-left p-2">
+                        <input type="file" id="mediaInput" accept="image/*,video/*,gif/*" multiple
+                            style="display: none;">
+                    </div>
+
                     <div class="row">
                         <div class="col-md-8 col-sm-12">
                             <div class="content-placeholder content-container" id="content1">

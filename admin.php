@@ -693,7 +693,7 @@ include('getadmdetail.php');
                     FORM SUBMIT BUTTON. TEXTAREA DOES NOT WORK ATM -->
                     <div contenteditable="true" id="descriptionBox" class="form-control"
                         style="min-height: 100px; border: 1px solid #ccc; padding: 10px;">
-                    </div>
+                    </div>s
                     <input name="adm_case_desc" type="hidden" name="description" id="hiddenDescription">
                 </div>
                 <div class="form-group">

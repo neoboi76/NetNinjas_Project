@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-
 document.querySelectorAll('.nav-link, .dropdown-item').forEach(item => {
     item.addEventListener('click', function () {
         let pageId = document.getElementById('pageTitle');
