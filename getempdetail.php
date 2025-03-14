@@ -19,8 +19,7 @@ if (isset($_SESSION['EMP_ID'])) {
     $empId = $_SESSION['EMP_ID'];
 
     $stmt = $conn->prepare("
-        SELECT e.EMP_ID, e.EMP_PASS, e.EMP_FNAME, e.EMP_LNAME, e.EMP_POS, 
-               e.EMP_DEPARTMENT, e.EMP_EMAIL, e.EMP_BIRTH, e.EMP_JOINED, e.ADM_ID_FK_EMP,
+        SELECT e.EMP_ID, e.EMP_PASS, e.EMP_FNAME, e.EMP_LNAME, e.EMP_POS, e.EMP_BIRTH, e.EMP_JOINED, e.ADM_ID_FK_EMP,
                a.ADM_FNAME, a.ADM_LNAME
         FROM employee e
         LEFT JOIN administrator a ON e.ADM_ID_FK_EMP = a.ADM_ID
