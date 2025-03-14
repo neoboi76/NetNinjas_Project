@@ -153,6 +153,98 @@ let closeProfileModal = document.querySelector(".close-btn");
 let changePasswordLink = document.getElementById("changePasswordLink");
 let closePasswordModal = document.getElementById("closePasswordModal");
 
+document.addEventListener("DOMContentLoaded", function () {
+    function loadMediaForArea(areaId) {
+        fetch("loadannouncement.php")
+            .then(response => response.json())
+            .then(data => {
+                console.log("Fetched media data: ", data);
+
+                data.forEach(media => {
+                    const mediaContainer = document.querySelector(`#content${media.area} .content-area`);
+
+                    console.log(`Targeting container: #content${media.area} .content-area`);
+                    console.log(mediaContainer);
+
+                    if (mediaContainer && !mediaContainer.classList.contains("loaded")) {
+                        const mediaItem = document.createElement("div");
+                        mediaItem.classList.add("media-item");
+
+                        const imageUrl = media.signedUrl;
+                        console.log("Image URL: ", imageUrl);
+
+                        if (!imageUrl) {
+                            console.error("No signed URL for media: ", media);
+                            return;
+                        }
+
+                        const fileExtension = media.path.split('.').pop().toLowerCase();
+                        const mimeTypeMap = {
+                            'jpg': 'image/jpeg',
+                            'jpeg': 'image/jpeg',
+                            'png': 'image/png',
+                            'gif': 'image/gif',
+                            'mp4': 'video/mp4',
+                            'webm': 'video/webm'
+                        };
+
+                        const mimeType = mimeTypeMap[fileExtension];
+                        if (!mimeType) {
+                            console.error("Unsupported media type: " + fileExtension);
+                            return;
+                        }
+
+                        if (mimeType.startsWith("image/")) {
+                            const img = document.createElement("img");
+                            img.src = imageUrl;
+                            mediaItem.appendChild(img);
+                        } else if (mimeType.startsWith("video/")) {
+                            const video = document.createElement("video");
+                            video.src = imageUrl;
+                            video.controls = true;
+                            mediaItem.appendChild(video);
+                        }
+
+                        mediaContainer.appendChild(mediaItem);
+                        mediaContainer.classList.add("loaded");
+                    } else {
+                        console.error("Media container not found for area: ", media.area);
+                    }
+                });
+            })
+            .catch(error => console.error("Error loading media:", error));
+    }
+
+    function observeContentAreas() {
+        const contentAreas = document.querySelectorAll('.content-container');
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const areaId = entry.target.id.replace('content', '');
+                    console.log("IntersectionObserver triggering for area:", areaId);
+
+                    if (!entry.target.classList.contains("loaded")) {
+                        loadMediaForArea(Number(areaId));
+                        entry.target.classList.add("loaded");
+                    }
+
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            root: null,
+            threshold: 0.5,
+        });
+
+        contentAreas.forEach(area => {
+            observer.observe(area);
+        });
+    }
+
+    observeContentAreas();
+});
+
 document.addEventListener("DOMContentLoaded", function (event) {
 
     // Show Review Superior tab when button is clicked
