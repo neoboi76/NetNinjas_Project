@@ -75,60 +75,36 @@ include('getadmdetail.php');
         </div>
         <h2 id="pageTitle"><b>Announcement</b></h2>
         <div class="tab-content">
-            <div id="welcome" class="tab-pane fade show active">
-                <div class="container-fluid p-3">
-                    <div class="row">
-                        <div class="text-left p-2">
-                            <!-- Static now. Make Dynamic Later -->
-                            <button type="submit" class="btn btn-primary">Manage Posts</button>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="content-placeholder content-container1">
-                                <p>Future Dynamic Content 1</p>
-                            </div>
-                        </div>
-                        <!-- Small Content Box -->
-                        <div class="col-md-4">
-                            <div class="content-placeholder content-container2">
-                                <p>Future Dynamic Content 2</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <!-- Full Width Content Box -->
-                        <div class="col-12">
-                            <div class="content-placeholder content-container3">
-                                <p>Future Dynamic Content 3</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div id="welcome" class="tab-pane fade">
+                <!-- <div class="container-fluid p-3">
+
+                </div> -->
             </div>
-            <div id="announcement" class="tab-pane fade">
+            <div id="announcement" class="tab-pane fade show active">
                 <div class="container-fluid p-3">
                     <div class="text-left p-2">
-                        <!-- Static now. Make Dynamic Later -->
-                        <button type="submit" class="btn btn-primary">Manage Posts</button>
+                        <button id="addMediaBtn" class="btn btn-primary">Add Media</button>
+                        <input type="file" id="mediaInput" accept="image/*,video/*,gif/*" multiple
+                            style="display: none;">
                     </div>
+
                     <div class="row">
-                        <!-- Large Content Box -->
-                        <div class="col-md-8">
-                            <div class="content-placeholder content-container1">
-                                <p>Future Dynamic Content 1</p>
+                        <div class="col-md-8 col-sm-12">
+                            <div class="content-placeholder content-container" id="content1">
+                                <div class="content-area"></div>
                             </div>
                         </div>
-                        <!-- Small Content Box -->
-                        <div class="col-md-4">
-                            <div class="content-placeholder content-container2">
-                                <p>Future Dynamic Content 2</p>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="content-placeholder content-container" id="content2">
+                                <div class="content-area"></div>
                             </div>
                         </div>
                     </div>
+
                     <div class="row mt-3">
-                        <!-- Full Width Content Box -->
                         <div class="col-12">
-                            <div class="content-placeholder content-container3">
-                                <p>Future Dynamic Content 3</p>
+                            <div class="content-placeholder content-container" id="content3">
+                                <div class="content-area"></div>
                             </div>
                         </div>
                     </div>
@@ -139,7 +115,8 @@ include('getadmdetail.php');
                 <div class="container p-4 bg-light rounded">
                     <!-- Employee Action Buttons -->
                     <div class="d-flex justify-content-start mb-3">
-                        <button class="btn btn-primary me-2" id="viewEmployeeBtn">View Employee</button>
+                        <button class="btn btn-primary me-2" id="enableEmployeeBtn">Enable Employee</button>
+                        <button class="btn btn-primary me-2" id="disableEmployeeBtn">Disable Employee</button>
                         <button class="btn btn-primary me-2" id="addEmployeeBtn">Add Employee</button>
                         <button class="btn btn-primary" id="editEmployeeBtn">Edit Employee</button>
                     </div>
@@ -154,10 +131,10 @@ include('getadmdetail.php');
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Position</th>
-                                    <th>Phone Number</th>
                                     <th>Birth Date</th>
                                     <th>Status</th>
                                     <th>Email</th>
+                                    <th>Department</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -174,11 +151,10 @@ include('getadmdetail.php');
                                                 <td>{$row['EMP_FNAME']}</td>
                                                 <td>{$row['EMP_LNAME']}</td>
                                                 <td>{$row['EMP_POS']}</td>
-                                                <td>{$row['EMP_PHONENUM']}</td>
                                                 <td>{$row['EMP_BIRTH']}</td>
                                                 <td>{$row['EMP_STATUS']}</td> <!-- Show status here -->
                                                 <td>{$row['EMP_EMAIL']}</td>
-                                            </tr>";
+                                            </tr>";/*  Add department variable */
                                     }
                                 } else {
                                     echo "<tr><td colspan='8' class='text-center'>No employees found</td></tr>";
@@ -207,7 +183,9 @@ include('getadmdetail.php');
 
                         <form method="POST">
                             <input type="text" name="emp_id_add" placeholder="Employee ID" required>
-                            <input type="text" name="emp_phoneNum_add" placeholder="Phone/Cellphone Number" required>
+                            <!-- <input type="text" name="emp_phoneNum_add" placeholder="Phone/Cellphone Number" required> -->
+                            <!--  Add email variable -->
+                            <input type="text" name="" placeholder="Email" required>
                             <input type="text" name="emp_role_add" placeholder="Role" required>
                             <input type="text" placeholder="Department" required>
 
@@ -271,7 +249,8 @@ include('getadmdetail.php');
 
                         <form method="POST">
                             <input name="edit_emp_ID" type="text" placeholder="Employee ID" required>
-                            <input name="edit_emp_PhoneNum" type="text" placeholder="Phone/Cellphone Number" required>
+                            <!-- <input name="edit_emp_PhoneNum" type="text" placeholder="Phone/Cellphone Number" required> -->
+                            <input type="text" name="" placeholder="Email" required>
                             <input name="edit_emp_role" type="text" placeholder="Role" required>
                             <input name="edit_emp_dept" type="text" placeholder="Department" required>
 
@@ -376,6 +355,31 @@ include('getadmdetail.php');
 
             ?>
 
+            <!-- Enable Employee Modal -->
+            <div id="employeeEnableModal" class="employeeEnable-modal">
+                <div class="employeeEnable-modal-content">
+                    <span class="employeeEnable-close">&times;</span>
+                    <h3>Enable Employee</h3>
+                    <form method="POST">
+                        <input type="text" name="enable_emp_ID" placeholder="Enter Employee ID" required>
+                        <button class="btn btn-success" name="enable_employee">Enable</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Disable Employee Modal -->
+            <div id="employeeDisableModal" class="employeeDisable-modal">
+                <div class="employeeDisable-modal-content">
+                    <span class="employeeDisable-close">&times;</span>
+                    <h3>Disable Employee</h3>
+                    <form method="POST">
+                        <input type="text" name="disable_emp_ID" placeholder="Enter Employee ID" required>
+                        <button class="btn btn-danger" name="disable_employee">Disable</button>
+                    </form>
+                </div>
+            </div>
+
+
             <div id="review" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
                     <!-- Top Buttons -->
@@ -407,48 +411,47 @@ include('getadmdetail.php');
                                 <button name="adm_review_sub" type="submit" class="btn btn-primary">Submit</button>
                             </div>
                     </form>
-                    
+
                     <!-- PHP Review this one is WORKING but page refreshes -->
                     <?php
-                        include 'connection.php';
+                    include 'connection.php';
 
-                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adm_review_sub'])) 
-                        {
-                            $emp_id = $_POST['adm_emp_send'];
-                            $adm_feedback = $_POST['adm_feedback'];
-                            $admin_id = $_SESSION["ADM_ID"] ?? null;
-                        
-                            if (!$admin_id) {
-                                echo "<script>alert('Admin not logged in.'); window.location.href='admin.php';</script>";
-                                exit();
-                            }
-                        
-                            // Check if employee ID exists
-                            $check_sql = "SELECT 1 FROM employee WHERE EMP_ID = ?";
-                            $check_stmt = $conn->prepare($check_sql);
-                            $check_stmt->bind_param("i", $emp_id);
-                            $check_stmt->execute();
-                            $result = $check_stmt->get_result();
-                        
-                            if ($result->num_rows === 0) {
-                                echo "<script>alert('Error: Employee ID not found!'); window.location.href='admin.php';</script>";
-                                exit();
-                            }
-                            $check_stmt->close();
-                        
-                            // Proceed with insertion if employee exists
-                            $sql = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) VALUES (?, NOW(), ?, ?)";
-                            $stmt = $conn->prepare($sql);
-                            $stmt->bind_param("sii", $adm_feedback, $emp_id, $admin_id);
-                        
-                            if ($stmt->execute()) {
-                                echo "<script>alert('Feedback successfully submitted!'); window.location.href='admin.php';</script>";
-                            } else {
-                                echo "<script>alert('Error: " . $stmt->error . "'); window.location.href='admin.php';</script>";
-                            }
-                    
-                           $stmt->close();
+                    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adm_review_sub'])) {
+                        $emp_id = $_POST['adm_emp_send'];
+                        $adm_feedback = $_POST['adm_feedback'];
+                        $admin_id = $_SESSION["ADM_ID"] ?? null;
+
+                        if (!$admin_id) {
+                            echo "<script>alert('Admin not logged in.'); window.location.href='admin.php';</script>";
+                            exit();
                         }
+
+                        // Check if employee ID exists
+                        $check_sql = "SELECT 1 FROM employee WHERE EMP_ID = ?";
+                        $check_stmt = $conn->prepare($check_sql);
+                        $check_stmt->bind_param("i", $emp_id);
+                        $check_stmt->execute();
+                        $result = $check_stmt->get_result();
+
+                        if ($result->num_rows === 0) {
+                            echo "<script>alert('Error: Employee ID not found!'); window.location.href='admin.php';</script>";
+                            exit();
+                        }
+                        $check_stmt->close();
+
+                        // Proceed with insertion if employee exists
+                        $sql = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) VALUES (?, NOW(), ?, ?)";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("sii", $adm_feedback, $emp_id, $admin_id);
+
+                        if ($stmt->execute()) {
+                            echo "<script>alert('Feedback successfully submitted!'); window.location.href='admin.php';</script>";
+                        } else {
+                            echo "<script>alert('Error: " . $stmt->error . "'); window.location.href='admin.php';</script>";
+                        }
+
+                        $stmt->close();
+                    }
                     ?>
                 </div>
 
@@ -459,7 +462,7 @@ include('getadmdetail.php');
                         include 'connection.php';
 
                         $adminId = $_SESSION['ADM_ID']; // Admin ID who sent the feedback
-
+                        
                         // Fetch feedback records sent by this admin, ordered by latest date and highest EVAL_ID
                         $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC, EVAL_ID DESC";
                         $stmt = $conn->prepare($sql_fetch_feedback);
@@ -467,12 +470,14 @@ include('getadmdetail.php');
                         
                         $stmt->execute();
                         $result = $stmt->get_result();
-                        
+
                         // Check if there are feedback records
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) { ?>
-                                <div class="feedback-history-item" style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
-                                    <div class="feedback-history-header" style="margin-bottom:5px; display:flex; justify-content:space-between; flex-wrap:wrap;">
+                                <div class="feedback-history-item"
+                                    style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
+                                    <div class="feedback-history-header"
+                                        style="margin-bottom:5px; display:flex; justify-content:space-between; flex-wrap:wrap;">
                                         <span><strong>Feedback ID:</strong> <?php echo $row['EVAL_ID']; ?></span>
                                         <span><strong>to Employee ID:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
                                         <span><strong>Posted on:</strong> <?php echo $row['EVAL_DATE']; ?></span>
@@ -485,7 +490,7 @@ include('getadmdetail.php');
                         } else {
                             echo "<p>No feedback sent records found.</p>";
                         }
-                        
+
                         // Close connection
                         $stmt->close();
                         $conn->close();
@@ -510,15 +515,66 @@ include('getadmdetail.php');
             </div>
         </div>
 
-        <div id="caseManagement" class="tab-pane fade">
+        <div id="caseManagement" class="tab-pane fade ">
             <div class="container-fluid p-4">
                 <div class="bg-white rounded-4 shadow p-4">
                     <div class="d-flex justify-content-between align-items-right mb-3">
-                        <button class="btn btn-warning">Assign Cases</button>
+                        <button class="btn btn-warning" id="openModal">Assign Cases</button>
                     </div>
-                    <div class="border rounded-4 bg-light p-5 shadow" style="min-height: 250px;">Sample</div>
+                    <div class="border rounded-4 bg-light p-5 shadow" id="contentContainer">
+                        <table class="table table-bordered mt-3">
+                            <thead>
+                                <tr>
+                                    <th>Tracking #</th>
+                                    <th>Employee ID</th>
+                                    <th>Activity</th>
+                                    <th>Description</th>
+                                    <th>Date Assigned</th>
+                                    <th>Status</th> <!-- Done, In Progress, or Incomplete -->
+                                </tr>
+                            </thead>
+                            <tbody id="caseTableBody">
+                                <!-- Assigned cases will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Modal Overlay -->
+        <div class="custom-modal-overlay" id="modalOverlay"></div>
+
+        <!-- Modal -->
+        <div class="custom-modal" id="caseModal">
+            <h4 class="text-center">Assign a Case</h4>
+            <form id="caseForm">
+                <div class="form-group">
+                    <label class="form-label">Employee ID:</label>
+                    <input type="text" class="form-control" id="employeeId" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Activity:</label>
+                    <input type="text" class="form-control" id="activity" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description:</label>
+                    <!--  NOTE: THIS IS A DIV, NOT A FORM. THUS, IT WON'T EASILY BE SUBMITTED THROUGH 
+                    FORM SUBMIT BUTTON. TEXTAREA DOES NOT WORK ATM -->
+                    <div contenteditable="true" id="descriptionBox" class="form-control"
+                        style="min-height: 100px; border: 1px solid #ccc; padding: 10px;">
+                    </div>
+                    <input type="hidden" name="description" id="hiddenDescription">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date Assigned:</label>
+                    <input type="date" class="form-control" id="dateAssigned" required>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-success" id="assignCase">Assign Case</button>
+                    <button type="button" class="btn btn-secondary" id="closeModal">Cancel</button>
+                </div>
+            </form>
         </div>
 
 
@@ -606,36 +662,37 @@ include('getadmdetail.php');
                                 </thead>
                                 <tbody>
                                     <?php
-                                        include 'connection.php';
+                                    include 'connection.php';
 
-                                        $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
-                                        $stmt = $conn->prepare($sql_fetch_feedback);
+                                    $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
+                                    $stmt = $conn->prepare($sql_fetch_feedback);
 
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
 
-                                        if ($result->num_rows > 0) {
-                                            while ($row = $result->fetch_assoc()) { ?>
-                                                <tr>
-                                                    <td><?php echo $row['F_DATE']; ?></td>
-                                                    <td><?php echo $row['F_DEPT']; ?></td>
-                                                    <td><?php echo $row['F_TYPE']; ?></td>
-                                                    <td><?php echo $row['F_NAME']; ?></td>
-                                                    <td>
-                                                    <a href="generate_signed_url.php?file=<?php echo urlencode($row['F_PATH']); ?>"class="btn btn-primary">Download</a>
-                                                        <button class="btn btn-danger remove-btn" 
-                                                                data-id="<?php echo htmlspecialchars($row['F_ID']); ?>" 
-                                                                data-path="<?php echo htmlspecialchars($row['F_PATH']); ?>">Remove
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            <?php }
-                                        } else {
-                                            echo "<tr><td colspan='5'>No documents found.</td></tr>";
-                                        }
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) { ?>
+                                            <tr>
+                                                <td><?php echo $row['F_DATE']; ?></td>
+                                                <td><?php echo $row['F_DEPT']; ?></td>
+                                                <td><?php echo $row['F_TYPE']; ?></td>
+                                                <td><?php echo $row['F_NAME']; ?></td>
+                                                <td>
+                                                    <a href="generate_signed_url.php?file=<?php echo urlencode($row['F_PATH']); ?>"
+                                                        class="btn btn-primary">Download</a>
+                                                    <button class="btn btn-danger remove-btn"
+                                                        data-id="<?php echo htmlspecialchars($row['F_ID']); ?>"
+                                                        data-path="<?php echo htmlspecialchars($row['F_PATH']); ?>">Remove
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        <?php }
+                                    } else {
+                                        echo "<tr><td colspan='5'>No documents found.</td></tr>";
+                                    }
 
-                                        $stmt->close();
-                                        $conn->close();
+                                    $stmt->close();
+                                    $conn->close();
                                     ?>
                                 </tbody>
                             </table>
@@ -773,20 +830,22 @@ include('getadmdetail.php');
 
                 // Assuming the logged-in admin's ID is stored in a session variable like this:
                 $adminId = $_SESSION['ADM_ID']; // Admin ID to whom the feedback is addressed
-
+                
                 // Fetch feedback records for this admin, ordered by latest date and highest EVAL_ID
                 $sql_fetch_feedback = "SELECT * FROM evaluation WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_ID DESC";
                 $stmt = $conn->prepare($sql_fetch_feedback);
                 $stmt->bind_param("i", $adminId); // Bind admin ID for secure query
-
+                
                 $stmt->execute();
                 $result = $stmt->get_result();
 
                 // Check if there are feedback records
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) { ?>
-                        <div class="feedback-item" style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
-                            <div class="feedback-header" style="margin-bottom:5px; display:flex; justify-content:space-between; flex-wrap:wrap;">
+                        <div class="feedback-item"
+                            style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
+                            <div class="feedback-header"
+                                style="margin-bottom:5px; display:flex; justify-content:space-between; flex-wrap:wrap;">
                                 <span><strong>Feedback ID:</strong> <?php echo $row['EVAL_ID']; ?></span>
                                 <span><strong>Feedback from Employee ID:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
                                 <span><strong>For:</strong> <?php echo $row['ADM_ID_FK_EVAL']; ?></span>

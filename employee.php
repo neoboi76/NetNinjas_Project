@@ -253,68 +253,52 @@ include('getempdetail.php'); // or use require()
             <div id="documents" class="tab-pane fade">
                 <div class="documents-container">
                     <h5><b>Documents</b></h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <!--  SAMPLE CONTENTS -->
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Department</th>
-                                    <th>File Type</th>
-                                    <th>File Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                include 'connection.php';
+                    <div class="table-container">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>File Type</th>
+                                        <th>File Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    include 'connection.php';
 
-                                $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
-                                $stmt = $conn->prepare($sql_fetch_feedback);
+                                    $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
+                                    $stmt = $conn->prepare($sql_fetch_feedback);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
 
-                                $stmt->execute();
-                                $result = $stmt->get_result();
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) { ?>
+                                            <tr>
+                                                <td><?php echo $row['F_DATE']; ?></td>
+                                                <td><?php echo $row['F_TYPE']; ?></td>
+                                                <td><?php echo $row['F_NAME']; ?></td>
+                                                <td>
+                                                    <a href="generate_signed_url.php?file=<?php echo urlencode($row['F_PATH']); ?>"
+                                                        class="btn btn-primary">Download</a>
+                                                </td>
+                                            </tr>
+                                        <?php }
+                                    } else {
+                                        echo "<tr><td colspan='4'>No feedback records found.</td></tr>";
+                                    }
 
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) { ?>
-                                        <tr>
-                                            <td><?php echo $row['F_DATE']; ?></td>
-                                            <td><?php echo $row['F_DEPT']; ?></td>
-                                            <td><?php echo $row['F_TYPE']; ?></td>
-                                            <td><?php echo $row['F_NAME']; ?></td>
-                                            <td><a href="generate_signed_url.php?file=<?php echo urlencode($row['F_PATH']); ?>"class="btn btn-primary">Download</a>
-                                        </tr>
-                                    <?php }
-                                } else {
-                                    echo "<p>No feedback records found.</p>";
-                                }
-
-                                $stmt->close();
-                                $conn->close();
-                                ?>
-                                <!--
-                                <tr>
-                                    <td>01/01/2025</td>
-                                    <td>HR</td>
-                                    <td>PDF</td>
-                                    <td>Employee_Handbook.pdf</td>
-                                    <td><a href="./Test/Manifesto.pdf" download="CommmunistManifesto.pdf"
-                                            class="btn btn-primary">Download</a></td>
-                                </tr>
-                                <tr>
-                                    <td>02/01/2025</td>
-                                    <td>Finance</td>
-                                    <td>Excel</td>
-                                    <td>Budget_2025.xlsx</td>
-                                    <td><a href="./Test/ass.jpg" download="Sauce.jpg"
-                                            class="btn btn-primary">Download</a></td>
-                                </tr>
-                                -->
-                            </tbody>
-                        </table>
+                                    $stmt->close();
+                                    $conn->close();
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+
 
             <div id="leave" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
@@ -372,55 +356,55 @@ include('getempdetail.php'); // or use require()
                             </thead>
                             <tbody id="leaveHistory">
                                 <!-- Data will be dynamically inserted here -->
-                                 <?php
-                                    include 'connection.php';
+                                <?php
+                                include 'connection.php';
 
-                                    // Assume session is already started and EMP_ID is stored in session
-                                    $current_emp_id = $_SESSION['EMP_ID'] ?? null;
-                                    
-                                    if ($current_emp_id) {
-                                        // Fetch leave requests that match the current employee ID
-                                        $sql = "SELECT LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, LEAVERQ_STATUS 
+                                // Assume session is already started and EMP_ID is stored in session
+                                $current_emp_id = $_SESSION['EMP_ID'] ?? null;
+
+                                if ($current_emp_id) {
+                                    // Fetch leave requests that match the current employee ID
+                                    $sql = "SELECT LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, LEAVERQ_STATUS 
                                                 FROM leave_request 
                                                 WHERE EMP_ID = ? 
                                                 ORDER BY LEAVERQ_DATELEAVE DESC";
-                                    
-                                        $stmt = $conn->prepare($sql);
-                                        $stmt->bind_param("i", $current_emp_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                                    
-                                        // Check if there are records
-                                        if ($result->num_rows > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                                // Determine badge class based on status
-                                                $badgeClass = 'bg-warning'; // default for Pending
-                                                if ($row['LEAVERQ_STATUS'] === 'Approved') {
-                                                    $badgeClass = 'bg-success';
-                                                } elseif ($row['LEAVERQ_STATUS'] === 'Denied') {
-                                                    $badgeClass = 'bg-danger';
-                                                }
-                                    
-                                                echo "<tr>
+
+                                    $stmt = $conn->prepare($sql);
+                                    $stmt->bind_param("i", $current_emp_id);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+
+                                    // Check if there are records
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            // Determine badge class based on status
+                                            $badgeClass = 'bg-warning'; // default for Pending
+                                            if ($row['LEAVERQ_STATUS'] === 'Approved') {
+                                                $badgeClass = 'bg-success';
+                                            } elseif ($row['LEAVERQ_STATUS'] === 'Denied') {
+                                                $badgeClass = 'bg-danger';
+                                            }
+
+                                            echo "<tr>
                                                     <td>" . htmlspecialchars($row['LEAVERQ_REASON']) . "</td>
                                                     <td>" . htmlspecialchars($row['LEAVERQ_DESCRIPT']) . "</td>
                                                     <td>" . htmlspecialchars($row['LEAVERQ_DATELEAVE']) . "</td>
                                                     <td>" . htmlspecialchars($row['LEAVERQ_RETURN']) . "</td>
                                                     <td><span class='badge $badgeClass'>" . htmlspecialchars($row['LEAVERQ_STATUS']) . "</span></td>
                                                 </tr>";
-                                            }
-                                        } else {
-                                            echo "<tr><td colspan='5' style='text-align: center;'>No leave requests found.</td></tr>";
                                         }
-                                    
-                                        $stmt->close();
                                     } else {
-                                        echo "<tr><td colspan='5' style='text-align: center;'>Employee not logged in.</td></tr>";
+                                        echo "<tr><td colspan='5' style='text-align: center;'>No leave requests found.</td></tr>";
                                     }
-                                    
-                                    $conn->close();
 
-                                 ?>
+                                    $stmt->close();
+                                } else {
+                                    echo "<tr><td colspan='5' style='text-align: center;'>Employee not logged in.</td></tr>";
+                                }
+
+                                $conn->close();
+
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -429,44 +413,44 @@ include('getempdetail.php'); // or use require()
 
             <!--PHP LEAVE REQUEST-->
             <?php
-                include 'connection.php';
-                
-                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['leave_emp_submit'])) {
-                    $leave_reason = $_POST['leave_reason'];
-                    $leave_descript = $_POST['leave_descript'];
-                    $leave_start = $_POST['leave_start'];
-                    $leave_return = $_POST['leave_return'];
-                
-                    if (isset($_SESSION['EMP_ID'])) {
-                        $leave_emp_id = $_SESSION['EMP_ID'];
-                
-                        $leave_rq_sql = "INSERT INTO leave_request (LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, EMP_ID) 
+            include 'connection.php';
+
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['leave_emp_submit'])) {
+                $leave_reason = $_POST['leave_reason'];
+                $leave_descript = $_POST['leave_descript'];
+                $leave_start = $_POST['leave_start'];
+                $leave_return = $_POST['leave_return'];
+
+                if (isset($_SESSION['EMP_ID'])) {
+                    $leave_emp_id = $_SESSION['EMP_ID'];
+
+                    $leave_rq_sql = "INSERT INTO leave_request (LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, EMP_ID) 
                                         VALUES (?, ?, ?, ?, ?)";
-                        $leave_rq_dbadd = $conn->prepare($leave_rq_sql);
-                        $leave_rq_dbadd->bind_param("ssssi", $leave_reason, $leave_descript, $leave_start, $leave_return, $leave_emp_id);
-                
-                        if ($leave_rq_dbadd->execute()) {
-                            echo "<script>
+                    $leave_rq_dbadd = $conn->prepare($leave_rq_sql);
+                    $leave_rq_dbadd->bind_param("ssssi", $leave_reason, $leave_descript, $leave_start, $leave_return, $leave_emp_id);
+
+                    if ($leave_rq_dbadd->execute()) {
+                        echo "<script>
                                     alert('Leave request submitted successfully!');
                                     window.location.href = 'employee.php'; // Redirect back to same page
                                 </script>";
-                        } else {
-                            echo "<script>
+                    } else {
+                        echo "<script>
                                     alert('Error submitting leave request: " . $leave_rq_dbadd->error . "');
                                     window.location.href = 'employee.php'; // Redirect back to same page
                                 </script>";
-                        }
-                
-                        $leave_rq_dbadd->close();
-                    } else {
-                        echo "<script>
+                    }
+
+                    $leave_rq_dbadd->close();
+                } else {
+                    echo "<script>
                                 alert('Error: Employee ID is missing. Please log in again.');
                                 window.location.href = 'employee.php'; // Redirect back to same page
                             </script>";
-                    }
                 }
-                
-                $conn->close();
+            }
+
+            $conn->close();
 
             ?>
 
@@ -597,39 +581,40 @@ include('getempdetail.php'); // or use require()
                     <h4 class="mb-3 text-center"><b>Invoices</b></h4>
                     <div class="salary-list">
                         <?php
-                            include 'connection.php';
+                        include 'connection.php';
 
-                            // Assuming the logged-in employee's ID is stored in a session variable
-                            $employeeId = $_SESSION['EMP_ID']; // Replace with your actual session variable if different
-                            
-                            // Fetch payroll records for the logged-in employee only
-                            $sql_fetch_feedback = "SELECT * FROM payroll WHERE EMP_ID_FK_PAY = ? ORDER BY P_DATE DESC";
-                            $stmt = $conn->prepare($sql_fetch_feedback);
-                            $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
-                            
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    // Format the date
-                                    $formattedDate = date('F Y', strtotime($row['P_DATE'])); // Converts date to "Month Year" format
-                                    ?>
-                                    <div class="salary-item">
-                                        <a href="#"
-                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                            <b>₱<?php echo number_format($row['P_AMT'], 2); ?> was deposited for <?php echo $formattedDate; ?></b>
-                                            <span class="badge bg-secondary"><?php echo $row['P_DATE']; ?></span>
-                                        </a>
-                                    </div>
-                                    <?php
-                                }
-                            } else {
-                                echo "<p>No payroll records found.</p>";
+                        // Assuming the logged-in employee's ID is stored in a session variable
+                        $employeeId = $_SESSION['EMP_ID']; // Replace with your actual session variable if different
+                        
+                        // Fetch payroll records for the logged-in employee only
+                        $sql_fetch_feedback = "SELECT * FROM payroll WHERE EMP_ID_FK_PAY = ? ORDER BY P_DATE DESC";
+                        $stmt = $conn->prepare($sql_fetch_feedback);
+                        $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
+                        
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                // Format the date
+                                $formattedDate = date('F Y', strtotime($row['P_DATE'])); // Converts date to "Month Year" format
+                                ?>
+                                <div class="salary-item">
+                                    <a href="#"
+                                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                        <b>₱<?php echo number_format($row['P_AMT'], 2); ?> was deposited for
+                                            <?php echo $formattedDate; ?></b>
+                                        <span class="badge bg-secondary"><?php echo $row['P_DATE']; ?></span>
+                                    </a>
+                                </div>
+                                <?php
                             }
-                            
-                            $stmt->close();
-                            $conn->close();
+                        } else {
+                            echo "<p>No payroll records found.</p>";
+                        }
+
+                        $stmt->close();
+                        $conn->close();
                         ?>
                     </div>
                 </div>

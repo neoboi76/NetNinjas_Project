@@ -1,10 +1,37 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const tabs = document.querySelectorAll(".nav-link");
+    const tabContents = document.querySelectorAll(".tab-pane");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove("active"));
+            this.classList.add("active");
+
+            // Hide all tab content
+            tabContents.forEach(content => content.classList.remove("show", "active"));
+
+            // Get target tab content and show it
+            const targetTabId = this.getAttribute("href"); // Example: #caseManagement
+            const targetTab = document.querySelector(targetTabId);
+            if (targetTab) {
+                targetTab.classList.add("show", "active");
+            }
+        });
+    });
+});
+
+
+let announcementId  = document.getElementById('announcement1');
+announcementId.classList.add('classBg');
+
 document.querySelectorAll('.nav-link, .dropdown-item').forEach(item => {
     item.addEventListener('click', function () {
         let pageId = document.getElementById('pageTitle');
         let contentId = document.querySelectorAll('.tab-pane');
-        let welcomeId  = document.getElementById('welcome');
         let navId = document.querySelectorAll('.nav-link');
-        welcomeId.innerText = ""
 
         switch(this.innerText) {
 
@@ -153,6 +180,7 @@ document.querySelectorAll('.nav-link, .dropdown-item').forEach(item => {
     });
 });
 
+
 let profileModal = document.getElementById("profileModal");
 let passwordModal = document.getElementById("passwordModal");
 let profileIcon = document.querySelector(".account-icon");
@@ -175,21 +203,81 @@ document.addEventListener("DOMContentLoaded", function (event) {
     closeProfileModal.addEventListener("click", function () {
         profileModal.style.display = "none";
     });
-
-    // Open Change Password Modal
-    changePasswordLink.addEventListener("click", function (event) {
-        profileModal.style.display = "none";
-        passwordModal.style.display = "flex";
-    });
-
-    // Close Change Password Modal
-    closePasswordModal.addEventListener("click", function () {
-        passwordModal.style.display = "none";
-        profileModal.style.display = "flex";
-    });
     
 
 });
+
+document.getElementById("addMediaBtn").addEventListener("click", function () {
+    document.getElementById("mediaInput").click();
+});
+
+document.getElementById("mediaInput").addEventListener("change", function (event) {
+    const files = event.target.files;
+    let areaId = prompt("Enter content area number (or type 'new' to create a new area):");
+
+    if (!areaId) return;
+
+    let mediaContainer = document.querySelector(`#content${areaId} .content-area`);
+
+    if (areaId.toLowerCase() === "new") {
+        mediaContainer = createNewContentArea();
+    } else if (!mediaContainer) {
+        alert("Invalid area. Creating a new content area.");
+        mediaContainer = createNewContentArea();
+    }
+
+    for (let file of files) {
+        const mediaItem = document.createElement("div");
+        mediaItem.classList.add("media-item");
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.textContent = "X";
+        deleteBtn.onclick = () => mediaItem.remove();
+
+        if (file.type.startsWith("image/")) {
+            const img = document.createElement("img");
+            img.src = URL.createObjectURL(file);
+            mediaItem.appendChild(img);
+        } else if (file.type.startsWith("video/")) {
+            const video = document.createElement("video");
+            video.src = URL.createObjectURL(file);
+            video.controls = true;
+            mediaItem.appendChild(video);
+        }
+
+        mediaItem.appendChild(deleteBtn);
+        mediaContainer.appendChild(mediaItem);
+    }
+});
+
+
+// Function to dynamically create a new content area
+function createNewContentArea() {
+    let newAreaId = `content${document.querySelectorAll(".content-placeholder").length + 1}`;
+
+    const newRow = document.createElement("div");
+    newRow.classList.add("row", "mt-3");
+
+    const newCol = document.createElement("div");
+    newCol.classList.add("col-12");
+
+    const newContainer = document.createElement("div");
+    newContainer.classList.add("content-placeholder", "content-container");
+    newContainer.id = newAreaId;
+
+    const newContentArea = document.createElement("div");
+    newContentArea.classList.add("content-area");
+
+    newContainer.appendChild(newContentArea);
+    newCol.appendChild(newContainer);
+    newRow.appendChild(newCol);
+
+    document.getElementById("announcement").appendChild(newRow);
+    return newContentArea;
+}
+
+
 
 
 document.getElementById("savePassword").addEventListener("submit", function(event) {
@@ -274,6 +362,132 @@ document.addEventListener("DOMContentLoaded", function () {
         body.classList.remove("employeeEdit-modal-open");
     });
 
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Buttons
+    const enableEmployeeBtn = document.getElementById("enableEmployeeBtn");
+    const disableEmployeeBtn = document.getElementById("disableEmployeeBtn");
+
+    // Modals
+    const enableEmployeeModal = document.getElementById("employeeEnableModal");
+    const disableEmployeeModal = document.getElementById("employeeDisableModal");
+
+    // Close buttons
+    const closeEnableModal = enableEmployeeModal.querySelector(".employeeEnable-close");
+    const closeDisableModal = disableEmployeeModal.querySelector(".employeeDisable-close");
+
+    const body = document.body;
+
+    // Ensure modals start hidden
+    enableEmployeeModal.style.display = "none";
+    disableEmployeeModal.style.display = "none";
+
+    // Open Enable Employee Modal
+    enableEmployeeBtn.addEventListener("click", function () {
+        enableEmployeeModal.style.display = "flex";
+        setTimeout(() => enableEmployeeModal.classList.add("show"), 10);
+        body.classList.add("employeeEnable-modal-open");
+    });
+
+    // Open Disable Employee Modal
+    disableEmployeeBtn.addEventListener("click", function () {
+        disableEmployeeModal.style.display = "flex";
+        setTimeout(() => disableEmployeeModal.classList.add("show"), 10);
+        body.classList.add("employeeDisable-modal-open");
+    });
+
+    // Close Enable Employee Modal
+    closeEnableModal.addEventListener("click", function () {
+        enableEmployeeModal.classList.add("hide");
+        enableEmployeeModal.classList.remove("show");
+
+        setTimeout(() => {
+            enableEmployeeModal.style.display = "none";
+            enableEmployeeModal.classList.remove("hide");
+        }, 300);
+        body.classList.remove("employeeEnable-modal-open");
+    });
+
+    // Close Disable Employee Modal
+    closeDisableModal.addEventListener("click", function () {
+        disableEmployeeModal.classList.add("hide");
+        disableEmployeeModal.classList.remove("show");
+
+        setTimeout(() => {
+            disableEmployeeModal.style.display = "none";
+            disableEmployeeModal.classList.remove("hide");
+        }, 300);
+        body.classList.remove("employeeDisable-modal-open");
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const openModalBtn = document.getElementById("openModal");
+    const closeModalBtn = document.getElementById("closeModal");
+    const modal = document.getElementById("caseModal");
+    const overlay = document.getElementById("modalOverlay");
+    const assignCaseBtn = document.getElementById("assignCase");
+    const contentContainer = document.getElementById("contentContainer");
+    const caseTableBody = document.getElementById("caseTableBody");
+    let caseCounter = 1;
+
+    // Open modal function
+    openModalBtn.addEventListener("click", function () {
+        modal.style.display = "block";
+        overlay.style.display = "block";
+        contentContainer.classList.add("modal-active");
+    });
+
+    // Close modal function
+    closeModalBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+        overlay.style.display = "none";
+        contentContainer.classList.remove("modal-active");
+    });
+
+    // Assign case function
+    assignCaseBtn.addEventListener("click", function () {
+
+        document.getElementById("hiddenDescription").value = document.getElementById("descriptionBox").innerText;
+
+        const employeeId = document.getElementById("employeeId").value.trim();
+        const activity = document.getElementById("activity").value.trim();
+        const description = document.getElementById("hiddenDescription").value.trim();
+        const dateAssigned = document.getElementById("dateAssigned").value;
+
+        if (employeeId === "" || activity === "" || description === "" || dateAssigned === "") {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        // Add new row to table
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td>${caseCounter++}</td>
+            <td>${employeeId}</td>
+            <td>${activity}</td>
+            <td>${description}</td>
+            <td>${dateAssigned}</td>
+            <td>In Progress</td>
+        `;
+        caseTableBody.appendChild(newRow);
+
+        // Clear form fields
+        document.getElementById("caseForm").reset();
+
+        // Close modal
+        modal.style.display = "none";
+        overlay.style.display = "none";
+        contentContainer.classList.remove("modal-active");
+    });
+
+    // Close modal when clicking outside
+    overlay.addEventListener("click", function () {
+        modal.style.display = "none";
+        overlay.style.display = "none";
+        contentContainer.classList.remove("modal-active");
+    });
 });
 
 

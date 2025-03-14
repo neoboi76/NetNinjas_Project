@@ -139,17 +139,32 @@ body {
     border: 1px solid #b1b1b1;
 }
 
+
 .documents-container {
     background-color: #f8f9fa;
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #ddd;
+    height: auto;
+}
+
+.table-container {
+/*     background-color: red; */
+    height: 900px; /* Set fixed height for scrollable area */
+    overflow-y: auto;
 }
 
 .table-responsive {
-    max-height: 300px; /* Makes it scrollable */
-    overflow-y: auto;
+    height: 100%;
 }
+
+.table {
+    width: 100%;
+    height: auto;
+}
+
+
+
 
 /*ASSIGNED CASES  STUFF*/
 .assignedCases-list {

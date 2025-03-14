@@ -108,19 +108,69 @@ body {
     }
 }
 
-.content-placeholder {
-    background-color: #e9ecef;
-    border: 1px solid #dee2e6;
-    padding: 90px;
-    text-align: center;
-    border-radius: 5px;
-    min-height: 100px; 
-
+/* Responsive Layout */
+@media (max-width: 768px) {
+    .content-container {
+        width: 100%;
+        margin-bottom: 15px;
+    }
 }
 
-.content-container1 { background-color: #f8f9fa; }
-.content-container2 { background-color: #f8f9fa; }
-.content-container3 { background-color: #f8f9fa; }
+/* Content Area */
+.content-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    object-fit: contain;
+    min-height: 200px;
+    border: 1px dashed #ccc;
+    overflow: hidden;
+}
+
+
+/* Media Items */
+.media-item {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.media-item img,
+.media-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+/* Text Content */
+.text-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 18px;
+    text-align: justify;
+    font-family: Arial, sans-serif;
+}
+
+/* Delete Button */
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 50%;
+}
 
 
 /* Modal Styling */
@@ -260,6 +310,38 @@ keyframes fadeOut {
     justify-content: center;
 }
 
+.employeeEnable-modal {
+    display: none;
+    position: fixed;
+    visibility: hidden;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Background blur effect */
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.employeeDisable-modal {
+    display: none;
+    position: fixed;
+    visibility: hidden;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Background blur effect */
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Employee Modal Content */
 .employee-modal-content {
     background: white;
@@ -287,6 +369,32 @@ keyframes fadeOut {
     opacity: 0;
 }
 
+.employeeEnable-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    position: relative;
+    text-align: center;
+    transform: translateY(-30px); /* Start slightly above */
+    transition: transform 0.7s ease, opacity 0.7s ease;
+    opacity: 0;
+}
+
+.employeeDisable-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    position: relative;
+    text-align: center;
+    transform: translateY(-30px); /* Start slightly above */
+    transition: transform 0.7s ease, opacity 0.7s ease;
+    opacity: 0;
+}
+
 
 /* Show modal with fade + slide-in */
 #employeeModal.show {
@@ -296,6 +404,18 @@ keyframes fadeOut {
 }
 
 #employeeEditModal.show {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+
+#employeeEnableModal.show {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+
+#employeeDisableModal.show {
     display: flex;
     opacity: 1;
     visibility: visible;
@@ -311,6 +431,16 @@ keyframes fadeOut {
     opacity: 1;
 }
 
+#employeeEnableModal.show .employeeEnable-modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+#employeeDisableModal.show .employeeDisable-modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
 /* Hide modal with fade + slide-out */
 #employeeModal.hide .employee-modal-content {
     transform: translateY(30px);
@@ -318,6 +448,16 @@ keyframes fadeOut {
 }
 
 #employeeEditModal.hide .employeeEdit-modal-content {
+    transform: translateY(30px);
+    opacity: 0;
+}
+
+#employeeEnableModal.hide .employeeEnable-modal-content {
+    transform: translateY(30px);
+    opacity: 0;
+}
+
+#employeeDisableModal.hide .employeeDisable-modal-content {
     transform: translateY(30px);
     opacity: 0;
 }
@@ -339,6 +479,23 @@ keyframes fadeOut {
     font-size: 20px;
     cursor: pointer;
 }
+
+.employeeEnable-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.employeeDisable-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
 
 /* Input Fields */
 .employee-form input {
@@ -375,6 +532,7 @@ keyframes fadeOut {
     font-size: 20px;
     cursor: pointer;
 }
+
 
 #feedbackHistoryContent {
     background-color: #f8f9fa;
@@ -570,6 +728,54 @@ button {
     border-radius: 8px;
     margin-bottom: 10px;
     border: 5px solid #ddd; /* Subtle border */
+}
+
+/* Modal background blur effect */
+.modal-active {
+    filter: blur(5px);
+    pointer-events: none;
+}
+
+/* Modal styling */
+.custom-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1050;
+    width: 600px;
+}
+
+.custom-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1049;
+}
+
+.custom-modal textarea {
+    width: 100% !important;  /* Ensure it spans the container */
+    height: 120px !important; /* Set a good height */
+    border: 1px solid #ccc;   /* Make sure the border is visible */
+    padding: 10px;            /* Improve usability */
+    resize: vertical;         /* Allow resizing if needed */
+    display: block;           /* Ensure it's displayed */
+    background-color: red;  /* Ensure visibility */
+}
+
+/* Improve form spacing */
+.form-group {
+    margin-bottom: 15px;
 }
 
 /***************** LEAVE **********************/
