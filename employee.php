@@ -280,8 +280,7 @@ include('getempdetail.php'); // or use require()
                                             <td><?php echo $row['F_DEPT']; ?></td>
                                             <td><?php echo $row['F_TYPE']; ?></td>
                                             <td><?php echo $row['F_NAME']; ?></td>
-                                            <td><a href="<?php echo $row['F_PATH']; ?>" download="<?php echo $row['F_NAME']; ?>"
-                                                    class="btn btn-primary">Download</a></td>
+                                            <td><a href="generate_signed_url.php?file=<?php echo urlencode($row['F_PATH']); ?>"class="btn btn-primary">Download</a>
                                         </tr>
                                     <?php }
                                 } else {

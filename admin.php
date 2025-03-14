@@ -604,33 +604,36 @@ include('getadmdetail.php');
                                 </thead>
                                 <tbody>
                                     <?php
-                                    include 'connection.php';
+                                        include 'connection.php';
 
-                                    $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
-                                    $stmt = $conn->prepare($sql_fetch_feedback);
+                                        $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
+                                        $stmt = $conn->prepare($sql_fetch_feedback);
 
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
 
-                                    if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) { ?>
-                                            <tr>
-                                                <td><?php echo $row['F_DATE']; ?></td>
-                                                <td><?php echo $row['F_DEPT']; ?></td>
-                                                <td><?php echo $row['F_TYPE']; ?></td>
-                                                <td><?php echo $row['F_NAME']; ?></td>
-                                                <td><a href="<?php echo $row['F_PATH']; ?>"
-                                                        download="<?php echo $row['F_NAME']; ?>"
-                                                        class="btn btn-primary">Download</a> <button
-                                                        class="btn btn-danger remove-btn">Remove</button></td>
-                                            </tr>
-                                        <?php }
-                                    } else {
-                                        echo "<p>No feedback records found.</p>";
-                                    }
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) { ?>
+                                                <tr>
+                                                    <td><?php echo $row['F_DATE']; ?></td>
+                                                    <td><?php echo $row['F_DEPT']; ?></td>
+                                                    <td><?php echo $row['F_TYPE']; ?></td>
+                                                    <td><?php echo $row['F_NAME']; ?></td>
+                                                    <td>
+                                                    <a href="generate_signed_url.php?file=<?php echo urlencode($row['F_PATH']); ?>"class="btn btn-primary">Download</a>
+                                                        <button class="btn btn-danger remove-btn" 
+                                                                data-id="<?php echo htmlspecialchars($row['F_ID']); ?>" 
+                                                                data-path="<?php echo htmlspecialchars($row['F_PATH']); ?>">Remove
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php }
+                                        } else {
+                                            echo "<tr><td colspan='5'>No documents found.</td></tr>";
+                                        }
 
-                                    $stmt->close();
-                                    $conn->close();
+                                        $stmt->close();
+                                        $conn->close();
                                     ?>
                                 </tbody>
                             </table>

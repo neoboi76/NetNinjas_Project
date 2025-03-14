@@ -389,6 +389,98 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        const formData = new FormData();
+        formData.append("file", file);
+
+        // Send the file to the backend (upload.php)
+        fetch("uploadfile.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data); // Check server response
+
+            if (data.includes("File uploaded successfully")) {
+                const fileName = file.name;
+                const fileType = file.type.split("/")[1]?.toUpperCase() || "Unknown";
+                const currentDate = new Date().toLocaleDateString();
+
+                // Create a new row in the table
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td>${currentDate}</td>
+                    <td>General</td>
+                    <td>${fileType}</td>
+                    <td>${fileName}</td>
+                    <td>
+                        <a href="https://storage.googleapis.com/websys-uploads/${fileName}" target="_blank" class="btn btn-primary">Download</a>
+                        <button class="btn btn-danger remove-btn">Remove</button>
+                    </td>
+                `;
+
+                documentsTable.appendChild(newRow);
+                fileInput.value = "";
+            } else {
+                alert("Upload failed: " + data);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred while uploading.");
+        });
+    });
+
+    // Remove document (From Table + Database)
+    // Handle remove button click
+    documentsTable.addEventListener("click", function (event) {
+        if (event.target.classList.contains("remove-btn")) {
+            const row = event.target.closest("tr");
+            const fileId = event.target.getAttribute("data-id");
+
+            if (!fileId) {
+                alert("Error: Missing file ID.");
+                return;
+            }
+
+            if (!confirm("Are you sure you want to delete this file record?")) {
+                return;
+            }
+
+            fetch("deletefile.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ file_id: fileId }) // Send only file_id
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    row.remove(); // Remove row from table
+                } else {
+                    alert("Error deleting record: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while deleting the record.");
+            });
+        }
+    });
+});
+
+/*
+document.addEventListener("DOMContentLoaded", function () {
+    const addDocumentBtn = document.getElementById("addDocumentBtn");
+    const fileInput = document.getElementById("fileInput");
+    const documentsTable = document.getElementById("documentsTable").querySelector("tbody");
+
+    addDocumentBtn.addEventListener("click", function () {
+        const file = fileInput.files[0];
+        if (!file) {
+            alert("Please select a file to upload.");
+            return;
+        }
+
         const fileName = file.name;
         const fileType = file.type.split("/")[1]?.toUpperCase() || "Unknown";
         const currentDate = new Date().toLocaleDateString();
@@ -424,6 +516,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+*/
 
 document.addEventListener("DOMContentLoaded", function () {
     const leaveRequests = [
