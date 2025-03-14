@@ -294,7 +294,9 @@ include('getadmdetail.php');
                             <input type="date" id="edit_emp_bday" name="edit_emp_bday" required>
 
                             <button name="save_emp" class="btn btn-success">Save Changes</button>
-                            <button name="delete_emp" class="btn btn-danger">Delete Employee</button>
+                            <button style="height: 50px; margin-top: 8px;" name="delete_emp"
+                                class="btn btn-danger">Delete
+                                Employee</button>
                         </form>
                     </div>
                 </div>
@@ -701,7 +703,8 @@ include('getadmdetail.php');
                 <div class="text-center mt-3">
                     <button name="adm_case_sub" type="submit" class="btn btn-success" id="assignCase">Assign
                         Case</button>
-                    <button type="button" class="btn btn-secondary" id="closeModal">Cancel</button>
+                    <button style="padding: 10px;" type="button" class="btn btn-secondary"
+                        id="closeModal">Cancel</button>
                 </div>
             </form>
         </div>
