@@ -1,27 +1,65 @@
 <?php
-    include('connection.php');  // Ensure the database connection is included
+include('connection.php');
 
-    // Query to fetch media data
-    $query = "SELECT A_AREANUM, A_NAME, A_PATH, A_TYPE FROM announcement"; // Replace 'media_table' with your actual table name
+require 'vendor/autoload.php';
 
-    // Execute the query
-    $result = $conn->query($query);
+use Google\Cloud\Storage\StorageClient;
 
-    // Create an array to hold the media data
-    $mediaData = [];
+putenv('GOOGLE_APPLICATION_CREDENTIALS=gcs-key.json');
 
-    if ($result) {
-        // Fetch each row from the result
-        while ($row = $result->fetch_assoc()) {
-            $mediaData[] = [
-                'area' => $row['A_AREANUM'],
-                'name' => $row['A_NAME'],
-                'path' => $row['A_PATH'],
-                'type' => $row['A_TYPE']
-            ];
+$bucketName = 'websys_uploads';
+$storage = new StorageClient();
+$bucket = $storage->bucket($bucketName);
+
+$query = "SELECT * FROM announcement";
+$result = $conn->query($query);
+
+$mediaData = [];
+
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        // Fix file path by removing the base URL
+        $filePath = str_replace('https://storage.googleapis.com/websys_uploads/', '', trim($row['A_PATH']));
+
+        error_log("Processing file: " . $filePath);
+
+        if (empty($filePath)) {
+            error_log("Error: A_PATH is empty for announcement ID " . $row['A_AREANUM']);
+            continue;
         }
-    }
 
-    // Return the data as a JSON response
-    echo json_encode($mediaData);
+        try {
+            $object = $bucket->object($filePath);
+
+            if (!$object->exists()) {
+                error_log("Error: Object does not exist in GCS - " . $filePath);
+                $signedUrl = null;
+            } else {
+                error_log("Generating signed URL for: " . $filePath);
+
+                $signedUrl = $object->signedUrl(
+                    new DateTime('+1 year'),
+                    ['method' => 'GET']
+                );
+
+                error_log("Signed URL generated: " . $signedUrl);
+            }
+        } catch (Exception $e) {
+            $signedUrl = null;
+            error_log("Exception while generating signed URL for $filePath: " . $e->getMessage());
+        }
+
+        $mediaData[] = [
+            'area' => $row['A_AREANUM'],
+            'name' => $row['A_NAME'],
+            'path' => $filePath,
+            'type' => $row['A_TYPE'],
+            'signedUrl' => $signedUrl
+        ];
+    }
+} else {
+    error_log("Error fetching announcements: " . $conn->error);
+}
+
+echo json_encode($mediaData);
 ?>

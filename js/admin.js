@@ -208,36 +208,59 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Function to load media into the content area
     function loadMediaForArea(areaId) {
         // Fetch media data from the PHP script
         fetch("loadannouncement.php")
         .then(response => response.json())
         .then(data => {
+            console.log("Fetched media data: ", data);  // Log the entire response to inspect it
+
             data.forEach(media => {
                 const mediaContainer = document.querySelector(`#content${media.area} .content-area`);
 
-                // Debug log to see if the container exists
                 console.log(`Targeting container: #content${media.area} .content-area`);
                 console.log(mediaContainer);
 
-                if (mediaContainer && !mediaContainer.classList.contains("loaded")) {  // Check if media hasn't been loaded yet
+                if (mediaContainer && !mediaContainer.classList.contains("loaded")) {
                     const mediaItem = document.createElement("div");
                     mediaItem.classList.add("media-item");
 
                     const deleteBtn = document.createElement("button");
                     deleteBtn.classList.add("delete-btn");
                     deleteBtn.textContent = "X";
-                    deleteBtn.onclick = () => mediaItem.remove();
+                    deleteBtn.onclick = () => {
+                        if (!confirm("Are you sure you want to delete all announcements for this area?")) return;
+                    
+                        fetch("deleteannouncement.php", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            body: `area=${encodeURIComponent(media.area)}`
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Delete response:", data);
+                            if (data.status === "success") {
+                                mediaContainer.innerHTML = ""; // Remove all media in the area
+                            } else {
+                                alert("Error: " + data.message);
+                            }
+                        })
+                        .catch(error => console.error("Error deleting media:", error));
+                    };
+                    
 
-                    // Replace backslashes with forward slashes (to handle Windows-style paths)
-                    const imagePath = media.path.replace(/\\/g, "/");
+                    const imageUrl = media.signedUrl;  // Use the signed URL from the response
+                    console.log("Image URL: ", imageUrl);
 
-                    // Construct the correct image URL
-                    const imageUrl = `/NetNinjas_Project/NetNinjas_Project/Test/${imagePath}`;
-                    console.log("Generated Image URL: ", imageUrl);  // Log the URL to check the result
+                    // Check if signedUrl exists
+                    if (!imageUrl) {
+                        console.error("No signed URL for media: ", media);
+                        return;
+                    }
 
-                    // Map file extensions to MIME types
+                    const fileExtension = media.path.split('.').pop().toLowerCase();
                     const mimeTypeMap = {
                         'jpg': 'image/jpeg',
                         'jpeg': 'image/jpeg',
@@ -247,25 +270,19 @@ document.addEventListener("DOMContentLoaded", function () {
                         'webm': 'video/webm'
                     };
 
-                    // Get the file extension from the path
-                    const fileExtension = media.path.split('.').pop().toLowerCase();
-
-                    // Check the MIME type for the extension
                     const mimeType = mimeTypeMap[fileExtension];
                     if (!mimeType) {
                         console.error("Unsupported media type: " + fileExtension);
                         return;
                     }
 
-                    // Handle images and videos based on MIME type
                     if (mimeType.startsWith("image/")) {
                         const img = document.createElement("img");
-                        img.src = imageUrl;  // Set the correct image URL
-                        console.log("Image source: ", img.src);  // Debug log for image source
+                        img.src = imageUrl;  // Set the signed URL as the image source
                         mediaItem.appendChild(img);
                     } else if (mimeType.startsWith("video/")) {
                         const video = document.createElement("video");
-                        video.src = imageUrl;  // Ensure the path is correct for video as well
+                        video.src = imageUrl;  // Set the signed URL as the video source
                         video.controls = true;
                         mediaItem.appendChild(video);
                     }
@@ -273,99 +290,44 @@ document.addEventListener("DOMContentLoaded", function () {
                     mediaItem.appendChild(deleteBtn);
                     mediaContainer.appendChild(mediaItem);
 
-                    // Mark this area as "loaded" to prevent reloading media
                     mediaContainer.classList.add("loaded");
                 } else {
                     console.error("Media container not found for area: ", media.area);
                 }
             });
         })
-        .catch(error => console.error("Error loading media:", error));  // Log any errors    
+        .catch(error => console.error("Error loading media:", error));
     }
 
-
-    // Create an IntersectionObserver to load media when content areas come into view
     function observeContentAreas() {
         const contentAreas = document.querySelectorAll('.content-container');
 
         const observer = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Get the areaId from the ID of the content container (e.g., 'content1', 'content2', ...)
                     const areaId = entry.target.id.replace('content', '');
                     console.log("IntersectionObserver triggering for area:", areaId);
-                    
-                    // Load media for the specific area only if it hasn't been loaded already
+
                     if (!entry.target.classList.contains("loaded")) {
-                        loadMediaForArea(Number(areaId));  // Load media for the specific area
-                        entry.target.classList.add("loaded"); // Mark this area as loaded
+                        loadMediaForArea(Number(areaId));
+                        entry.target.classList.add("loaded");
                     }
-                    
-                    observer.unobserve(entry.target);  // Stop observing this content area after loading the media
+
+                    observer.unobserve(entry.target);
                 }
             });
         }, {
-            root: null, // use the viewport as the root
-            threshold: 0.5, // trigger when 50% of the area is in view
+            root: null,
+            threshold: 0.5,
         });
 
         contentAreas.forEach(area => {
-            observer.observe(area);  // Start observing each content area
+            observer.observe(area);
         });
     }
 
-    // Call the observer function when the DOM is ready
     observeContentAreas();
-
-    // Force load media for area 2 as an example (hardcoded for testing)
-    loadMediaForArea();
 });
-
-
-
-/*
-document.addEventListener("DOMContentLoaded", function () {
-    // Function to load media into content area
-    function loadMediaForArea(areaId) {
-        // Set the path of the image you want to load
-        const imagePath = '/NetNinjas_Project/NetNinjas_Project/Test/ass.jpg'; // Replace with your image path
-        const imageUrl = imagePath.replace(/\\/g, "/"); // Fix Windows-style paths if necessary
-
-        // Force load the image into area 2
-        const mediaContainer = document.querySelector(`#content2 .content-area`);
-
-        console.log(`Targeting container: #content2 .content-area`);
-        console.log(mediaContainer);
-
-        if (mediaContainer) {
-            const mediaItem = document.createElement("div");
-            mediaItem.classList.add("media-item");
-
-            const deleteBtn = document.createElement("button");
-            deleteBtn.classList.add("delete-btn");
-            deleteBtn.textContent = "X";
-            deleteBtn.onclick = () => mediaItem.remove();
-
-            // Create image element
-            const img = document.createElement("img");
-            img.src = imageUrl; // Set the image source
-            console.log("Image source: ", img.src); // Debug log for image source
-
-            // Append the image and the delete button to the media item
-            mediaItem.appendChild(img);
-            mediaItem.appendChild(deleteBtn);
-
-            // Append the media item to the content area
-            mediaContainer.appendChild(mediaItem);
-        } else {
-            console.error("Media container not found for area 2");
-        }
-    }
-
-    // Force load the media into area 2 immediately
-    loadMediaForArea(2);
-});
-*/
 
 
 document.getElementById("addMediaBtn").addEventListener("click", function () {
@@ -387,6 +349,12 @@ document.getElementById("mediaInput").addEventListener("change", function (event
         mediaContainer = createNewContentArea();
     }
 
+    // Prepare the form data for sending to the server
+    const formData = new FormData();
+
+    // Append areaId to formData
+    formData.append('areaNum', areaId);  // Send areaId as 'areaNum' to PHP
+
     for (let file of files) {
         const mediaItem = document.createElement("div");
         mediaItem.classList.add("media-item");
@@ -396,6 +364,10 @@ document.getElementById("mediaInput").addEventListener("change", function (event
         deleteBtn.textContent = "X";
         deleteBtn.onclick = () => mediaItem.remove();
 
+        // Append each file to the FormData object
+        formData.append('media[]', file);
+
+        // Preview the uploaded media
         if (file.type.startsWith("image/")) {
             const img = document.createElement("img");
             img.src = URL.createObjectURL(file);
@@ -410,6 +382,19 @@ document.getElementById("mediaInput").addEventListener("change", function (event
         mediaItem.appendChild(deleteBtn);
         mediaContainer.appendChild(mediaItem);
     }
+
+    // Send the file to the server for upload and database insertion
+    fetch('uploadMedia.php', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Media uploaded successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error uploading media:', error);
+    });
 });
 
 
@@ -437,9 +422,6 @@ function createNewContentArea() {
     document.getElementById("announcement").appendChild(newRow);
     return newContentArea;
 }
-
-
-
 
 document.getElementById("savePassword").addEventListener("submit", function(event) {
 
