@@ -407,94 +407,49 @@ include('getadmdetail.php');
                                 <button name="adm_review_sub" type="submit" class="btn btn-primary">Submit</button>
                             </div>
                     </form>
-
-                    <!-- PHP Review work in progress-->
+                    
+                    <!-- PHP Review this one is WORKING but page refreshes -->
                     <?php
+                        include 'connection.php';
 
-                    include "connection.php";
-
-                    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["adm_review_sub"])) {
-                        $emp_id = $_POST['adm_emp_send'];
-                        $adm_subject = $_POST['adm_subject'];
-                        $adm_feedback = $_POST['adm_feedback'];
-                        $admin_id = $_SESSION["ADM_ID"] ?? null;
-
-                        if ($admin_id === null) {
-                            echo "<script>alert('Admin not logged in.'); window.location.href='admin.php';</script>";
-                            exit();
-                        }
-
-                        $check_emp = "SELECT * FROM employee WHERE EMP_ID = ?";
-                        $checker = $conn->prepare($check_emp);
-                        $checker->bind_param("i", $emp_id);
-                        $checker->execute();
-                        $result = $checker->get_result();
-
-                        if ($result->num_rows > 0) {
-                            // Employee ID exists, proceed with insertion
-                            $give_feedback = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) VALUES (?, NOW(), ?, ?)";
-                            $adm_give_feed = $conn->prepare($give_feedback);
-                            $adm_give_feed->bind_param("sii", $adm_feedback, $emp_id, $admin_id);
-
-                            if ($adm_give_feed->execute()) {
-                                echo "<script>alert('Feedback successfully submitted!'); window.location.href='admin.php';</script>";
-                            } else {
-                                echo "<script>alert('Error submitting feedback: " . $adm_give_feed->error . "'); window.location.href='admin.php';</script>";
-                            }
-                            $adm_give_feed->close();
-                        } else {
-                            // Employee ID does not exist
-                            echo "<script>alert('Error: Employee ID not found!'); window.location.href='admin.php';</script>";
-                        }
-
-                        $checker->close();
-                        $conn->close();
-                    }
-
-                    /*
-                        include "connection.php";
-                        
-                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adm_review_sub'])) {
+                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adm_review_sub'])) 
+                        {
                             $emp_id = $_POST['adm_emp_send'];
-                            $adm_subject = $_POST['adm_subject'];
                             $adm_feedback = $_POST['adm_feedback'];
                             $admin_id = $_SESSION["ADM_ID"] ?? null;
                         
-                            if ($admin_id === null) {
+                            if (!$admin_id) {
                                 echo "<script>alert('Admin not logged in.'); window.location.href='admin.php';</script>";
                                 exit();
                             }
-        
-                            $check_emp = "SELECT * FROM employee WHERE EMP_ID = ?";
-                            $checker = $conn->prepare($check_emp);
-                            $checker->bind_param("i", $emp_id);
-                            $checker->execute();
-                            $result = $checker->get_result();
                         
-                            if ($result->num_rows > 0) {
-                                // Employee ID exists, proceed with insertion
-                                $give_feedback = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) VALUES (?, NOW(), ?, ?)";
-                                $adm_give_feed = $conn->prepare($give_feedback);
-                                $adm_give_feed->bind_param("sii", $adm_feedback, $emp_id, $admin_id);
+                            // Check if employee ID exists
+                            $check_sql = "SELECT 1 FROM employee WHERE EMP_ID = ?";
+                            $check_stmt = $conn->prepare($check_sql);
+                            $check_stmt->bind_param("i", $emp_id);
+                            $check_stmt->execute();
+                            $result = $check_stmt->get_result();
                         
-                                if ($adm_give_feed->execute()) {
-                                    echo "<script>alert('Feedback successfully submitted!'); window.location.href='admin.php';</script>";
-                                } else {
-                                    echo "<script>alert('Error submitting feedback: " . $adm_give_feed->error . "'); window.location.href='admin.php';</script>";
-                                }
-                                $adm_give_feed->close();
-                            } else {
-                                // Employee ID does not exist
+                            if ($result->num_rows === 0) {
                                 echo "<script>alert('Error: Employee ID not found!'); window.location.href='admin.php';</script>";
+                                exit();
                             }
+                            $check_stmt->close();
                         
-                            $checker->close();
-                            $conn->close();
+                            // Proceed with insertion if employee exists
+                            $sql = "INSERT INTO evaluation_emp (EVAL_NOTE, EVAL_DATE, EMP_ID_FK_EVAL, ADM_ID_FK_EVAL) VALUES (?, NOW(), ?, ?)";
+                            $stmt = $conn->prepare($sql);
+                            $stmt->bind_param("sii", $adm_feedback, $emp_id, $admin_id);
+                        
+                            if ($stmt->execute()) {
+                                echo "<script>alert('Feedback successfully submitted!'); window.location.href='admin.php';</script>";
+                            } else {
+                                echo "<script>alert('Error: " . $stmt->error . "'); window.location.href='admin.php';</script>";
+                            }
+                    
+                           $stmt->close();
                         }
-                        */
-
                     ?>
-
                 </div>
 
                 <!-- Feedback History (Initially Hidden) -->
@@ -649,33 +604,36 @@ include('getadmdetail.php');
                                 </thead>
                                 <tbody>
                                     <?php
-                                    include 'connection.php';
+                                        include 'connection.php';
 
-                                    $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
-                                    $stmt = $conn->prepare($sql_fetch_feedback);
+                                        $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
+                                        $stmt = $conn->prepare($sql_fetch_feedback);
 
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
 
-                                    if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) { ?>
-                                            <tr>
-                                                <td><?php echo $row['F_DATE']; ?></td>
-                                                <td><?php echo $row['F_DEPT']; ?></td>
-                                                <td><?php echo $row['F_TYPE']; ?></td>
-                                                <td><?php echo $row['F_NAME']; ?></td>
-                                                <td><a href="<?php echo $row['F_PATH']; ?>"
-                                                        download="<?php echo $row['F_NAME']; ?>"
-                                                        class="btn btn-primary">Download</a> <button
-                                                        class="btn btn-danger remove-btn">Remove</button></td>
-                                            </tr>
-                                        <?php }
-                                    } else {
-                                        echo "<p>No feedback records found.</p>";
-                                    }
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) { ?>
+                                                <tr>
+                                                    <td><?php echo $row['F_DATE']; ?></td>
+                                                    <td><?php echo $row['F_DEPT']; ?></td>
+                                                    <td><?php echo $row['F_TYPE']; ?></td>
+                                                    <td><?php echo $row['F_NAME']; ?></td>
+                                                    <td>
+                                                    <a href="generate_signed_url.php?file=<?php echo urlencode($row['F_PATH']); ?>"class="btn btn-primary">Download</a>
+                                                        <button class="btn btn-danger remove-btn" 
+                                                                data-id="<?php echo htmlspecialchars($row['F_ID']); ?>" 
+                                                                data-path="<?php echo htmlspecialchars($row['F_PATH']); ?>">Remove
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php }
+                                        } else {
+                                            echo "<tr><td colspan='5'>No documents found.</td></tr>";
+                                        }
 
-                                    $stmt->close();
-                                    $conn->close();
+                                        $stmt->close();
+                                        $conn->close();
                                     ?>
                                 </tbody>
                             </table>
