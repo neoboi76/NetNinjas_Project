@@ -175,26 +175,27 @@ include('getadmdetail.php');
 
                     <div class="employee-form">
                         <div class="employee-profile-pic">
-                            <!-- Add profile picture -->
-                            <img src="./images/profilePlaceholder.png" alt="Profile Picture">
+                            <!-- Profile Picture Preview -->
+                            <img id="profilePreview" src="./images/profilePlaceholder.png" alt="Profile Picture"
+                                width="100">
                             <br>
-                            <button>Add profile picture</button>
+                            <!-- Hidden File Input -->
+                            <input type="file" id="profilePicInput" accept="image/*" style="display: none;">
+                            <button type="button" id="addProfilePicBtn">Add profile picture</button>
                         </div>
 
-                        <form method="POST">
+                        <form method="POST" enctype="multipart/form-data">
                             <input type="text" name="emp_id_add" placeholder="Employee ID" required>
-                            <!-- <input type="text" name="emp_phoneNum_add" placeholder="Phone/Cellphone Number" required> -->
-                            <!--  Add email variable -->
-                            <input type="text" name="" placeholder="Email" required>
+                            <input type="text" name="emp_email_add" placeholder="Email" required>
                             <input type="text" name="emp_role_add" placeholder="Role" required>
-                            <input type="text" placeholder="Department" required>
+                            <input type="text" name="emp_department_add" placeholder="Department" required>
 
                             <div class="employee-name-fields">
                                 <input type="text" name="emp_fname_add" placeholder="First Name" required>
                                 <input type="text" name="emp_lname_add" placeholder="Last Name" required>
                             </div>
 
-                            Birthdate: <input type="date" name="emp_bday_add" placeholder="Birthdate" required>
+                            Birthdate: <input type="date" name="emp_bday_add" required>
                             <button class="btn btn-success" name="add_employee">Add Employee</button>
                         </form>
                     </div>
@@ -241,16 +242,18 @@ include('getadmdetail.php');
 
                     <div class="employee-form">
                         <div class="employee-profile-pic">
-                            <!-- Add profile picture -->
-                            <img src="./images/profilePlaceholder.png" alt="Profile Picture">
+                            <!-- Profile Picture Preview -->
+                            <img id="editProfilePreview" src="./images/profilePlaceholder.png" alt="Profile Picture"
+                                width="100">
                             <br>
-                            <button>Edit profile picture</button>
+                            <!-- Hidden File Input -->
+                            <input type="file" id="editProfilePicInput" accept="image/*" style="display: none;">
+                            <button type="button" id="editProfilePicBtn">Edit profile picture</button>
                         </div>
 
-                        <form method="POST">
+                        <form method="POST" enctype="multipart/form-data">
                             <input name="edit_emp_ID" type="text" placeholder="Employee ID" required>
-                            <!-- <input name="edit_emp_PhoneNum" type="text" placeholder="Phone/Cellphone Number" required> -->
-                            <input type="text" name="" placeholder="Email" required>
+                            <input type="email" name="edit_emp_email" placeholder="Email" required>
                             <input name="edit_emp_role" type="text" placeholder="Role" required>
                             <input name="edit_emp_dept" type="text" placeholder="Department" required>
 
@@ -259,9 +262,11 @@ include('getadmdetail.php');
                                 <input name="edit_emp_lname" type="text" placeholder="Last Name" required>
                             </div>
 
-                            Birthdate: <input type="date" name="edit_emp_bday" placeholder="Birthdate" required>
+                            <label for="edit_emp_bday">Birthdate:</label>
+                            <input type="date" id="edit_emp_bday" name="edit_emp_bday" required>
+
                             <button name="save_emp" class="btn btn-success">Save Changes</button>
-                            <button name="delete_emp" class="btn btn-success">Delete Employee</button>
+                            <button name="delete_emp" class="btn btn-danger">Delete Employee</button>
                         </form>
                     </div>
                 </div>

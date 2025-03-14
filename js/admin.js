@@ -422,6 +422,36 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.getElementById("addProfilePicBtn").addEventListener("click", function() {
+    document.getElementById("profilePicInput").click();
+});
+
+document.getElementById("profilePicInput").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("profilePreview").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+document.getElementById("editProfilePicBtn").addEventListener("click", function() {
+    document.getElementById("editProfilePicInput").click();
+});
+
+document.getElementById("editProfilePicInput").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("editProfilePreview").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     const openModalBtn = document.getElementById("openModal");
     const closeModalBtn = document.getElementById("closeModal");

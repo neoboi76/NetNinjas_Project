@@ -1,10 +1,44 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const tabs = document.querySelectorAll(".nav-link");
+    const tabContents = document.querySelectorAll(".tab-pane");
+
+    // Set announcement as default active tab on page load
+    const defaultTab = document.querySelector(".nav-link[href='#announcement']");
+    if (defaultTab) {
+        defaultTab.classList.add("active");
+    }
+
+    const defaultContent = document.getElementById("announcement");
+    if (defaultContent) {
+        defaultContent.classList.add("show", "active");
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            // Remove active class from all tabs and content
+            tabs.forEach(t => t.classList.remove("active"));
+            tabContents.forEach(content => content.classList.remove("show", "active"));
+
+            // Activate clicked tab and corresponding content
+            this.classList.add("active");
+            const targetTabId = this.getAttribute("href");
+            const targetTab = document.querySelector(targetTabId);
+            if (targetTab) {
+                targetTab.classList.add("show", "active");
+            }
+        });
+    });
+});
+
+
+
 document.querySelectorAll('.nav-link, .dropdown-item').forEach(item => {
     item.addEventListener('click', function () {
         let pageId = document.getElementById('pageTitle');
         let contentId = document.querySelectorAll('.tab-pane');
-        let welcomeId  = document.getElementById('welcome');
         let navId = document.querySelectorAll('.nav-link');
-        welcomeId.innerText = ""
 
         switch(this.innerText) {
 

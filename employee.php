@@ -48,22 +48,29 @@ include('getempdetail.php'); // or use require()
         <p>First Name: <b><?php echo $employee['EMP_FNAME']; ?></b></p>
         <p>Last Name: <b><?php echo $employee['EMP_LNAME']; ?></b></p>
         <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link" id="announcement1" href="#announcement"
-                    data-bs-toggle="tab">Announcement</a></li>
+            <li class="nav-item">
+                <a class="nav-link active" id="announcement1" href="#announcement" data-bs-toggle="tab">Announcement</a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="report1" data-bs-toggle="dropdown" href="#">Report</a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#caseReport" data-bs-toggle="tab">Case
+                    <li><a class="dropdown-item" id="caseReport1" href="#caseReport" data-bs-toggle="tab">Case
                             Report</a></li>
-                    <li><a class="dropdown-item" href="#documents" data-bs-toggle="tab">Documents</a>
+                    <li><a class="dropdown-item" id="documents1" href="#documents" data-bs-toggle="tab">Documents</a>
                     </li>
                 </ul>
             </li>
-            <li class="nav-item leave"><a class="nav-link" id="leave1" href="#leave" data-bs-toggle="tab">Leave</a></li>
-            <li class="nav-item"><a class="nav-link" id="feedback1" href="#feedback" data-bs-toggle="tab">Feedback</a>
+            <li class="nav-item">
+                <a class="nav-link" id="leave1" href="#leave" data-bs-toggle="tab">Leave</a>
             </li>
-            <li class="nav-item"><a class="nav-link" id="salary1" href="#salary" data-bs-toggle="tab">Salary</a></li>
+            <li class="nav-item">
+                <a class="nav-link" id="feedback1" href="#feedback" data-bs-toggle="tab">Feedback</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="salary1" href="#salary" data-bs-toggle="tab">Salary</a>
+            </li>
         </ul>
+
     </section>
 
     <section class="content">
@@ -74,53 +81,30 @@ include('getempdetail.php'); // or use require()
         </div>
         <h2 id="pageTitle"><b>Announcement</b></h2>
         <div class="tab-content">
-            <div id="welcome" class="tab-pane fade show active">
-                <div class="container-fluid p-3">
-                    <div class="row">
-                        <!-- Large Content Box -->
-                        <div class="col-md-8">
-                            <div class="content-placeholder content-container1">
-                                <p>Future Dynamic Content 1</p>
-                            </div>
-                        </div>
-                        <!-- Small Content Box -->
-                        <div class="col-md-4">
-                            <div class="content-placeholder content-container2">
-                                <p>Future Dynamic Content 2</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <!-- Full Width Content Box -->
-                        <div class="col-12">
-                            <div class="content-placeholder content-container3">
-                                <p>Future Dynamic Content 3</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div id="welcome" class="tab-pane fade">
+                <!-- <div class="container-fluid p-3">
+
+                </div> -->
             </div>
-            <div id="announcement" class="tab-pane fade">
+            <div id="announcement" class="tab-pane fade show active">
                 <div class="container-fluid p-3">
                     <div class="row">
-                        <!-- Large Content Box -->
-                        <div class="col-md-8">
-                            <div class="content-placeholder content-container1">
-                                <p>Future Dynamic Content 1</p>
+                        <div class="col-md-8 col-sm-12">
+                            <div class="content-placeholder content-container" id="content1">
+                                <div class="content-area"></div>
                             </div>
                         </div>
-                        <!-- Small Content Box -->
-                        <div class="col-md-4">
-                            <div class="content-placeholder content-container2">
-                                <p>Future Dynamic Content 2</p>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="content-placeholder content-container" id="content2">
+                                <div class="content-area"></div>
                             </div>
                         </div>
                     </div>
+
                     <div class="row mt-3">
-                        <!-- Full Width Content Box -->
                         <div class="col-12">
-                            <div class="content-placeholder content-container3">
-                                <p>Future Dynamic Content 3</p>
+                            <div class="content-placeholder content-container" id="content3">
+                                <div class="content-area"></div>
                             </div>
                         </div>
                     </div>
