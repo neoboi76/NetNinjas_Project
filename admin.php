@@ -458,33 +458,35 @@ include('getadmdetail.php');
                         <?php
                         include 'connection.php';
 
-                        // Assuming the logged-in admin's ID is stored in a session variable, for example:
-                        $adminId = $_SESSION['ADM_ID'];  // Replace this with your actual session variable that stores the admin ID
-                        
-                        // Fetch feedback for the logged-in admin only
-                        $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC";
+                        $adminId = $_SESSION['ADM_ID']; // Admin ID who sent the feedback
+
+                        // Fetch feedback records sent by this admin, ordered by latest date and highest EVAL_ID
+                        $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC, EVAL_ID DESC";
                         $stmt = $conn->prepare($sql_fetch_feedback);
-                        $stmt->bind_param("i", $adminId); // Bind the admin ID to the query
+                        $stmt->bind_param("i", $adminId); // Bind admin ID for secure query
                         
                         $stmt->execute();
                         $result = $stmt->get_result();
-
+                        
+                        // Check if there are feedback records
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) { ?>
-                                <div class="feedback-history-item">
-                                    <div class="feedback-history-header">
-                                        <span><strong>Feedback to:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
-                                        <span><strong>Posted:</strong> <?php echo $row['EVAL_DATE']; ?></span><br>
+                                <div class="feedback-history-item" style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
+                                    <div class="feedback-history-header" style="margin-bottom:5px; display:flex; justify-content:space-between; flex-wrap:wrap;">
+                                        <span><strong>Feedback ID:</strong> <?php echo $row['EVAL_ID']; ?></span>
+                                        <span><strong>to Employee ID:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
+                                        <span><strong>Posted on:</strong> <?php echo $row['EVAL_DATE']; ?></span>
                                     </div>
-                                    <div class="feedback-history-text">
-                                        <?php echo $row['EVAL_NOTE']; ?>
+                                    <div class="feedback-history-text" style="margin-top:8px;">
+                                        <?php echo nl2br(htmlspecialchars($row['EVAL_NOTE'])); // Protect and format text ?>
                                     </div>
                                 </div>
                             <?php }
                         } else {
                             echo "<p>No feedback sent records found.</p>";
                         }
-
+                        
+                        // Close connection
                         $stmt->close();
                         $conn->close();
                         ?>
@@ -769,27 +771,29 @@ include('getadmdetail.php');
                 <?php
                 include 'connection.php';
 
-                // Assuming the logged-in admin's ID is stored in a session variable, for example:
-                $adminId = $_SESSION['ADM_ID'];  // Replace this with your actual session variable that stores the admin ID
-                
-                // Fetch feedback for the logged-in admin only
-                $sql_fetch_feedback = "SELECT * FROM evaluation WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC";
+                // Assuming the logged-in admin's ID is stored in a session variable like this:
+                $adminId = $_SESSION['ADM_ID']; // Admin ID to whom the feedback is addressed
+
+                // Fetch feedback records for this admin, ordered by latest date and highest EVAL_ID
+                $sql_fetch_feedback = "SELECT * FROM evaluation WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC, EVAL_ID DESC";
                 $stmt = $conn->prepare($sql_fetch_feedback);
-                $stmt->bind_param("i", $adminId); // Bind the admin ID to the query
-                
+                $stmt->bind_param("i", $adminId); // Bind admin ID for secure query
+
                 $stmt->execute();
                 $result = $stmt->get_result();
 
+                // Check if there are feedback records
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) { ?>
-                        <div class="feedback-item">
-                            <div class="feedback-header">
-                                <span><strong>Feedback by:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
+                        <div class="feedback-item" style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
+                            <div class="feedback-header" style="margin-bottom:5px; display:flex; justify-content:space-between; flex-wrap:wrap;">
+                                <span><strong>Feedback ID:</strong> <?php echo $row['EVAL_ID']; ?></span>
+                                <span><strong>Feedback from Employee ID:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
                                 <span><strong>For:</strong> <?php echo $row['ADM_ID_FK_EVAL']; ?></span>
-                                <span><strong>Posted:</strong> <?php echo $row['EVAL_DATE']; ?></span><br>
+                                <span><strong>Posted on:</strong> <?php echo $row['EVAL_DATE']; ?></span>
                             </div>
-                            <div class="feedback-text">
-                                <?php echo $row['EVAL_NOTE']; ?>
+                            <div class="feedback-text" style="margin-top:8px;">
+                                <?php echo nl2br(htmlspecialchars($row['EVAL_NOTE'])); // Protect against XSS and keep line breaks ?>
                             </div>
                         </div>
                     <?php }
@@ -797,6 +801,7 @@ include('getadmdetail.php');
                     echo "<p>No feedback records found.</p>";
                 }
 
+                // Close connection
                 $stmt->close();
                 $conn->close();
                 ?>
