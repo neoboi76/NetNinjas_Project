@@ -358,40 +358,46 @@ include('getempdetail.php'); // or use require()
 
             <!--PHP LEAVE REQUEST-->
             <?php
-            include 'connection.php';
-
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['leave_emp_submit'])) {
-                $leave_reason = $_POST['leave_reason'];
-                $leave_descript = $_POST['leave_descript'];
-                $leave_start = $_POST['leave_start'];
-                $leave_return = $_POST['leave_return'];
-
-                if (isset($_SESSION['EMP_ID'])) {
-                    $leave_emp_id = $_SESSION['EMP_ID'];
-
-                    $leave_rq_sql = "INSERT INTO leave_request (LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, EMP_ID) 
-                         VALUES (?, ?, ?, ?, ?)";
-
-                    $leave_rq_dbadd = $conn->prepare($leave_rq_sql);
-                    $leave_rq_dbadd->bind_param("ssssi", $leave_reason, $leave_descript, $leave_start, $leave_return, $leave_emp_id);
-
-                    if ($leave_rq_dbadd->execute()) {
-                        echo "<script>alert('Leave request submitted successfully!');</script>";
-                        echo "<script>window.location.href = window.location.href;</script>";
+                include 'connection.php';
+                
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['leave_emp_submit'])) {
+                    $leave_reason = $_POST['leave_reason'];
+                    $leave_descript = $_POST['leave_descript'];
+                    $leave_start = $_POST['leave_start'];
+                    $leave_return = $_POST['leave_return'];
+                
+                    if (isset($_SESSION['EMP_ID'])) {
+                        $leave_emp_id = $_SESSION['EMP_ID'];
+                
+                        $leave_rq_sql = "INSERT INTO leave_request (LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, EMP_ID) 
+                                        VALUES (?, ?, ?, ?, ?)";
+                        $leave_rq_dbadd = $conn->prepare($leave_rq_sql);
+                        $leave_rq_dbadd->bind_param("ssssi", $leave_reason, $leave_descript, $leave_start, $leave_return, $leave_emp_id);
+                
+                        if ($leave_rq_dbadd->execute()) {
+                            echo "<script>
+                                    alert('Leave request submitted successfully!');
+                                    window.location.href = 'employee.php'; // Redirect back to same page
+                                </script>";
+                        } else {
+                            echo "<script>
+                                    alert('Error submitting leave request: " . $leave_rq_dbadd->error . "');
+                                    window.location.href = 'employee.php'; // Redirect back to same page
+                                </script>";
+                        }
+                
+                        $leave_rq_dbadd->close();
                     } else {
-                        echo "<script>alert('Error submitting leave request: " . $leave_rq_dbadd->error . "');</script>";
-                        echo "<script>window.location.href = window.location.href;</script>";
+                        echo "<script>
+                                alert('Error: Employee ID is missing. Please log in again.');
+                                window.location.href = 'employee.php'; // Redirect back to same page
+                            </script>";
                     }
-                    $leave_rq_dbadd->close();
-                } else {
-                    echo "<script>alert('Error: Employee ID is missing. Please log in again.');</script>";
-                    echo "<script>window.location.href = window.location.href;</script>";
                 }
-            }
+                
+                $conn->close();
 
-            $conn->close()
-
-                ?>
+            ?>
 
             <div id="feedback" class="tab-pane fade">
                 <div class="container p-4 bg-light rounded">
