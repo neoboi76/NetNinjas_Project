@@ -634,6 +634,33 @@ include('getadmdetail.php');
                             </thead>
                             <tbody id="caseTableBody">
                                 <!-- Assigned cases will be added here -->
+                                <?php 
+                                    include "connection.php";
+                            
+                                    // Fetch all cases from the database
+                                    $query = "SELECT CASE_ID, EMP_ID_FK_CASE, CASE_SUBJ, CASE_DESC, CASE_DATE, CASE_STATUS FROM cases ORDER BY CASE_ID DESC";
+                                    $result = mysqli_query($conn, $query);
+                            
+                                    // Check if there are any cases
+                                    if (mysqli_num_rows($result) > 0) {
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            echo "<tr>";
+                                            echo "<td>" . htmlspecialchars($row['CASE_ID']) . "</td>"; // Tracking #
+                                            echo "<td>" . htmlspecialchars($row['EMP_ID_FK_CASE']) . "</td>"; // Employee ID
+                                            echo "<td>" . htmlspecialchars($row['CASE_SUBJ']) . "</td>"; // Activity
+                                            echo "<td>" . htmlspecialchars($row['CASE_DESC']) . "</td>"; // Description
+                                            echo "<td>" . htmlspecialchars($row['CASE_DATE']) . "</td>"; // Date Assigned
+                                            echo "<td>" . htmlspecialchars($row['CASE_STATUS']) . "</td>"; // Status
+                                            echo "</tr>";
+                                        }
+                                    } else {
+                                        // No cases found
+                                        echo "<tr><td colspan='6' class='text-center'>No cases found.</td></tr>";
+                                    }
+                            
+                                    // Close the connection
+                                    mysqli_close($conn);
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -647,14 +674,14 @@ include('getadmdetail.php');
         <!-- Modal -->
         <div class="custom-modal" id="caseModal">
             <h4 class="text-center">Assign a Case</h4>
-            <form id="caseForm">
+            <form method="POST">
                 <div class="form-group">
                     <label class="form-label">Employee ID:</label>
-                    <input type="text" class="form-control" id="employeeId" required>
+                    <input name = "adm_case_emp_ID" type="text" class="form-control" id="employeeId" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Activity:</label>
-                    <input type="text" class="form-control" id="activity" required>
+                    <input name = "adm_case_act" type="text" class="form-control" id="activity" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description:</label>
@@ -663,19 +690,50 @@ include('getadmdetail.php');
                     <div contenteditable="true" id="descriptionBox" class="form-control"
                         style="min-height: 100px; border: 1px solid #ccc; padding: 10px;">
                     </div>
-                    <input type="hidden" name="description" id="hiddenDescription">
+                    <input name =  "adm_case_desc" type="hidden" name="description" id="hiddenDescription">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Date Assigned:</label>
-                    <input type="date" class="form-control" id="dateAssigned" required>
+                    <input name = "adm_case_date" type="date" class="form-control" id="dateAssigned" required>
                 </div>
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-success" id="assignCase">Assign Case</button>
+                    <button name = "adm_case_sub" type="submit" class="btn btn-success" id="assignCase">Assign Case</button>
                     <button type="button" class="btn btn-secondary" id="closeModal">Cancel</button>
                 </div>
             </form>
         </div>
 
+        <!-- PHP ASSIGN CASE -->
+        <?php 
+            include "connection.php";
+            if (isset($_POST['adm_case_sub'])) {
+
+                // Collect and sanitize form inputs
+                $empID = mysqli_real_escape_string($conn, $_POST['adm_case_emp_ID']);
+                $caseSubject = mysqli_real_escape_string($conn, $_POST['adm_case_act']);
+                $caseDesc = mysqli_real_escape_string($conn, $_POST['adm_case_desc']);
+                $caseDate = mysqli_real_escape_string($conn, $_POST['adm_case_date']);
+                $caseStatus = "In Progress"; // Default case status
+            
+                // Prepare and execute the insert query with CASE_STATUS included
+                $sql = "INSERT INTO cases (CASE_SUBJ, CASE_DATE, CASE_DESC, CASE_STATUS, EMP_ID_FK_CASE) 
+                        VALUES (?, ?, ?, ?, ?)";
+            
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ssssi", $caseSubject, $caseDate, $caseDesc, $caseStatus, $empID);
+            
+                // Check execution and respond accordingly
+                if ($stmt->execute()) {
+                    echo "<script>alert('Case successfully assigned to Employee ID: $empID'); window.location.href='admin.php';</script>";
+                } else {
+                    echo "<script>alert('Failed to assign case: " . $stmt->error . "'); window.history.back();</script>";
+                }
+            
+                // Close the statement and connection
+                $stmt->close();
+                $conn->close();
+            }
+        ?>
 
         <div id="documents" class="tab-pane fade">
             <div class="custom-container p-3">

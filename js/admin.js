@@ -491,6 +491,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        /*
         // Add new row to table
         const newRow = document.createElement("tr");
         newRow.innerHTML = `
@@ -502,6 +503,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <td>In Progress</td>
         `;
         caseTableBody.appendChild(newRow);
+        */
 
         // Clear form fields
         document.getElementById("caseForm").reset();
