@@ -110,49 +110,79 @@ include('getempdetail.php'); // or use require()
                     </div>
                 </div>
             </div>
+
+            <!-- PHP FOR DONE HANDLING-->
+            <?php
+                include 'connection.php';
+
+                // Get the logged-in employee's ID
+                $employeeId = $_SESSION['EMP_ID']; // Adjust this based on your session variable
+                
+                // -------------------- HANDLE "MARK AS DONE" ACTION -------------------
+                if (isset($_POST['case_id_done'])) {
+                    $caseId = intval($_POST['case_id_done']); // Sanitize input to ensure it's an integer
+                
+                    // Update case status to 'Done'
+                    $sql_update = "UPDATE cases SET CASE_STATUS = 'Done' WHERE CASE_ID = ? AND EMP_ID_FK_CASE = ?";
+                    $stmt_update = $conn->prepare($sql_update);
+                    $stmt_update->bind_param("ii", $caseId, $employeeId);
+                
+                    if ($stmt_update->execute()) {
+                        echo "<script>alert('Case marked as done successfully!'); window.location.href=window.location.href;</script>";
+                    } else {
+                        echo "<script>alert('Failed to mark case as done: " . $stmt_update->error . "');</script>";
+                    }
+                
+                    $stmt_update->close();
+                }
+                // ---------------------------------------------------------------------
+            ?>
+
             <div id="caseReport" class="tab-pane fade">
                 <div class="container-fluid p-3">
                     <!-- Placeholder for Future Content -->
-                    <div class="content-box text-center d-flex">
-                        <div id="assignedCases" class="tab-pane p-2 bg-light rounded">
-                            <h3>Active Assigned Cases</h3>
-                            <div class="assignedCases-list">
-                                <?php
-                                include 'connection.php';
+                    <div class="content-box text-center d-flex flex-column align-items-center gap-3 p-3">
+                        <h3>Active Assigned Cases</h3>
+                        <div class="assignedCases-list w-100" style="max-width: 100%; width: 100%;">
 
-                                // Assuming the logged-in employee's ID is stored in a session variable, for example:
-                                $employeeId = $_SESSION['EMP_ID']; // Replace this with your actual session variable that stores the employee ID
-                                
-                                // Fetch evaluations for the logged-in employee only
-                                $sql_fetch_feedback = "SELECT * FROM cases WHERE EMP_ID_FK_CASE = ? ORDER BY CASE_DATE DESC";
-                                $stmt = $conn->prepare($sql_fetch_feedback);
-                                $stmt->bind_param("i", $employeeId); // Bind the employee ID to the query
-                                
-                                $stmt->execute();
-                                $result = $stmt->get_result();
+                            <?php
+                            // ---------------- FETCH CASES IN PROGRESS -------------------
+                            $sql_fetch_cases = "SELECT * FROM cases WHERE EMP_ID_FK_CASE = ? AND CASE_STATUS = 'In Progress' ORDER BY CASE_DATE DESC";
+                            $stmt = $conn->prepare($sql_fetch_cases);
+                            $stmt->bind_param("i", $employeeId);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
 
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) { ?>
-                                        <div class="assignedCases-item">
-                                            <div class="assignedCases-header">
-                                                <span><strong>ID:</strong> <?php echo $row['CASE_ID']; ?></span>
-                                                <span><strong>Subject:</strong> <?php echo $row['CASE_SUBJ']; ?></span>
-                                                <span><strong>Issued:</strong> <?php echo $row['CASE_DATE']; ?></span>
-                                                <button class="btn btn-primary">Mark as done</button>
-                                            </div>
-                                            <div class="assignedCases-text">
-                                                <span><?php echo $row['CASE_DESC']; ?></span>
-                                            </div>
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) { ?>
+                                    <div class="border rounded-3 p-3 mb-3 bg-light shadow-sm case-container"
+                                        style="width: 100%; box-sizing: border-box;">
+
+                                        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                                            <div><strong>ID:</strong> <?php echo htmlspecialchars($row['CASE_ID']); ?></div>
+                                            <div><strong>Subject:</strong> <?php echo htmlspecialchars($row['CASE_SUBJ']); ?></div>
+                                            <div><strong>Issued:</strong> <?php echo htmlspecialchars($row['CASE_DATE']); ?></div>
+                                            <!-- Form to mark as done -->
+                                            <form method="POST" action="" class="m-0">
+                                                <input type="hidden" name="case_id_done" value="<?php echo $row['CASE_ID']; ?>">
+                                                <button type="submit" class="btn btn-success btn-sm">Mark as Done</button>
+                                            </form>
                                         </div>
-                                    <?php }
-                                } else {
-                                    echo "<p>No feedback records found.</p>";
-                                }
 
-                                $stmt->close();
-                                $conn->close();
-                                ?>
-                            </div>
+                                        <div class="text-start mt-2">
+                                            <p class="m-0"><?php echo nl2br(htmlspecialchars($row['CASE_DESC'])); ?></p>
+                                        </div>
+                                    </div>
+                                <?php }
+                            } else {
+                                echo "<p class='text-muted'>No active cases assigned to you.</p>";
+                            }
+
+                            $stmt->close();
+                            $conn->close();
+                            // -------------------------------------------------------------------
+                            ?>
+
                         </div>
                     </div>
 
