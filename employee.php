@@ -372,6 +372,55 @@ include('getempdetail.php'); // or use require()
                             </thead>
                             <tbody id="leaveHistory">
                                 <!-- Data will be dynamically inserted here -->
+                                 <?php
+                                    include 'connection.php';
+
+                                    // Assume session is already started and EMP_ID is stored in session
+                                    $current_emp_id = $_SESSION['EMP_ID'] ?? null;
+                                    
+                                    if ($current_emp_id) {
+                                        // Fetch leave requests that match the current employee ID
+                                        $sql = "SELECT LEAVERQ_REASON, LEAVERQ_DESCRIPT, LEAVERQ_DATELEAVE, LEAVERQ_RETURN, LEAVERQ_STATUS 
+                                                FROM leave_request 
+                                                WHERE EMP_ID = ? 
+                                                ORDER BY LEAVERQ_DATELEAVE DESC";
+                                    
+                                        $stmt = $conn->prepare($sql);
+                                        $stmt->bind_param("i", $current_emp_id);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                    
+                                        // Check if there are records
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                                // Determine badge class based on status
+                                                $badgeClass = 'bg-warning'; // default for Pending
+                                                if ($row['LEAVERQ_STATUS'] === 'Approved') {
+                                                    $badgeClass = 'bg-success';
+                                                } elseif ($row['LEAVERQ_STATUS'] === 'Denied') {
+                                                    $badgeClass = 'bg-danger';
+                                                }
+                                    
+                                                echo "<tr>
+                                                    <td>" . htmlspecialchars($row['LEAVERQ_REASON']) . "</td>
+                                                    <td>" . htmlspecialchars($row['LEAVERQ_DESCRIPT']) . "</td>
+                                                    <td>" . htmlspecialchars($row['LEAVERQ_DATELEAVE']) . "</td>
+                                                    <td>" . htmlspecialchars($row['LEAVERQ_RETURN']) . "</td>
+                                                    <td><span class='badge $badgeClass'>" . htmlspecialchars($row['LEAVERQ_STATUS']) . "</span></td>
+                                                </tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='5' style='text-align: center;'>No leave requests found.</td></tr>";
+                                        }
+                                    
+                                        $stmt->close();
+                                    } else {
+                                        echo "<tr><td colspan='5' style='text-align: center;'>Employee not logged in.</td></tr>";
+                                    }
+                                    
+                                    $conn->close();
+
+                                 ?>
                             </tbody>
                         </table>
                     </div>

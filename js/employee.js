@@ -163,11 +163,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 document.addEventListener("DOMContentLoaded", function () {
     // Example leave requests (Replace with actual data from backend)
-    let leaveRequests = [
-        { reason: "Medical", description: "Doctor's appointment", start: "2025-03-20", return: "2025-03-21", status: "Pending" },
-        { reason: "Vacation", description: "Family trip", start: "2025-04-01", return: "2025-04-10", status: "Approved" },
-        { reason: "Emergency", description: "Urgent personal matter", start: "2025-03-15", return: "2025-03-16", status: "Denied" }
-    ];
+    let leaveRequests = [];
 
     let leaveHistory = document.getElementById("leaveHistory");
 
