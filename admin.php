@@ -278,17 +278,17 @@ include('getadmdetail.php');
                                 </div>
                                 
                                     <input name="edit_emp_ID" type="text" placeholder="Employee ID" required>
-                                    <input type="email" name="edit_emp_email" placeholder="Email" required>
-                                    <input name="edit_emp_role" type="text" placeholder="Role" required>
-                                    <input name="edit_emp_dept" type="text" placeholder="Department" required>
+                                    <input type="email" name="edit_emp_email" placeholder="Email">
+                                    <input name="edit_emp_role" type="text" placeholder="Role">
+                                    <input name="edit_emp_dept" type="text" placeholder="Department">
 
                                     <div class="employee-name-fields">
-                                        <input name="edit_emp_fname" type="text" placeholder="First Name" required>
-                                        <input name="edit_emp_lname" type="text" placeholder="Last Name" required>
+                                        <input name="edit_emp_fname" type="text" placeholder="First Name">
+                                        <input name="edit_emp_lname" type="text" placeholder="Last Name">
                                     </div>
 
                                     <label for="edit_emp_bday">Birthdate:</label>
-                                    <input type="date" id="edit_emp_bday" name="edit_emp_bday" required>
+                                    <input type="date" id="edit_emp_bday" name="edit_emp_bday">
 
                                     <button name="save_emp" class="btn btn-success">Save Changes</button>
                                     <button style="height: 50px; margin-top: 8px;" name="delete_emp"
