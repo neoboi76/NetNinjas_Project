@@ -612,16 +612,56 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
-
 document.addEventListener("DOMContentLoaded", function () {
     const editEmployeeForm = document.getElementById("editEmployeeForm");
+    const profilePicInput = document.getElementById("editProfilePicInput");
 
     editEmployeeForm.addEventListener("submit", function (e) {
         e.preventDefault(); // Prevent full-page reload
 
         const actionType = e.submitter.name; // 'save_emp' or 'delete_emp'
+        const employeeID = editEmployeeForm.querySelector("[name='edit_emp_ID']").value;
 
+        if (actionType === "delete_emp") {
+            if (!confirm("Are you sure you want to delete this employee?")) return;
+            deleteEmployee(employeeID);
+        } else {
+            if (profilePicInput.files.length > 0) {
+                uploadProfilePicture(employeeID).then(() => {
+                    updateEmployee();
+                }).catch(error => console.error("Profile Pic Upload Error:", error));
+            } else {
+                updateEmployee();
+            }
+        }
+    });
+
+    function uploadProfilePicture(empID) {
+        return new Promise((resolve, reject) => {
+            const file = profilePicInput.files[0];
+            const formData = new FormData();
+            formData.append("emp_id", empID);
+            formData.append("editProfilePic", file);
+
+            fetch("update_pfp.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("Profile picture updated successfully!");
+                    resolve();
+                } else {
+                    alert(data.message);
+                    reject(data.message);
+                }
+            })
+            .catch(error => reject(error));
+        });
+    }
+
+    function updateEmployee() {
         const formData = {
             edit_emp_ID: editEmployeeForm.querySelector("[name='edit_emp_ID']").value,
             edit_emp_email: editEmployeeForm.querySelector("[name='edit_emp_email']").value,
@@ -630,30 +670,39 @@ document.addEventListener("DOMContentLoaded", function () {
             edit_emp_fname: editEmployeeForm.querySelector("[name='edit_emp_fname']").value,
             edit_emp_lname: editEmployeeForm.querySelector("[name='edit_emp_lname']").value,
             edit_emp_bday: editEmployeeForm.querySelector("[name='edit_emp_bday']").value,
-            action: actionType // Either 'save_emp' or 'delete_emp'
+            action: "save_emp"
         };
-
-        if (actionType === "delete_emp") {
-            if (!confirm("Are you sure you want to delete this employee?")) return;
-        }
 
         fetch("edit_employee.php", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
         })
         .then(response => response.json())
         .then(data => {
-            alert(data.message); 
-
-            if (data.success && actionType === "delete_emp") {
-                editEmployeeForm.reset(); // Clear form after deletion
+            alert(data.message);
+            if (data.success) {
+                editEmployeeForm.reset();
             }
         })
         .catch(error => console.error("Error:", error));
-    });
+    }
+
+    function deleteEmployee(empID) {
+        fetch("edit_employee.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ edit_emp_ID: empID, action: "delete_emp" })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.success) {
+                editEmployeeForm.reset();
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function () {

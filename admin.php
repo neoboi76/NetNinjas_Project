@@ -265,38 +265,37 @@ include('getadmdetail.php');
             <div id="employeeEditModal" class="employeeEdit-modal">
                 <div class="employeeEdit-modal-content">
                     <span class="employeeEdit-close">&times;</span>
+                        <div class="employee-form">
+                            <form method="POST" id="editEmployeeForm" enctype="multipart/form-data">
+                                <div class="employee-profile-pic">
+                                    <!-- Profile Picture Preview -->
+                                    <img id="editProfilePreview" name="editProfilePic" src="./images/profilePlaceholder.png" alt="Profile Picture"
+                                        width="100">
+                                    <br>
+                                    <!-- Hidden File Input -->
+                                    <input type="file" id="editProfilePicInput" accept="image/*" style="display: none;">
+                                    <button type="button" id="editProfilePicBtn">Edit profile picture</button>
+                                </div>
+                                
+                                    <input name="edit_emp_ID" type="text" placeholder="Employee ID" required>
+                                    <input type="email" name="edit_emp_email" placeholder="Email" required>
+                                    <input name="edit_emp_role" type="text" placeholder="Role" required>
+                                    <input name="edit_emp_dept" type="text" placeholder="Department" required>
 
-                    <div class="employee-form">
-                        <div class="employee-profile-pic">
-                            <!-- Profile Picture Preview -->
-                            <img id="editProfilePreview" src="./images/profilePlaceholder.png" alt="Profile Picture"
-                                width="100">
-                            <br>
-                            <!-- Hidden File Input -->
-                            <input type="file" id="editProfilePicInput" accept="image/*" style="display: none;">
-                            <button type="button" id="editProfilePicBtn">Edit profile picture</button>
+                                    <div class="employee-name-fields">
+                                        <input name="edit_emp_fname" type="text" placeholder="First Name" required>
+                                        <input name="edit_emp_lname" type="text" placeholder="Last Name" required>
+                                    </div>
+
+                                    <label for="edit_emp_bday">Birthdate:</label>
+                                    <input type="date" id="edit_emp_bday" name="edit_emp_bday" required>
+
+                                    <button name="save_emp" class="btn btn-success">Save Changes</button>
+                                    <button style="height: 50px; margin-top: 8px;" name="delete_emp"
+                                        class="btn btn-danger">Delete
+                                        Employee</button>
+                            </form>
                         </div>
-
-                        <form method="POST" id="editEmployeeForm" enctype="multipart/form-data">
-                            <input name="edit_emp_ID" type="text" placeholder="Employee ID" required>
-                            <input type="email" name="edit_emp_email" placeholder="Email" required>
-                            <input name="edit_emp_role" type="text" placeholder="Role" required>
-                            <input name="edit_emp_dept" type="text" placeholder="Department" required>
-
-                            <div class="employee-name-fields">
-                                <input name="edit_emp_fname" type="text" placeholder="First Name" required>
-                                <input name="edit_emp_lname" type="text" placeholder="Last Name" required>
-                            </div>
-
-                            <label for="edit_emp_bday">Birthdate:</label>
-                            <input type="date" id="edit_emp_bday" name="edit_emp_bday" required>
-
-                            <button name="save_emp" class="btn btn-success">Save Changes</button>
-                            <button style="height: 50px; margin-top: 8px;" name="delete_emp"
-                                class="btn btn-danger">Delete
-                                Employee</button>
-                        </form>
-                    </div>
                 </div>
             </div>
 
