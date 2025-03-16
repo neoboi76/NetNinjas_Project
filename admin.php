@@ -573,12 +573,12 @@ include('getadmdetail.php');
                         include 'connection.php';
 
                         $adminId = $_SESSION['ADM_ID']; // Admin ID who sent the feedback
-                        
+
                         // Fetch feedback records sent by this admin, ordered by latest date and highest EVAL_ID
                         $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC, EVAL_ID DESC";
                         $stmt = $conn->prepare($sql_fetch_feedback);
                         $stmt->bind_param("i", $adminId); // Bind admin ID for secure query
-                        
+
                         $stmt->execute();
                         $result = $stmt->get_result();
 
@@ -586,14 +586,15 @@ include('getadmdetail.php');
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) { ?>
                                 <div class="feedback-history-item"
-                                    style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
+                                    style="border:1px solid #ccc; padding:6px 10px; margin-bottom:8px; border-radius:5px; background:#f9f9f9;">
                                     <div class="feedback-history-header"
-                                        style="margin-bottom:5px; display:flex; justify-content:space-between; flex-wrap:wrap;">
+                                        style="margin-bottom:3px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:5px;">
                                         <span><strong>Feedback ID:</strong> <?php echo $row['EVAL_ID']; ?></span>
                                         <span><strong>to Employee ID:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
                                         <span><strong>Posted on:</strong> <?php echo $row['EVAL_DATE']; ?></span>
                                     </div>
-                                    <div class="feedback-history-text" style="margin-top:8px;">
+                                    <div class="feedback-history-text" 
+                                        style="margin-top:5px; max-height:100px; overflow-y:auto;">
                                         <?php echo nl2br(htmlspecialchars($row['EVAL_NOTE'])); // Protect and format text ?>
                                     </div>
                                 </div>
