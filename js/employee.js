@@ -305,6 +305,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 });
 
+
 document.addEventListener("DOMContentLoaded", function () {
     // Example leave requests (Replace with actual data from backend)
     let leaveRequests = [];
@@ -352,6 +353,43 @@ document.addEventListener("DOMContentLoaded", function () {
         feedbackList.innerHTML = "<p>No feedback records found.</p>";
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("empReviewSuperiorForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent form from reloading
+
+        submitSuperiorFeedback(this);
+    });
+});
+
+function submitSuperiorFeedback(form) {
+    let formData = new FormData(form);
+
+    fetch("submit_superior_feedback.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            feedback: formData.get("feedback-text")
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message);
+        if (data.success) {
+            form.reset(); // Clear the form after successful submission
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An unexpected error occurred. Check console for details.");
+    });
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const salaryLinks = document.querySelectorAll(".salary-link");

@@ -540,7 +540,7 @@ include('getempdetail.php'); // or use require()
                             (<?php echo $employee['ADM_FNAME'] . " " . $employee['ADM_LNAME']; ?>)</b></h4>
                     <!-- Make the name of the superior dynamic.-->
 
-                    <form method="POST">
+                    <form method="POST" id="empReviewSuperiorForm">
                         <div class="mb-3">
                             <label for="superiorFeedback" class="form-label">Your Feedback</label>
                             <textarea name="feedback-text" class="form-control" id="superiorFeedback" rows="4"
@@ -553,6 +553,7 @@ include('getempdetail.php'); // or use require()
                     </form>
 
                     <?php
+                    /*
                     // Include your database connection
                     include 'connection.php';
 
@@ -585,6 +586,7 @@ include('getempdetail.php'); // or use require()
 
                     // Close the database connection
                     $conn->close();
+                    */
                     ?>
 
                     <!-- Back Button -->
