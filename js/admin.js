@@ -569,41 +569,50 @@ document.addEventListener("DOMContentLoaded", function () {
     const addEmployeeForm = document.getElementById("addEmployeeForm");
 
     addEmployeeForm.addEventListener("submit", function (e) {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
-        // Collect form data
-        const formData = {
-            emp_id_add: addEmployeeForm.querySelector("[name='emp_id_add']").value,
-            emp_email_add: addEmployeeForm.querySelector("[name='emp_email_add']").value,
-            emp_role_add: addEmployeeForm.querySelector("[name='emp_role_add']").value,
-            emp_dept_add: addEmployeeForm.querySelector("[name='emp_dept_add']").value,
-            emp_fname_add: addEmployeeForm.querySelector("[name='emp_fname_add']").value,
-            emp_lname_add: addEmployeeForm.querySelector("[name='emp_lname_add']").value,
-            emp_bday_add: addEmployeeForm.querySelector("[name='emp_bday_add']").value
-        };
+        const formData = new FormData(addEmployeeForm);
 
-        // Send data using Fetch API
+        // Step 1: Add Employee First
         fetch("add_employee.php", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(formData)
+            body: formData
         })
         .then(response => response.json())
         .then(data => {
-            alert(data.message); // Show success/error message
-
             if (data.success) {
-                addEmployeeForm.reset(); // Reset form after successful submission
+                alert(data.message);
 
-                // Close the modal (if applicable)
-                document.getElementById("employeeModal").style.display = "none";
+                // Step 2: Upload Profile Picture if Available
+                const profilePicInput = document.getElementById("profilePicInput");
+                if (profilePicInput.files.length > 0) {
+                    const pfpFormData = new FormData();
+                    pfpFormData.append("emp_id", data.emp_id); // Send EMP_ID
+                    pfpFormData.append("addProfilePic", profilePicInput.files[0]); // Send File
+
+                    fetch("upload_pfp.php", {
+                        method: "POST",
+                        body: pfpFormData
+                    })
+                    .then(response => response.json())
+                    .then(pfpData => {
+                        alert(pfpData.message);
+                        addEmployeeForm.reset();
+                        document.getElementById("profilePreview").src = "./images/profilePlaceholder.png"; // Reset preview
+                    })
+                    .catch(error => console.error("Error uploading profile picture:", error));
+                } else {
+                    addEmployeeForm.reset();
+                }
+            } else {
+                alert(data.message);
             }
         })
-        .catch(error => console.error("Error:", error));
+        .catch(error => console.error("Error adding employee:", error));
     });
 });
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const editEmployeeForm = document.getElementById("editEmployeeForm");

@@ -1,55 +1,36 @@
 <?php
+require 'vendor/autoload.php';
 include 'connection.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect JSON data
-    $data = json_decode(file_get_contents("php://input"), true);
+header('Content-Type: application/json');
 
-    // Extract values
-    $emp_id = $data['emp_id_add'];
-    $emp_email = $data['emp_email_add'];
-    $emp_role = $data['emp_role_add'];
-    $emp_dept = $data['emp_dept_add'];
-    $emp_fname = $data['emp_fname_add'];
-    $emp_lname = $data['emp_lname_add'];
-    $emp_bday = $data['emp_bday_add'];
+$response = ["success" => false, "message" => ""];
 
-    // Default values
-    $emp_pass = 'vivanetninjas'; 
-    $emp_joined = date('Y-m-d'); 
-    $adm_id_fk_emp = 0; 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["emp_id_add"])) {
+    $emp_id = $_POST["emp_id_add"];
+    $email = $_POST["emp_email_add"];
+    $role = $_POST["emp_role_add"];
+    $department = $_POST["emp_dept_add"];
+    $first_name = $_POST["emp_fname_add"];
+    $last_name = $_POST["emp_lname_add"];
+    $birthdate = $_POST["emp_bday_add"];
 
-    // Prepare SQL statement
-    $emp_adding = $conn->prepare("
-        INSERT INTO employee 
-        (EMP_ID, EMP_PASS, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_DEPARTMENT, EMP_EMAIL, EMP_BIRTH, EMP_JOINED, ADM_ID_FK_EMP) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ");
+    $sql = "INSERT INTO employee (EMP_ID, EMP_EMAIL, EMP_POS, EMP_DEPARTMENT, EMP_FNAME, EMP_LNAME, EMP_BIRTH) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("issssss", $emp_id, $email, $role, $department, $first_name, $last_name, $birthdate);
 
-    // Bind parameters
-    $emp_adding->bind_param(
-        "issssssssi",
-        $emp_id,
-        $emp_pass,
-        $emp_fname,
-        $emp_lname,
-        $emp_role,
-        $emp_dept,
-        $emp_email,
-        $emp_bday,
-        $emp_joined,
-        $adm_id_fk_emp
-    );
-
-    // Execute and return response
-    if ($emp_adding->execute()) {
-        echo json_encode(["success" => true, "message" => "Employee added successfully!"]);
+    if ($stmt->execute()) {
+        $response["success"] = true;
+        $response["message"] = "Employee added successfully!";
+        $response["emp_id"] = $emp_id; // Return EMP_ID to be used in profile picture upload
     } else {
-        echo json_encode(["success" => false, "message" => "Error: " . $emp_adding->error]);
+        $response["message"] = "Error adding employee: " . $stmt->error;
     }
 
-    // Close resources
-    $emp_adding->close();
-    $conn->close();
+    $stmt->close();
 }
+
+$conn->close();
+echo json_encode($response);
 ?>

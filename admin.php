@@ -174,22 +174,18 @@ include('getadmdetail.php');
             <div id="employeeModal" class="employee-modal">
                 <div class="employee-modal-content">
                     <span class="employee-close">&times;</span>
-
                     <div class="employee-form">
-                        <div class="employee-profile-pic">
-                            <!-- Profile Picture Preview -->
-                            <img id="profilePreview" src="./images/profilePlaceholder.png" alt="Profile Picture"
-                                width="100">
-                            <br>
-                            <!-- Hidden File Input -->
-                            <input type="file" name ="addProfilePic" id="profilePicInput" accept="image/*" style="display: none;">
-                            <button type="button" id="addProfilePicBtn">Add profile picture</button>
-                        </div>
-
                         <form method="POST" id="addEmployeeForm" enctype="multipart/form-data">
+                            <div class="employee-profile-pic">
+                                <!-- Profile Picture Preview -->
+                                <img id="profilePreview" src="./images/profilePlaceholder.png" alt="Profile Picture" width="100">
+                                <br>
+                                <!-- Hidden File Input (inside the form now) -->
+                                <input type="file" name="addProfilePic" id="profilePicInput" accept="image/*" style="display: none;">
+                                <button type="button" id="addProfilePicBtn">Add profile picture</button>
+                            </div>
+
                             <input type="text" name="emp_id_add" placeholder="Employee ID" required>
-                            <!-- <input type="text" name="emp_phoneNum_add" placeholder="Phone/Cellphone Number" required> -->
-                            <!--  Add email variable -->
                             <input type="text" name="emp_email_add" placeholder="Email" required>
                             <input type="text" name="emp_role_add" placeholder="Role" required>
                             <input type="text" name="emp_dept_add" placeholder="Department" required>
