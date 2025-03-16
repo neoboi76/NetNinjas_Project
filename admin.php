@@ -182,11 +182,11 @@ include('getadmdetail.php');
                                 width="100">
                             <br>
                             <!-- Hidden File Input -->
-                            <input type="file" id="profilePicInput" accept="image/*" style="display: none;">
+                            <input type="file" name ="addProfilePic" id="profilePicInput" accept="image/*" style="display: none;">
                             <button type="button" id="addProfilePicBtn">Add profile picture</button>
                         </div>
 
-                        <form method="POST" enctype="multipart/form-data">
+                        <form method="POST" id="addEmployeeForm" enctype="multipart/form-data">
                             <input type="text" name="emp_id_add" placeholder="Employee ID" required>
                             <!-- <input type="text" name="emp_phoneNum_add" placeholder="Phone/Cellphone Number" required> -->
                             <!--  Add email variable -->
@@ -208,59 +208,61 @@ include('getadmdetail.php');
 
             <!-- PHP ADD EMPLOYEE-->
             <?php
-            include 'connection.php';
+            /*
+                include 'connection.php';
 
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_employee'])) {
-                // Collect data from form
-                $emp_id = $_POST['emp_id_add'];
-                $emp_email = $_POST['emp_email_add'];
-                $emp_role = $_POST['emp_role_add'];
-                $emp_dept = $_POST['emp_dept_add'];
-                $emp_fname = $_POST['emp_fname_add'];
-                $emp_lname = $_POST['emp_lname_add'];
-                $emp_bday = $_POST['emp_bday_add'];
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_employee'])) {
+                    // Collect data from form
+                    $emp_id = $_POST['emp_id_add'];
+                    $emp_email = $_POST['emp_email_add'];
+                    $emp_role = $_POST['emp_role_add'];
+                    $emp_dept = $_POST['emp_dept_add'];
+                    $emp_fname = $_POST['emp_fname_add'];
+                    $emp_lname = $_POST['emp_lname_add'];
+                    $emp_bday = $_POST['emp_bday_add'];
 
-                // Default values
-                $emp_pass = 'vivanetninjas'; // Default password or you can generate random
-                $emp_joined = date('Y-m-d'); // Auto set current date as joined date
-                $adm_id_fk_emp = 0; // Assuming default admin ID is 0 (change as needed)
-            
-                // Prepare SQL statement
-                $emp_adding = $conn->prepare("
-                            INSERT INTO employee 
-                            (EMP_ID, EMP_PASS, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_DEPARTMENT, EMP_EMAIL, EMP_BIRTH, EMP_JOINED, ADM_ID_FK_EMP) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                        ");
+                    // Default values
+                    $emp_pass = 'vivanetninjas'; // Default password or you can generate random
+                    $emp_joined = date('Y-m-d'); // Auto set current date as joined date
+                    $adm_id_fk_emp = 0; // Assuming default admin ID is 0 (change as needed)
+                
+                    // Prepare SQL statement
+                    $emp_adding = $conn->prepare("
+                                INSERT INTO employee 
+                                (EMP_ID, EMP_PASS, EMP_FNAME, EMP_LNAME, EMP_POS, EMP_DEPARTMENT, EMP_EMAIL, EMP_BIRTH, EMP_JOINED, ADM_ID_FK_EMP) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            ");
 
-                // Bind parameters
-                $emp_adding->bind_param(
-                    "issssssssi",
-                    $emp_id,
-                    $emp_pass,
-                    $emp_fname,
-                    $emp_lname,
-                    $emp_role,
-                    $emp_dept,
-                    $emp_email,
-                    $emp_bday,
-                    $emp_joined,
-                    $adm_id_fk_emp
-                );
+                    // Bind parameters
+                    $emp_adding->bind_param(
+                        "issssssssi",
+                        $emp_id,
+                        $emp_pass,
+                        $emp_fname,
+                        $emp_lname,
+                        $emp_role,
+                        $emp_dept,
+                        $emp_email,
+                        $emp_bday,
+                        $emp_joined,
+                        $adm_id_fk_emp
+                    );
 
-                // Execute and check result
-                if ($emp_adding->execute()) {
-                    echo "<script>alert('Employee added successfully!');</script>";
-                    echo "<script>window.location.href = window.location.href;</script>";
-                } else {
-                    echo "<script>alert('Error: " . $emp_adding->error . "');</script>";
+                    // Execute and check result
+                    if ($emp_adding->execute()) {
+                        echo "<script>alert('Employee added successfully!');</script>";
+                        echo "<script>window.location.href = window.location.href;</script>";
+                    } else {
+                        echo "<script>alert('Error: " . $emp_adding->error . "');</script>";
+                    }
+
+                    // Close statement
+                    $emp_adding->close();
                 }
 
-                // Close statement
-                $emp_adding->close();
-            }
-
-            // Close connection
-            $conn->close();
+                // Close connection
+                $conn->close();
+                */
             ?>
 
             <!-- Edit Employee Modal. It must already have content-->
@@ -279,7 +281,7 @@ include('getadmdetail.php');
                             <button type="button" id="editProfilePicBtn">Edit profile picture</button>
                         </div>
 
-                        <form method="POST" enctype="multipart/form-data">
+                        <form method="POST" id="editEmployeeForm" enctype="multipart/form-data">
                             <input name="edit_emp_ID" type="text" placeholder="Employee ID" required>
                             <input type="email" name="edit_emp_email" placeholder="Email" required>
                             <input name="edit_emp_role" type="text" placeholder="Role" required>
@@ -304,6 +306,7 @@ include('getadmdetail.php');
 
             <!-- PHP EDIT && DELETE EMPLOYEE-->
             <?php
+            /*
             include 'connection.php';
 
             // Handle EDIT / UPDATE EMPLOYEE
@@ -360,8 +363,11 @@ include('getadmdetail.php');
 
                     $emp_save->close();
                 }
+                    
             }
+            */
 
+            /*
             // Handle DELETE EMPLOYEE
             if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_emp'])) {
                 // Collect employee ID to delete
@@ -395,6 +401,7 @@ include('getadmdetail.php');
 
             // Close connection
             $conn->close();
+            */
             ?>
 
             <!-- Enable Employee Modal -->
@@ -402,7 +409,7 @@ include('getadmdetail.php');
                 <div class="employeeEnable-modal-content">
                     <span class="employeeEnable-close">&times;</span>
                     <h3>Enable Employee</h3>
-                    <form method="POST">
+                    <form method="POST" id="enableEmployeeForm">
                         <input name="emp_enable_adm" type="text" name="enable_emp_ID" placeholder="Enter Employee ID"
                             required>
                         <button name="emp_enable_sub" class="btn btn-success" name="enable_employee">Enable</button>
@@ -412,6 +419,7 @@ include('getadmdetail.php');
 
             <!-- PHP ENABLE -->
             <?php
+            /*
             include "connection.php";
             // Check if enable button was pressed
             if (isset($_POST['emp_enable_sub'])) {
@@ -438,6 +446,7 @@ include('getadmdetail.php');
             }
 
             $conn->close(); // Close connection
+            */
             ?>
 
             <!-- Disable Employee Modal -->
@@ -445,7 +454,7 @@ include('getadmdetail.php');
                 <div class="employeeDisable-modal-content">
                     <span class="employeeDisable-close">&times;</span>
                     <h3>Disable Employee</h3>
-                    <form method="POST">
+                    <form method="POST" id="disableEmployeeForm">
                         <input name="emp_disable_adm" type="text" name="disable_emp_ID" placeholder="Enter Employee ID"
                             required>
                         <button name="emp_disable_sub" class="btn btn-danger" name="disable_employee">Disable</button>
@@ -455,6 +464,7 @@ include('getadmdetail.php');
 
             <!-- PHP DISABLE -->
             <?php
+            /*
             include "connection.php";
             if (isset($_POST['emp_disable_sub'])) {
                 $emp_id = $_POST['emp_disable_adm']; // Get employee ID input
@@ -480,6 +490,7 @@ include('getadmdetail.php');
             }
 
             $conn->close(); // Close connection
+            */
             ?>
 
 
@@ -491,7 +502,7 @@ include('getadmdetail.php');
                     </div>
 
 
-                    <form method="POST">
+                    <form method="POST" id="admFeedbackForm">
                         <div id="reviewContent">
                             <div class="mb-3">
                                 <input name="adm_emp_send" style="border: 3px solid #b1b1b1; padding: 5px;" type="text"
@@ -517,6 +528,7 @@ include('getadmdetail.php');
 
                     <!-- PHP Review this one is WORKING but page refreshes -->
                     <?php
+                    /*
                     include 'connection.php';
 
                     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adm_review_sub'])) {
@@ -555,6 +567,7 @@ include('getadmdetail.php');
 
                         $stmt->close();
                     }
+                    */
                     ?>
                 </div>
 

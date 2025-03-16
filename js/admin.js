@@ -565,6 +565,125 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const addEmployeeForm = document.getElementById("addEmployeeForm");
+
+    addEmployeeForm.addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Collect form data
+        const formData = {
+            emp_id_add: addEmployeeForm.querySelector("[name='emp_id_add']").value,
+            emp_email_add: addEmployeeForm.querySelector("[name='emp_email_add']").value,
+            emp_role_add: addEmployeeForm.querySelector("[name='emp_role_add']").value,
+            emp_dept_add: addEmployeeForm.querySelector("[name='emp_dept_add']").value,
+            emp_fname_add: addEmployeeForm.querySelector("[name='emp_fname_add']").value,
+            emp_lname_add: addEmployeeForm.querySelector("[name='emp_lname_add']").value,
+            emp_bday_add: addEmployeeForm.querySelector("[name='emp_bday_add']").value
+        };
+
+        // Send data using Fetch API
+        fetch("add_employee.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message); // Show success/error message
+
+            if (data.success) {
+                addEmployeeForm.reset(); // Reset form after successful submission
+
+                // Close the modal (if applicable)
+                document.getElementById("employeeModal").style.display = "none";
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const editEmployeeForm = document.getElementById("editEmployeeForm");
+
+    editEmployeeForm.addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent full-page reload
+
+        const actionType = e.submitter.name; // 'save_emp' or 'delete_emp'
+
+        const formData = {
+            edit_emp_ID: editEmployeeForm.querySelector("[name='edit_emp_ID']").value,
+            edit_emp_email: editEmployeeForm.querySelector("[name='edit_emp_email']").value,
+            edit_emp_role: editEmployeeForm.querySelector("[name='edit_emp_role']").value,
+            edit_emp_dept: editEmployeeForm.querySelector("[name='edit_emp_dept']").value,
+            edit_emp_fname: editEmployeeForm.querySelector("[name='edit_emp_fname']").value,
+            edit_emp_lname: editEmployeeForm.querySelector("[name='edit_emp_lname']").value,
+            edit_emp_bday: editEmployeeForm.querySelector("[name='edit_emp_bday']").value,
+            action: actionType // Either 'save_emp' or 'delete_emp'
+        };
+
+        if (actionType === "delete_emp") {
+            if (!confirm("Are you sure you want to delete this employee?")) return;
+        }
+
+        fetch("edit_employee.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message); 
+
+            if (data.success && actionType === "delete_emp") {
+                editEmployeeForm.reset(); // Clear form after deletion
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("disableEmployeeForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default form submission
+        updateEmployeeStatus("disable", this);
+    });
+
+    document.getElementById("enableEmployeeForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        updateEmployeeStatus("enable", this);
+    });
+});
+
+function updateEmployeeStatus(action, form) {
+    let formData = new FormData(form);
+    let empID = formData.get(action === "enable" ? "emp_enable_adm" : "emp_disable_adm");
+
+    if (!empID) {
+        alert("Please enter an Employee ID.");
+        return;
+    }
+
+    fetch("update_employee_status.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emp_id: empID, action: action })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        form.reset(); // Clear the form after submission
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+}
+
+
 document.getElementById("addProfilePicBtn").addEventListener("click", function() {
     document.getElementById("profilePicInput").click();
 });
@@ -976,6 +1095,42 @@ document.addEventListener("DOMContentLoaded", function () {
         feedbackList.innerHTML = "<p>No feedback records found.</p>";
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("admFeedbackForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        submitFeedback(this);
+    });
+});
+
+function submitFeedback(form) {
+    let formData = new FormData(form);
+
+    fetch("submit_feedback.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            emp_id: formData.get("adm_emp_send"),
+            feedback: formData.get("adm_feedback")
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message);
+        if (data.success) {
+            form.reset();
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An unexpected error occurred. Check console for details.");
+    });
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     const createInvoiceBtn = document.getElementById("createInvoiceBtn");
