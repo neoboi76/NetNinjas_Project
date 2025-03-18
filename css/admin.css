@@ -984,12 +984,6 @@ button {
     }
 }
 
-@media all and (max-width: 1080px) {
-    body {
-        overflow: scroll;
-    }
-}
-
 @media all and (max-width: 675px) {
 
     .logo img {

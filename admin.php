@@ -178,10 +178,12 @@ include('getadmdetail.php');
                         <form method="POST" id="addEmployeeForm" enctype="multipart/form-data">
                             <div class="employee-profile-pic">
                                 <!-- Profile Picture Preview -->
-                                <img id="profilePreview" src="./images/profilePlaceholder.png" alt="Profile Picture" width="100">
+                                <img id="profilePreview" src="./images/profilePlaceholder.png" alt="Profile Picture"
+                                    width="100">
                                 <br>
                                 <!-- Hidden File Input (inside the form now) -->
-                                <input type="file" name="addProfilePic" id="profilePicInput" accept="image/*" style="display: none;">
+                                <input type="file" name="addProfilePic" id="profilePicInput" accept="image/*"
+                                    style="display: none;">
                                 <button type="button" id="addProfilePicBtn">Add profile picture</button>
                             </div>
 
@@ -265,37 +267,37 @@ include('getadmdetail.php');
             <div id="employeeEditModal" class="employeeEdit-modal">
                 <div class="employeeEdit-modal-content">
                     <span class="employeeEdit-close">&times;</span>
-                        <div class="employee-form">
-                            <form method="POST" id="editEmployeeForm" enctype="multipart/form-data">
-                                <div class="employee-profile-pic">
-                                    <!-- Profile Picture Preview -->
-                                    <img id="editProfilePreview" name="editProfilePic" src="./images/profilePlaceholder.png" alt="Profile Picture"
-                                        width="100">
-                                    <br>
-                                    <!-- Hidden File Input -->
-                                    <input type="file" id="editProfilePicInput" accept="image/*" style="display: none;">
-                                    <button type="button" id="editProfilePicBtn">Edit profile picture</button>
-                                </div>
-                                
-                                    <input name="edit_emp_ID" type="text" placeholder="Employee ID" required>
-                                    <input type="email" name="edit_emp_email" placeholder="Email">
-                                    <input name="edit_emp_role" type="text" placeholder="Role">
-                                    <input name="edit_emp_dept" type="text" placeholder="Department">
+                    <div class="employee-form">
+                        <form method="POST" id="editEmployeeForm" enctype="multipart/form-data">
+                            <div class="employee-profile-pic">
+                                <!-- Profile Picture Preview -->
+                                <img id="editProfilePreview" name="editProfilePic" src="./images/profilePlaceholder.png"
+                                    alt="Profile Picture" width="100">
+                                <br>
+                                <!-- Hidden File Input -->
+                                <input type="file" id="editProfilePicInput" accept="image/*" style="display: none;">
+                                <button type="button" id="editProfilePicBtn">Edit profile picture</button>
+                            </div>
 
-                                    <div class="employee-name-fields">
-                                        <input name="edit_emp_fname" type="text" placeholder="First Name">
-                                        <input name="edit_emp_lname" type="text" placeholder="Last Name">
-                                    </div>
+                            <input name="edit_emp_ID" type="text" placeholder="Employee ID" required>
+                            <input type="email" name="edit_emp_email" placeholder="Email">
+                            <input name="edit_emp_role" type="text" placeholder="Role">
+                            <input name="edit_emp_dept" type="text" placeholder="Department">
 
-                                    <label for="edit_emp_bday">Birthdate:</label>
-                                    <input type="date" id="edit_emp_bday" name="edit_emp_bday">
+                            <div class="employee-name-fields">
+                                <input name="edit_emp_fname" type="text" placeholder="First Name">
+                                <input name="edit_emp_lname" type="text" placeholder="Last Name">
+                            </div>
 
-                                    <button name="save_emp" class="btn btn-success">Save Changes</button>
-                                    <button style="height: 50px; margin-top: 8px;" name="delete_emp"
-                                        class="btn btn-danger">Delete
-                                        Employee</button>
-                            </form>
-                        </div>
+                            <label for="edit_emp_bday">Birthdate:</label>
+                            <input type="date" id="edit_emp_bday" name="edit_emp_bday">
+
+                            <button name="save_emp" class="btn btn-success">Save Changes</button>
+                            <button style="height: 50px; margin-top: 8px;" name="delete_emp"
+                                class="btn btn-danger">Delete
+                                Employee</button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -573,12 +575,12 @@ include('getadmdetail.php');
                         include 'connection.php';
 
                         $adminId = $_SESSION['ADM_ID']; // Admin ID who sent the feedback
-
+                        
                         // Fetch feedback records sent by this admin, ordered by latest date and highest EVAL_ID
                         $sql_fetch_feedback = "SELECT * FROM evaluation_emp WHERE ADM_ID_FK_EVAL = ? ORDER BY EVAL_DATE DESC, EVAL_ID DESC";
                         $stmt = $conn->prepare($sql_fetch_feedback);
                         $stmt->bind_param("i", $adminId); // Bind admin ID for secure query
-
+                        
                         $stmt->execute();
                         $result = $stmt->get_result();
 
@@ -593,7 +595,7 @@ include('getadmdetail.php');
                                         <span><strong>to Employee ID:</strong> <?php echo $row['EMP_ID_FK_EVAL']; ?></span>
                                         <span><strong>Posted on:</strong> <?php echo $row['EVAL_DATE']; ?></span>
                                     </div>
-                                    <div class="feedback-history-text" 
+                                    <div class="feedback-history-text"
                                         style="margin-top:5px; max-height:100px; overflow-y:auto;">
                                         <?php echo nl2br(htmlspecialchars($row['EVAL_NOTE'])); // Protect and format text ?>
                                     </div>
@@ -698,11 +700,9 @@ include('getadmdetail.php');
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description:</label>
-                    <!--  NOTE: THIS IS A DIV, NOT A FORM. THUS, IT WON'T EASILY BE SUBMITTED THROUGH 
-                    FORM SUBMIT BUTTON. TEXTAREA DOES NOT WORK ATM -->
                     <div contenteditable="true" id="descriptionBox" class="form-control"
                         style="min-height: 100px; border: 1px solid #ccc; padding: 10px;">
-                    </div>s
+                    </div>
                     <input name="adm_case_desc" type="hidden" name="description" id="hiddenDescription">
                 </div>
                 <div class="form-group">
