@@ -754,6 +754,8 @@ include('getadmdetail.php');
                 <div class="button-group d-flex gap-3">
                     <button class="custom-btn" id="viewReportsBtn">View Reports</button>
                     <button class="custom-btn" id="viewDocumentsBtn">View Documents</button>
+                    <input type="file" id="fileInput" class="form-control w-50">
+                    <button id="addDocumentBtn" class="btn btn-success">Add Document</button>
                 </div>
                 <div class="content-box mt-3">
                     <!-- EMPLOYEE REPORTS -->
@@ -815,56 +817,53 @@ include('getadmdetail.php');
                     </div>
                     <!-- UPLOADED DOCUMENTS -->
                     <div id="empDocuments" class="tab-pane fade d-none">
-                        <div class="d-flex justify-content-between mb-3">
-                            <input type="file" id="fileInput" class="form-control w-50">
-                            <button id="addDocumentBtn" class="btn btn-success">Add Document</button>
-                        </div>
-                        </form>
-                        <div class="table-responsive">
-                            <table class="table table-bordered p-3" id="documentsTable">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>File Type</th>
-                                        <th>File Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    include 'connection.php';
+                        <div class ="documentsContainer">
+                            <div class="table-responsive">
+                                <table class="table table-bordered p-3" id="documentsTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>File Type</th>
+                                            <th>File Name</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        include 'connection.php';
 
-                                    $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
-                                    $stmt = $conn->prepare($sql_fetch_feedback);
+                                        $sql_fetch_feedback = "SELECT * FROM files ORDER BY F_DATE DESC";
+                                        $stmt = $conn->prepare($sql_fetch_feedback);
 
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
 
-                                    if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) { ?>
-                                            <tr>
-                                                <td><?php echo $row['F_DATE']; ?></td>
-                                                <td><?php echo $row['F_TYPE']; ?></td>
-                                                <td><?php echo $row['F_NAME']; ?></td>
-                                                <td>
-                                                    <a href="generate_signed_url.php?file=<?php echo urlencode($row['F_PATH']); ?>"
-                                                        class="btn btn-primary">Download</a>
-                                                    <button class="btn btn-danger remove-btn"
-                                                        data-id="<?php echo htmlspecialchars($row['F_ID']); ?>"
-                                                        data-path="<?php echo htmlspecialchars($row['F_PATH']); ?>">Remove
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        <?php }
-                                    } else {
-                                        echo "<tr><td colspan='5'>No documents found.</td></tr>";
-                                    }
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) { ?>
+                                                <tr>
+                                                    <td><?php echo $row['F_DATE']; ?></td>
+                                                    <td><?php echo $row['F_TYPE']; ?></td>
+                                                    <td><?php echo $row['F_NAME']; ?></td>
+                                                    <td>
+                                                        <a href="generate_signed_url.php?file=<?php echo urlencode($row['F_PATH']); ?>"
+                                                            class="btn btn-primary">Download</a>
+                                                        <button class="btn btn-danger remove-btn"
+                                                            data-id="<?php echo htmlspecialchars($row['F_ID']); ?>"
+                                                            data-path="<?php echo htmlspecialchars($row['F_PATH']); ?>">Remove
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php }
+                                        } else {
+                                            echo "<tr><td colspan='5'>No documents found.</td></tr>";
+                                        }
 
-                                    $stmt->close();
-                                    $conn->close();
-                                    ?>
-                                </tbody>
-                            </table>
+                                        $stmt->close();
+                                        $conn->close();
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
