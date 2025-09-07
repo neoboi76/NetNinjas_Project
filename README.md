@@ -67,6 +67,12 @@ This project contributes to:
 - Automated notification system
 - Comprehensive reporting features
 
+### **Technology used**
+- **Languages/Scripts**: HTML, Javascript, CSS, MySQL, and PHP
+- **Frameworks Used**: Bootstrap 5
+- **Miscellaneous**: XAMPP Web server solution stack
+
+
 ---
 
 ## 📊 System Architecture
