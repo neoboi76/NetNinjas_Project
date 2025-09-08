@@ -107,10 +107,10 @@ The system underwent comprehensive testing including:
 - Christian John B. Aquino
 - Lian Mhar T. Asperin  
 - Juoross Phillip C. Jose
-- Christian Danielle R. Leaño
+- **Christian Danielle R. Leaño (Lead back-end developer)**
 - Franz C. Pereira
 - Zaki Nathaniel U. Tanig
-- Dino Alfred T. Timbol
+- **Dino Alfred T. Timbol (Lead front-end developer)**
 
 **Project Mentor:** Prof. Martin Joseph Guinto  
 **Client:** Barangay Captain Restituto E. Cajes
